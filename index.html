@@ -236,16 +236,35 @@ searchInput.addEventListener("keydown",e=>{
   if(e.key==="Enter")search();
 });
 
-function addBook(shelf,b){
+async function addBook(shelf,b){
 
-  if(!state[shelf].some(x=>x.key===b.key)){
+  if(state[shelf].some(x=>x.key===b.key)) return;
 
-    state[shelf].push(b);
+  const {data:{user}}=await supabaseClient.auth.getUser();
 
-    save();
+  if(user){
 
-    alert(`Added to ${shelf.toUpperCase()}.`);
+    const {error}=await supabaseClient
+      .from("shelf_books")
+      .insert({
+        user_id:user.id,
+        shelf:shelf,
+        book_key:b.key,
+        book_data:b
+      });
+
+    if(error){
+      alert("Could not save this book.");
+      console.error(error);
+      return;
+    }
   }
+
+  state[shelf].push(b);
+
+  save();
+
+  alert(`Added to ${shelf.toUpperCase()}.`);
 }
 
 async function removeBook(shelf,key){
