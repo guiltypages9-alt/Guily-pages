@@ -19,10 +19,13 @@ button{font:14px Arial,sans-serif}.grid{display:grid;grid-template-columns:repea
 .panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:20px}.panel h2{margin-top:0}
 input.profile{width:100%;padding:12px;border:1px solid #d9cbd3;border-radius:10px;margin:8px 0 12px}
 .small{font:12px Arial,sans-serif;color:var(--muted)}
+.status{margin:10px 0;padding:10px;border-radius:10px;background:#fff4f7;font:13px Arial,sans-serif}
+hr{border:0;border-top:1px solid var(--line);margin:20px 0}
 @media(max-width:600px){.hero h1{font-size:34px}.search{flex-direction:column}.search button{width:100%}.cover{height:230px}}
 </style>
 </head>
 <body>
+
 <header>
   <div class="logo">Guilty Pages</div>
   <div class="tag">Your books. Your shelves. Your guilty pleasures.</div>
@@ -36,58 +39,435 @@ input.profile{width:100%;padding:12px;border:1px solid #d9cbd3;border-radius:10p
 </header>
 
 <main>
+
 <section id="discover" class="tab">
-  <div class="hero"><h1>Read something you shouldn't?</h1><p>Find it. Save it. Confess it.</p></div>
-  <div class="search"><input id="searchInput" placeholder="Search books, authors, guilty pleasures..."><button class="action primary" id="searchBtn">Search</button></div>
+  <div class="hero">
+    <h1>Read something you shouldn't?</h1>
+    <p>Find it. Save it. Confess it.</p>
+  </div>
+  <div class="search">
+    <input id="searchInput" placeholder="Search books, authors, guilty pleasures...">
+    <button class="action primary" id="searchBtn">Search</button>
+  </div>
   <div id="results" class="grid"></div>
 </section>
 
-<section id="tbr" class="tab" hidden><div class="panel"><h2>My TBR</h2><div id="tbrList" class="grid"></div></div></section>
-<section id="dnf" class="tab" hidden><div class="panel"><h2>DNF</h2><div id="dnfList" class="grid"></div></div></section>
-<section id="reread" class="tab" hidden><div class="panel"><h2>Reread</h2><div id="rereadList" class="grid"></div></div></section>
+<section id="tbr" class="tab" hidden>
+  <div class="panel"><h2>My TBR</h2><div id="tbrList" class="grid"></div></div>
+</section>
+
+<section id="dnf" class="tab" hidden>
+  <div class="panel"><h2>DNF</h2><div id="dnfList" class="grid"></div></div>
+</section>
+
+<section id="reread" class="tab" hidden>
+  <div class="panel"><h2>Reread</h2><div id="rereadList" class="grid"></div></div>
+</section>
 
 <section id="profile" class="tab" hidden>
- <div class="panel">
-  <h2>Your Profile</h2>
-  <p class="small">This demo saves your name and shelves on this device. We can connect real authentication/database next.</p>
-  <label>Display name</label><input class="profile" id="displayName" placeholder="Your reader name">
-  <button class="action primary" id="saveProfile">Save profile</button>
-  <p id="saved" class="small"></p>
- </div>
+  <div class="panel">
+    <h2>Your Profile</h2>
+
+    <div id="authStatus" class="status">Checking account…</div>
+
+    <label>Email</label>
+    <input class="profile" id="email" type="email" placeholder="Your email">
+
+    <label>Password</label>
+    <input class="profile" id="password" type="password" placeholder="Your password">
+
+    <button class="action primary" id="signUp">Create account</button>
+    <button class="action" id="signIn">Sign in</button>
+
+    <hr>
+
+    <label>Display name</label>
+    <input class="profile" id="displayName" placeholder="Your reader name">
+
+    <button class="action primary" id="saveProfile">Save profile</button>
+    <button class="action" id="signOut">Sign out</button>
+
+    <p id="saved" class="small"></p>
+  </div>
 </section>
+
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+const SUPABASE_URL="https://wmpovzrwdvvmabxrcwtp.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_m-YSGRdUnH0eXTBVC5r3sw_l6oLwWSz";
+
+const supabaseClient=window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
 const KEY="guiltyPages";
-let state=JSON.parse(localStorage.getItem(KEY)||'{"tbr":[],"dnf":[],"reread":[],"name":""}');
-const save=()=>{localStorage.setItem(KEY,JSON.stringify(state));renderCounts()};
+
+let state=JSON.parse(
+  localStorage.getItem(KEY) ||
+  '{"tbr":[],"dnf":[],"reread":[],"name":""}'
+);
+
+const save=()=>{
+  localStorage.setItem(KEY,JSON.stringify(state));
+  renderCounts();
+};
+
 const tabs=[...document.querySelectorAll(".tab")];
-document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");tabs.forEach(s=>s.hidden=s.id!==b.dataset.tab); if(b.dataset.tab!=="discover")renderShelf(b.dataset.tab)});
-function renderCounts(){tbrCount.textContent=state.tbr.length?`(${state.tbr.length})`:"";dnfCount.textContent=state.dnf.length?`(${state.dnf.length})`:"";rereadCount.textContent=state.reread.length?`(${state.reread.length})`:""}
-function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function card(book, shelf){
- const cover=book.cover_i?`https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`:"";
- const inShelf=Object.entries(state).filter(([k,v])=>["tbr","dnf","reread"].includes(k)&&v.some(x=>x.key===book.key)).map(x=>x[0]);
- return `<article class="card">${cover?`<img class="cover" src="${cover}" alt="">`:`<div class="cover"></div>`}
- <div class="title">${esc(book.title)}</div><div class="author">${esc((book.author_name||[]).join(", "))}</div>
- ${shelf?`<button class="action" onclick="removeBook('${esc(shelf)}','${esc(book.key)}')">Remove</button>`:
- `<button class="action primary" onclick="addBook('tbr',${JSON.stringify(book).replace(/</g,"\\u003c")})">Add to TBR</button>
- <button class="action" onclick="addBook('dnf',${JSON.stringify(book).replace(/</g,"\\u003c")})">DNF</button>
- <button class="action" onclick="addBook('reread',${JSON.stringify(book).replace(/</g,"\\u003c")})">Reread</button>`}
- </article>`;
+
+document.querySelectorAll("nav button").forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll("nav button")
+      .forEach(x=>x.classList.remove("active"));
+
+    b.classList.add("active");
+
+    tabs.forEach(s=>{
+      s.hidden=s.id!==b.dataset.tab;
+    });
+
+    if(b.dataset.tab!=="discover"){
+      renderShelf(b.dataset.tab);
+    }
+
+    if(b.dataset.tab==="profile"){
+      loadProfile();
+    }
+  };
+});
+
+function renderCounts(){
+  tbrCount.textContent=state.tbr.length?`(${state.tbr.length})`:"";
+  dnfCount.textContent=state.dnf.length?`(${state.dnf.length})`:"";
+  rereadCount.textContent=state.reread.length?`(${state.reread.length})`:"";
 }
+
+function esc(s){
+  return String(s||"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[c]));
+}
+
+function card(book,shelf){
+
+  const cover=book.cover_i
+    ?`https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
+    :"";
+
+  return `<article class="card">
+    ${cover
+      ?`<img class="cover" src="${cover}" alt="">`
+      :`<div class="cover"></div>`}
+
+    <div class="title">${esc(book.title)}</div>
+
+    <div class="author">
+      ${esc((book.author_name||[]).join(", "))}
+    </div>
+
+    ${
+      shelf
+      ?`<button class="action"
+          onclick="removeBook('${esc(shelf)}','${esc(book.key)}')">
+          Remove
+        </button>`
+      :`
+        <button class="action primary"
+          onclick="addBook('tbr',${JSON.stringify(book).replace(/</g,"\\u003c")})">
+          Add to TBR
+        </button>
+
+        <button class="action"
+          onclick="addBook('dnf',${JSON.stringify(book).replace(/</g,"\\u003c")})">
+          DNF
+        </button>
+
+        <button class="action"
+          onclick="addBook('reread',${JSON.stringify(book).replace(/</g,"\\u003c")})">
+          Reread
+        </button>
+      `
+    }
+
+  </article>`;
+}
+
 async function search(){
- const q=searchInput.value.trim(); if(!q)return;
- results.innerHTML='<div class="empty">Searching the library…</div>';
- try{const r=await fetch("https://openlibrary.org/search.json?q="+encodeURIComponent(q)+"&limit=12");
- const d=await r.json();results.innerHTML=d.docs?.length?d.docs.map(x=>card(x)).join(""):'<div class="empty">No books found.</div>'}
- catch(e){results.innerHTML='<div class="empty">Could not reach Open Library. Please try again.</div>'}
+
+  const q=searchInput.value.trim();
+
+  if(!q)return;
+
+  results.innerHTML=
+    '<div class="empty">Searching the library…</div>';
+
+  try{
+
+    const r=await fetch(
+      "https://openlibrary.org/search.json?q="+
+      encodeURIComponent(q)+
+      "&limit=12"
+    );
+
+    const d=await r.json();
+
+    results.innerHTML=d.docs?.length
+      ?d.docs.map(x=>card(x)).join("")
+      :'<div class="empty">No books found.</div>';
+
+  }catch(e){
+
+    results.innerHTML=
+      '<div class="empty">Could not reach Open Library. Please try again.</div>';
+
+  }
 }
-searchBtn.onclick=search;searchInput.addEventListener("keydown",e=>{if(e.key==="Enter")search()});
-function addBook(shelf,b){if(!state[shelf].some(x=>x.key===b.key)){state[shelf].push(b);save();alert(`Added to ${shelf.toUpperCase()}.`)}}
-function removeBook(shelf,key){state[shelf]=state[shelf].filter(x=>x.key!==key);save();renderShelf(shelf)}
-function renderShelf(shelf){const el=document.getElementById(shelf+"List"), arr=state[shelf]||[];el.innerHTML=arr.length?arr.map(x=>card(x,shelf)).join(""):'<div class="empty">Nothing here yet.</div>'}
-displayName.value=state.name||"";saveProfile.onclick=()=>{state.name=displayName.value.trim();save();saved.textContent="Profile saved on this device."};renderCounts();
+
+searchBtn.onclick=search;
+
+searchInput.addEventListener("keydown",e=>{
+  if(e.key==="Enter")search();
+});
+
+function addBook(shelf,b){
+
+  if(!state[shelf].some(x=>x.key===b.key)){
+
+    state[shelf].push(b);
+
+    save();
+
+    alert(`Added to ${shelf.toUpperCase()}.`);
+  }
+}
+
+function removeBook(shelf,key){
+
+  state[shelf]=state[shelf].filter(
+    x=>x.key!==key
+  );
+
+  save();
+
+  renderShelf(shelf);
+}
+
+function renderShelf(shelf){
+
+  const el=document.getElementById(shelf+"List");
+
+  const arr=state[shelf]||[];
+
+  el.innerHTML=arr.length
+    ?arr.map(x=>card(x,shelf)).join("")
+    :'<div class="empty">Nothing here yet.</div>';
+}
+
+async function loadProfile(){
+
+  const {
+    data:{user}
+  }=await supabaseClient.auth.getUser();
+
+  if(!user){
+
+    authStatus.textContent=
+      "Not signed in. Create an account or sign in.";
+
+    displayName.value=state.name||"";
+
+    return;
+  }
+
+  authStatus.textContent=
+    `Signed in as ${user.email||"your account"}.`;
+
+  email.value=user.email||"";
+
+  const {data,error}=await supabaseClient
+    .from("profiles")
+    .select("display_name,username")
+    .eq("id",user.id)
+    .maybeSingle();
+
+  if(error){
+
+    saved.textContent=
+      "Connected, but the profile could not be loaded.";
+
+    return;
+  }
+
+  if(data){
+
+    displayName.value=
+      data.display_name||
+      data.username||
+      "";
+
+    state.name=displayName.value;
+
+    save();
+  }
+}
+
+signUp.onclick=async()=>{
+
+  const e=email.value.trim();
+  const p=password.value;
+
+  if(!e||!p){
+
+    saved.textContent=
+      "Enter your email and password first.";
+
+    return;
+  }
+
+  const {data,error}=
+    await supabaseClient.auth.signUp({
+      email:e,
+      password:p
+    });
+
+  if(error){
+
+    saved.textContent=error.message;
+
+    return;
+  }
+
+  if(data.user){
+
+    saved.textContent=
+      "Account created. Check your email if verification is required.";
+
+    authStatus.textContent=
+      "Account created.";
+  }
+};
+
+signIn.onclick=async()=>{
+
+  const e=email.value.trim();
+  const p=password.value;
+
+  if(!e||!p){
+
+    saved.textContent=
+      "Enter your email and password first.";
+
+    return;
+  }
+
+  const {data,error}=
+    await supabaseClient.auth.signInWithPassword({
+      email:e,
+      password:p
+    });
+
+  if(error){
+
+    saved.textContent=error.message;
+
+    return;
+  }
+
+  if(data.user){
+
+    authStatus.textContent=
+      `Signed in as ${data.user.email}.`;
+
+    saved.textContent=
+      "Signed in successfully.";
+
+    await loadProfile();
+  }
+};
+
+saveProfile.onclick=async()=>{
+
+  const name=displayName.value.trim();
+
+  if(!name){
+
+    saved.textContent=
+      "Please enter a display name.";
+
+    return;
+  }
+
+  const {
+    data:{user}
+  }=await supabaseClient.auth.getUser();
+
+  if(!user){
+
+    state.name=name;
+
+    save();
+
+    saved.textContent=
+      "Saved on this device. Sign in to save it to your account.";
+
+    return;
+  }
+
+  const {error}=await supabaseClient
+    .from("profiles")
+    .upsert(
+      {
+        id:user.id,
+        display_name:name
+      },
+      {
+        onConflict:"id"
+      }
+    );
+
+  if(error){
+
+    saved.textContent=
+      "Could not save profile: "+error.message;
+
+    return;
+  }
+
+  state.name=name;
+
+  save();
+
+  saved.textContent=
+    "Profile saved to your account.";
+};
+
+signOut.onclick=async()=>{
+
+  await supabaseClient.auth.signOut();
+
+  authStatus.textContent=
+    "Signed out.";
+
+  saved.textContent=
+    "You have been signed out.";
+
+  email.value="";
+  password.value="";
+};
+
+displayName.value=state.name||"";
+
+renderCounts();
+
+loadProfile();
 </script>
+
 </body>
 </html>
