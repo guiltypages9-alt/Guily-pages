@@ -248,7 +248,25 @@ function addBook(shelf,b){
   }
 }
 
-function removeBook(shelf,key){
+async function removeBook(shelf,key){
+
+  const {data:{user}}=await supabaseClient.auth.getUser();
+
+  if(user){
+
+    const {error}=await supabaseClient
+      .from("shelf_books")
+      .delete()
+      .eq("user_id",user.id)
+      .eq("shelf",shelf)
+      .eq("book_key",key);
+
+    if(error){
+      alert("Could not remove this book.");
+      console.error(error);
+      return;
+    }
+  }
 
   state[shelf]=state[shelf].filter(
     x=>x.key!==key
@@ -258,7 +276,6 @@ function removeBook(shelf,key){
 
   renderShelf(shelf);
 }
-
 function renderShelf(shelf){
 
   const el=document.getElementById(shelf+"List");
