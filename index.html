@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guilty Pages</title>
+<style>
+:root{--ink:#241d2b;--muted:#756b7c;--paper:#fffafc;--pink:#ead5df;--line:#eadfe5;--card:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,serif}
+header{padding:28px 20px 14px;text-align:center;border-bottom:1px solid var(--line);background:#fff}
+.logo{font-size:32px;font-weight:700;letter-spacing:.5px}.tag{font:13px Arial,sans-serif;color:var(--muted);margin-top:6px}
+nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:12px}
+nav button,.action{border:1px solid #d9cbd3;background:#fff;border-radius:999px;padding:9px 14px;color:var(--ink);cursor:pointer}
+nav button.active,.action.primary{background:var(--ink);color:#fff}
+main{max-width:1000px;margin:auto;padding:22px 16px 50px}
+.hero{text-align:center;padding:24px 10px 18px}.hero h1{font-size:42px;margin:8px 0}.hero p{font:15px Arial,sans-serif;color:var(--muted)}
+.search{display:flex;gap:8px;max-width:720px;margin:20px auto}.search input{flex:1;padding:14px;border:1px solid #d9cbd3;border-radius:12px;font-size:16px}
+button{font:14px Arial,sans-serif}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:0 4px 18px #2b1d2b08}.cover{width:100%;height:240px;object-fit:cover;border-radius:10px;background:var(--pink)}.title{font-size:19px;font-weight:700;margin:11px 0 5px}.author{font:13px Arial,sans-serif;color:var(--muted);min-height:34px}.empty{text-align:center;color:var(--muted);padding:45px 15px;font:14px Arial,sans-serif}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:20px}.panel h2{margin-top:0}
+input.profile{width:100%;padding:12px;border:1px solid #d9cbd3;border-radius:10px;margin:8px 0 12px}
+.small{font:12px Arial,sans-serif;color:var(--muted)}
+@media(max-width:600px){.hero h1{font-size:34px}.search{flex-direction:column}.search button{width:100%}.cover{height:230px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Guilty Pages</div>
+  <div class="tag">Your books. Your shelves. Your guilty pleasures.</div>
+  <nav>
+    <button class="active" data-tab="discover">Discover</button>
+    <button data-tab="tbr">TBR <span id="tbrCount"></span></button>
+    <button data-tab="dnf">DNF <span id="dnfCount"></span></button>
+    <button data-tab="reread">Reread <span id="rereadCount"></span></button>
+    <button data-tab="profile">Profile</button>
+  </nav>
+</header>
+
+<main>
+<section id="discover" class="tab">
+  <div class="hero"><h1>Read something you shouldn't?</h1><p>Find it. Save it. Confess it.</p></div>
+  <div class="search"><input id="searchInput" placeholder="Search books, authors, guilty pleasures..."><button class="action primary" id="searchBtn">Search</button></div>
+  <div id="results" class="grid"></div>
+</section>
+
+<section id="tbr" class="tab" hidden><div class="panel"><h2>My TBR</h2><div id="tbrList" class="grid"></div></div></section>
+<section id="dnf" class="tab" hidden><div class="panel"><h2>DNF</h2><div id="dnfList" class="grid"></div></div></section>
+<section id="reread" class="tab" hidden><div class="panel"><h2>Reread</h2><div id="rereadList" class="grid"></div></div></section>
+
+<section id="profile" class="tab" hidden>
+ <div class="panel">
+  <h2>Your Profile</h2>
+  <p class="small">This demo saves your name and shelves on this device. We can connect real authentication/database next.</p>
+  <label>Display name</label><input class="profile" id="displayName" placeholder="Your reader name">
+  <button class="action primary" id="saveProfile">Save profile</button>
+  <p id="saved" class="small"></p>
+ </div>
+</section>
+</main>
+
+<script>
+const KEY="guiltyPages";
+let state=JSON.parse(localStorage.getItem(KEY)||'{"tbr":[],"dnf":[],"reread":[],"name":""}');
+const save=()=>{localStorage.setItem(KEY,JSON.stringify(state));renderCounts()};
+const tabs=[...document.querySelectorAll(".tab")];
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");tabs.forEach(s=>s.hidden=s.id!==b.dataset.tab); if(b.dataset.tab!=="discover")renderShelf(b.dataset.tab)});
+function renderCounts(){tbrCount.textContent=state.tbr.length?`(${state.tbr.length})`:"";dnfCount.textContent=state.dnf.length?`(${state.dnf.length})`:"";rereadCount.textContent=state.reread.length?`(${state.reread.length})`:""}
+function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function card(book, shelf){
+ const cover=book.cover_i?`https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`:"";
+ const inShelf=Object.entries(state).filter(([k,v])=>["tbr","dnf","reread"].includes(k)&&v.some(x=>x.key===book.key)).map(x=>x[0]);
+ return `<article class="card">${cover?`<img class="cover" src="${cover}" alt="">`:`<div class="cover"></div>`}
+ <div class="title">${esc(book.title)}</div><div class="author">${esc((book.author_name||[]).join(", "))}</div>
+ ${shelf?`<button class="action" onclick="removeBook('${esc(shelf)}','${esc(book.key)}')">Remove</button>`:
+ `<button class="action primary" onclick="addBook('tbr',${JSON.stringify(book).replace(/</g,"\\u003c")})">Add to TBR</button>
+ <button class="action" onclick="addBook('dnf',${JSON.stringify(book).replace(/</g,"\\u003c")})">DNF</button>
+ <button class="action" onclick="addBook('reread',${JSON.stringify(book).replace(/</g,"\\u003c")})">Reread</button>`}
+ </article>`;
+}
+async function search(){
+ const q=searchInput.value.trim(); if(!q)return;
+ results.innerHTML='<div class="empty">Searching the library…</div>';
+ try{const r=await fetch("https://openlibrary.org/search.json?q="+encodeURIComponent(q)+"&limit=12");
+ const d=await r.json();results.innerHTML=d.docs?.length?d.docs.map(x=>card(x)).join(""):'<div class="empty">No books found.</div>'}
+ catch(e){results.innerHTML='<div class="empty">Could not reach Open Library. Please try again.</div>'}
+}
+searchBtn.onclick=search;searchInput.addEventListener("keydown",e=>{if(e.key==="Enter")search()});
+function addBook(shelf,b){if(!state[shelf].some(x=>x.key===b.key)){state[shelf].push(b);save();alert(`Added to ${shelf.toUpperCase()}.`)}}
+function removeBook(shelf,key){state[shelf]=state[shelf].filter(x=>x.key!==key);save();renderShelf(shelf)}
+function renderShelf(shelf){const el=document.getElementById(shelf+"List"), arr=state[shelf]||[];el.innerHTML=arr.length?arr.map(x=>card(x,shelf)).join(""):'<div class="empty">Nothing here yet.</div>'}
+displayName.value=state.name||"";saveProfile.onclick=()=>{state.name=displayName.value.trim();save();saved.textContent="Profile saved on this device."};renderCounts();
+</script>
+</body>
+</html>
