@@ -4,268 +4,2212 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Guilty Pages — Your Unapologetic Book Community</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root{
- --pink:#ff4fa3;--hot:#f92f8f;--soft:#fff0f8;--lav:#eee5ff;--purple:#9a6cff;
- --ink:#302037;--muted:#806f87;--white:#fff;--line:#f0d8ea;--shadow:0 10px 30px #9d4c7914;
+  --pink:#f7a8c4;
+  --pink-dark:#e86d9a;
+  --pink-light:#fff0f6;
+  --lav:#b9a4e8;
+  --lav-dark:#8c70c9;
+  --lav-light:#f2edff;
+  --purple:#6f4c9b;
+  --text:#34263d;
+  --muted:#806f87;
+  --white:#fff;
+  --bg:#fff8fc;
+  --border:#ead8e5;
+  --shadow:0 10px 30px rgba(115,70,110,.12);
+  --radius:20px;
 }
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#fff8fc 0%,#fff 45%,#faf6ff 100%)}
-button,input,textarea,select{font:inherit}button{cursor:pointer}
-header{position:sticky;top:0;z-index:30;background:#fff9fcf2;backdrop-filter:blur(16px);border-bottom:1px solid #f2dbe9}
-.top{max-width:1180px;margin:auto;min-height:68px;padding:10px 16px;display:flex;align-items:center;gap:12px}
-.logo{font-size:23px;font-weight:950;color:#ef398f;letter-spacing:-1px;white-space:nowrap}.logo span{color:#9b70e9}
-nav{display:flex;gap:5px;flex:1;overflow:auto}nav button{border:0;background:transparent;color:#695873;border-radius:999px;padding:10px 12px;font-weight:800;white-space:nowrap}nav button:hover,nav button.active{background:#ffe1f0;color:#d12676}
-.profile{border:0;border-radius:999px;padding:10px 14px;background:linear-gradient(135deg,#ff4fa3,#b078f3);color:white;font-weight:900;white-space:nowrap}
-main{max-width:1180px;margin:auto;padding:22px 16px 70px}
-.hero{position:relative;overflow:hidden;border-radius:32px;padding:34px 24px;background:linear-gradient(135deg,#ff4fa3 0%,#f45aab 45%,#b17cf0 100%);color:#fff;box-shadow:0 18px 45px #d93d8d2b}
-.hero:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;right:-70px;top:-90px;background:#ffffff20}
-.eyebrow{text-transform:uppercase;letter-spacing:2px;font-size:12px;font-weight:950}.hero h1{font-size:clamp(36px,8vw,64px);line-height:.93;margin:10px 0}.hero p{max-width:650px;font-size:16px;line-height:1.5}
-.genreBar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
-.genreChip{border:1px solid #ffffff66;background:#ffffff22;color:#fff;border-radius:999px;padding:8px 12px;font-weight:850;font-size:12px}
-.genreChip:hover,.genreChip.active{background:#fff;color:#bd3178}
-.genreSection{margin-top:18px}
-.search{display:flex;gap:8px;max-width:760px;margin-top:20px}.search input{flex:1;border:0;border-radius:999px;padding:15px 18px;outline:none}.search button{border:0;border-radius:999px;padding:13px 20px;background:#fff;color:#bd3178;font-weight:950}
-.section{background:#fff;border:1px solid var(--line);border-radius:25px;padding:19px;margin:18px 0;box-shadow:var(--shadow)}
-.sectionHead{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:14px}.section h2{margin:0;font-size:23px}.section p{margin:4px 0 0}.muted{color:var(--muted);font-size:13px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:15px}
-.book{background:linear-gradient(180deg,#fff,#fff8fc);border:1px solid #f1d9e8;border-radius:20px;padding:11px;overflow:hidden}
-.cover{width:100%;height:245px;object-fit:cover;border-radius:14px;background:linear-gradient(135deg,#f7e3ef,#eee5ff);display:block}
-.book h3{font-size:16px;margin:10px 0 3px;line-height:1.2}.book .author{color:var(--muted);font-size:13px;min-height:18px}
-.actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.pill{border:0;border-radius:999px;padding:8px 10px;font-size:12px;font-weight:900;background:var(--lav);color:#7048bd}.pill.pink{background:#ffd7ea;color:#b7246d}.pill.dark{background:#34213c;color:#fff}
-.rating{display:flex;align-items:center;gap:5px;margin-top:9px;font-size:13px}.stars{color:#f4a31b;letter-spacing:1px}.rating button{border:0;background:transparent;padding:0;color:#b14c80;font-size:12px;font-weight:800}
-.featureGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.feature{padding:18px;border-radius:20px;background:linear-gradient(135deg,#fff0f7,#f2ebff);border:1px solid #f0d8ea}.feature h3{margin:0 0 6px}
-.rank{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:#fff5fa;margin:8px 0;border:1px solid #f5dfeb}.rankNo{font-size:22px;font-weight:950;color:#d12c78;width:34px}.rankCover{width:45px;height:62px;border-radius:7px;object-fit:cover;background:#eee5ff}
-.shelfHeader{display:flex;justify-content:space-between;align-items:center;gap:10px}.privateTag,.publicTag{font-size:11px;font-weight:900;padding:6px 9px;border-radius:999px}.privateTag{background:#eee5ff;color:#7144b6}.publicTag{background:#ffe0ef;color:#bd286f}
-.profileHero{display:flex;align-items:center;gap:15px;background:linear-gradient(135deg,#fff0f8,#f0e8ff);padding:20px;border-radius:22px}.avatar{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#ff4fa3,#a776f2);color:#fff;font-weight:950;font-size:24px}
-.field{display:grid;gap:6px;margin:11px 0}.field input,.field textarea,.field select{width:100%;padding:12px;border:1px solid #e4cce5;border-radius:12px;background:#fff;outline:none}.toggle{display:flex;align-items:center;justify-content:space-between;padding:13px;background:#fff6fb;border-radius:14px;margin:8px 0}.toggle input{width:20px;height:20px;accent-color:#ff4fa3}
-.comment{padding:14px;border-radius:16px;background:#fff6fb;border:1px solid #f2dce9;margin:9px 0}.commentTop{display:flex;justify-content:space-between;gap:8px}.commentType{font-size:11px;color:#a1487d;font-weight:900;text-transform:uppercase}
-.room{padding:15px;border:1px solid #eed7e9;border-radius:18px;background:linear-gradient(135deg,#fff8fc,#f5efff);margin:9px 0}.room h3{margin:0 0 4px}
-.empty{text-align:center;padding:30px;color:#89778e}.hidden{display:none!important}
-.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:100;background:#302037;color:#fff;padding:12px 18px;border-radius:999px;box-shadow:0 10px 25px #0003;font-weight:800}
-.modal{position:fixed;inset:0;z-index:90;background:#2a193888;display:grid;place-items:center;padding:18px}.modalCard{width:min(650px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:25px;padding:20px}.close{float:right;border:0;background:#f2e8f5;border-radius:50%;width:36px;height:36px;font-weight:900}
-@media(max-width:780px){.featureGrid{grid-template-columns:1fr}.top{flex-wrap:wrap}.logo{flex:1}nav{order:3;flex-basis:100%}}
-@media(max-width:560px){.search{flex-direction:column}.search button{width:100%}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cover{height:215px}.hero{padding:27px 19px}.book{padding:9px}}
+
+*{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:linear-gradient(180deg,#fff8fc 0%,#fff 55%,#f8f3ff 100%);
+  color:var(--text);
+}
+
+button,input,select,textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+a{
+  color:inherit;
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:rgba(255,248,252,.94);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+
+.nav{
+  max-width:1200px;
+  margin:auto;
+  padding:14px 18px;
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+.logo{
+  font-family:Georgia,serif;
+  font-size:24px;
+  font-weight:800;
+  color:var(--purple);
+  white-space:nowrap;
+}
+
+.logo span{
+  color:var(--pink-dark);
+}
+
+.navlinks{
+  display:flex;
+  gap:6px;
+  flex:1;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+}
+
+.navlinks button{
+  border:0;
+  background:transparent;
+  color:var(--text);
+  padding:9px 12px;
+  border-radius:12px;
+  font-weight:700;
+}
+
+.navlinks button:hover,
+.navlinks button.active{
+  background:var(--lav-light);
+  color:var(--purple);
+}
+
+.auth-btn{
+  background:linear-gradient(135deg,var(--pink-dark),var(--lav-dark));
+  color:#fff!important;
+  padding:10px 16px!important;
+}
+
+main{
+  max-width:1200px;
+  margin:auto;
+  padding:22px 18px 70px;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.hero{
+  margin-top:18px;
+  border-radius:30px;
+  padding:55px 30px;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(255,255,255,.8),transparent 28%),
+    radial-gradient(circle at 90% 20%,rgba(255,255,255,.7),transparent 30%),
+    linear-gradient(135deg,#f8b4ce,#d8c6fa);
+  box-shadow:var(--shadow);
+  text-align:center;
+}
+
+.hero h1{
+  font-family:Georgia,serif;
+  font-size:clamp(38px,7vw,72px);
+  margin:0 0 10px;
+  color:#5e3b73;
+}
+
+.hero p{
+  font-size:19px;
+  color:#684f72;
+  margin:0 auto 28px;
+}
+
+.search-wrap{
+  max-width:720px;
+  margin:auto;
+  position:relative;
+}
+
+.search-wrap input{
+  width:100%;
+  border:2px solid rgba(255,255,255,.8);
+  background:#fff;
+  border-radius:18px;
+  padding:16px 52px 16px 18px;
+  outline:none;
+  box-shadow:0 8px 25px rgba(80,50,90,.1);
+}
+
+.search-wrap button{
+  position:absolute;
+  right:7px;
+  top:7px;
+  bottom:7px;
+  width:44px;
+  border:0;
+  border-radius:13px;
+  background:var(--purple);
+  color:#fff;
+}
+
+.section{
+  margin-top:34px;
+}
+
+.section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:15px;
+}
+
+.section h2{
+  font-family:Georgia,serif;
+  margin:0;
+  font-size:30px;
+  color:var(--purple);
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.genre-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;
+}
+
+.genre{
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px 14px;
+  background:#fff;
+  box-shadow:var(--shadow);
+  font-weight:800;
+  color:var(--purple);
+  transition:.2s;
+}
+
+.genre:hover{
+  transform:translateY(-3px);
+  background:var(--lav-light);
+}
+
+.toolbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:20px 0;
+}
+
+.toolbar input,
+.toolbar select,
+.form input,
+.form textarea,
+.form select{
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:12px;
+  padding:12px 14px;
+  outline:none;
+}
+
+.toolbar input{
+  flex:1;
+  min-width:220px;
+}
+
+.btn{
+  border:0;
+  border-radius:12px;
+  padding:11px 15px;
+  font-weight:800;
+  background:var(--lav-light);
+  color:var(--purple);
+}
+
+.btn.primary{
+  background:linear-gradient(135deg,var(--pink-dark),var(--lav-dark));
+  color:#fff;
+}
+
+.btn.danger{
+  background:#ffe5ef;
+  color:#a63763;
+}
+
+.btn.small{
+  padding:8px 10px;
+  font-size:13px;
+}
+
+.book-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:18px;
+}
+
+.book-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  transition:.2s;
+}
+
+.book-card:hover{
+  transform:translateY(-3px);
+}
+
+.cover{
+  width:100%;
+  height:255px;
+  object-fit:cover;
+  background:linear-gradient(135deg,#f4d4e2,#ddd2f7);
+}
+
+.cover-placeholder{
+  height:255px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:20px;
+  background:linear-gradient(135deg,#f6c1d6,#d8caf7);
+  color:#684a76;
+  font-family:Georgia,serif;
+  font-weight:700;
+}
+
+.book-info{
+  padding:14px;
+}
+
+.book-title{
+  font-weight:900;
+  line-height:1.2;
+  margin-bottom:5px;
+}
+
+.author{
+  color:var(--muted);
+  font-size:14px;
+  margin-bottom:9px;
+}
+
+.rating{
+  color:#9b6d00;
+  font-weight:800;
+  margin-bottom:10px;
+}
+
+.card-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.card-actions .btn{
+  flex:1;
+  min-width:75px;
+}
+
+.empty{
+  background:#fff;
+  border:1px dashed var(--border);
+  padding:35px;
+  border-radius:20px;
+  text-align:center;
+  color:var(--muted);
+}
+
+.profile-box,
+.room-card,
+.community-card,
+.panel{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:20px;
+  box-shadow:var(--shadow);
+}
+
+.profile-box{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  margin-bottom:22px;
+}
+
+.avatar{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--pink),var(--lav));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  font-weight:900;
+  color:#fff;
+}
+
+.tabs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+
+.tabs button{
+  border:1px solid var(--border);
+  background:#fff;
+  padding:10px 14px;
+  border-radius:12px;
+  font-weight:800;
+  color:var(--purple);
+}
+
+.tabs button.active{
+  background:var(--purple);
+  color:#fff;
+}
+
+.room-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:16px;
+}
+
+.room-card h3{
+  margin-top:0;
+  color:var(--purple);
+}
+
+.lock{
+  display:inline-block;
+  background:#ffe9f2;
+  color:#a13e67;
+  padding:5px 8px;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:900;
+}
+
+.community-card{
+  margin-bottom:15px;
+}
+
+.community-card h3{
+  margin:0 0 8px;
+}
+
+.comment{
+  padding:12px 0;
+  border-top:1px solid var(--border);
+}
+
+.comment strong{
+  color:var(--purple);
+}
+
+.stars{
+  display:flex;
+  gap:4px;
+  margin:8px 0;
+}
+
+.star{
+  border:0;
+  background:transparent;
+  font-size:25px;
+  padding:0;
+  color:#d6c7d9;
+}
+
+.star.on{
+  color:#e6a700;
+}
+
+.form{
+  display:grid;
+  gap:12px;
+}
+
+.form textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+.notice{
+  padding:13px 15px;
+  border-radius:13px;
+  background:var(--lav-light);
+  color:var(--purple);
+  margin-bottom:15px;
+}
+
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(50,35,60,.5);
+  z-index:100;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+
+.modal-bg.show{
+  display:flex;
+}
+
+.modal{
+  width:min(600px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:24px;
+  padding:24px;
+  box-shadow:0 20px 60px rgba(40,20,50,.3);
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  align-items:center;
+}
+
+.close{
+  border:0;
+  background:#f5edf6;
+  border-radius:50%;
+  width:36px;
+  height:36px;
+  font-size:20px;
+}
+
+.shelf-list{
+  display:grid;
+  gap:10px;
+}
+
+.shelf-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:#fff7fb;
+  border:1px solid var(--border);
+  padding:10px;
+  border-radius:14px;
+}
+
+.shelf-row img{
+  width:48px;
+  height:65px;
+  object-fit:cover;
+  border-radius:7px;
+}
+
+.shelf-row .grow{
+  flex:1;
+}
+
+footer{
+  text-align:center;
+  padding:30px 18px;
+  color:var(--muted);
+}
+
+.hidden{
+  display:none!important;
+}
+
+@media(max-width:760px){
+  .nav{
+    align-items:flex-start;
+    flex-wrap:wrap;
+  }
+
+  .navlinks{
+    width:100%;
+    justify-content:flex-start;
+    overflow-x:auto;
+    flex-wrap:nowrap;
+  }
+
+  .hero{
+    padding:40px 18px;
+  }
+
+  .book-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .cover,
+  .cover-placeholder{
+    height:220px;
+  }
+
+  .profile-box{
+    align-items:flex-start;
+  }
+}
+
+@media(max-width:430px){
+  .book-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+  }
+
+  .book-info{
+    padding:10px;
+  }
+
+  .cover,
+  .cover-placeholder{
+    height:190px;
+  }
+
+  .card-actions{
+    flex-direction:column;
+  }
+
+  .card-actions .btn{
+    width:100%;
+  }
+}
 </style>
 </head>
+
 <body>
-<header><div class="top">
-<div class="logo">💗 Guilty <span>Pages</span></div>
-<nav id="nav">
-<button data-tab="home">Home</button><button data-tab="discover">Discover</button><button data-tab="community">Community</button><button data-tab="tbr">TBR</button><button data-tab="dnf">DNF</button><button data-tab="reread">Rereads</button>
-</nav><button id="profileBtn" class="profile">Sign in</button>
-</div></header>
+
+<header>
+  <div class="nav">
+    <div class="logo">Guilty <span>Pages</span></div>
+
+    <div class="navlinks">
+      <button data-page="home" class="active">Home</button>
+      <button data-page="discover">Discover</button>
+      <button data-page="community">Community</button>
+      <button data-page="tbr">TBR</button>
+      <button data-page="dnf">DNF</button>
+      <button data-page="rereads">Rereads</button>
+      <button data-page="profile">Profile</button>
+    </div>
+
+    <button class="btn auth-btn" id="authButton">Sign in</button>
+  </div>
+</header>
 
 <main>
-<section id="home" class="tab">
-<div class="hero"><div class="eyebrow">Your unapologetic book community</div><h1>Read it.<br>Rate it.<br>Gossip about it.</h1><p>Track the books you love, abandon the ones you don't, discover what readers are talking about, and confess your most questionable reading choices.</p>
-<div class="search"><input id="searchInput" placeholder="Search a book, author, or guilty pleasure…"><button id="searchBtn">Find my next read</button></div>
-<div class="genreBar" id="genreBar">
-<button class="genreChip active" data-genre="">All genres</button>
-<button class="genreChip" data-genre="dark romance">🖤 Dark romance</button>
-<button class="genreChip" data-genre="close proximity">💗 Close proximity</button>
-<button class="genreChip" data-genre="enemies to lovers">⚔️ Enemies to lovers</button>
-<button class="genreChip" data-genre="work romance">💼 Work romance</button>
-<button class="genreChip" data-genre="sports romance">🏆 Sports romance</button>
-<button class="genreChip" data-genre="fantasy romance">✨ Fantasy romance</button>
-<button class="genreChip" data-genre="romantasy">🧚 Romantasy</button>
-<button class="genreChip" data-genre="historical romance">🌹 Historical romance</button>
-<button class="genreChip" data-genre="thriller">🔪 Thriller</button>
-<button class="genreChip" data-genre="mystery">🔎 Mystery</button>
-<button class="genreChip" data-genre="fantasy">🐉 Fantasy</button>
-<button class="genreChip" data-genre="young adult">🌙 Young adult</button>
-</div></div>
 
-<div class="section"><div class="sectionHead"><div><h2>✨ Welcome to Guilty Pages</h2><p class="muted">A book space for TBR chaos, DNF confessions and reader gossip.</p></div></div>
-<div class="featureGrid"><div class="feature"><h3>💗 Track everything</h3><div class="muted">Build TBR, DNF and reread shelves and decide who gets to see them.</div></div><div class="feature"><h3>⭐ Rate & react</h3><div class="muted">Give books your star rating and tell other readers what you really thought.</div></div><div class="feature"><h3>💬 Talk about it</h3><div class="muted">Comment on books or join member discussion rooms.</div></div></div></div>
+<!-- HOME -->
+<section id="home" class="page active">
 
-<div class="section"><div class="sectionHead"><div><h2>🔥 Trending with readers</h2><p class="muted">The books getting the most Guilty Pages activity.</p></div></div><div id="homeRanking"></div></div>
-<div class="section"><div class="sectionHead"><div><h2>📚 Recommended reads</h2><p class="muted">Search below and add books to your shelves.</p></div></div><div id="homeBooks" class="grid"><div class="empty">Your book discoveries will appear here.</div></div></div>
+  <div class="hero">
+    <h1>Read it. Rate it. Gossip about it.</h1>
+    <p>Your unapologetic book community for the books you love, hate, hide and can't stop talking about.</p>
+
+    <div class="search-wrap">
+      <input id="homeSearch" placeholder="Search for your next guilty pleasure...">
+      <button onclick="searchFromHome()">⌕</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h2>Find your next obsession</h2>
+    </div>
+
+    <div class="genre-grid">
+      <button class="genre" onclick="searchGenre('Dark Romance')">🖤 Dark Romance</button>
+      <button class="genre" onclick="searchGenre('Close Proximity')">🔥 Close Proximity</button>
+      <button class="genre" onclick="searchGenre('Enemies to Lovers')">⚔️ Enemies to Lovers</button>
+      <button class="genre" onclick="searchGenre('Work Romance')">💼 Work Romance</button>
+      <button class="genre" onclick="searchGenre('Sports Romance')">🏆 Sports Romance</button>
+      <button class="genre" onclick="searchGenre('Fantasy Romance')">🧚 Fantasy Romance</button>
+      <button class="genre" onclick="searchGenre('Romantasy')">✨ Romantasy</button>
+      <button class="genre" onclick="searchGenre('Historical Romance')">👑 Historical Romance</button>
+      <button class="genre" onclick="searchGenre('Thriller')">🔪 Thriller</button>
+      <button class="genre" onclick="searchGenre('Mystery')">🕵️ Mystery</button>
+      <button class="genre" onclick="searchGenre('Fantasy')">🐉 Fantasy</button>
+      <button class="genre" onclick="searchGenre('Young Adult')">💗 Young Adult</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h2>What's getting attention</h2>
+      <button class="btn" onclick="showPage('discover')">Discover more →</button>
+    </div>
+    <div id="homeBooks" class="book-grid"></div>
+  </div>
+
 </section>
 
-<section id="discover" class="tab hidden">
-<div class="section">
-<div class="sectionHead"><div><h2>📚 Discover books</h2><p class="muted">Real book data and covers from Open Library.</p></div></div>
-<div id="discoverGenres" class="genreBar" style="margin:0 0 15px">
-<button class="genreChip" style="background:#ffe1f0;color:#bd286f" data-genre="dark romance">🖤 Dark romance</button>
-<button class="genreChip" style="background:#ffe1f0;color:#bd286f" data-genre="close proximity">💗 Close proximity</button>
-<button class="genreChip" style="background:#ffe1f0;color:#bd286f" data-genre="enemies to lovers">⚔️ Enemies to lovers</button>
-<button class="genreChip" style="background:#ffe1f0;color:#bd286f" data-genre="work romance">💼 Work romance</button>
-<button class="genreChip" style="background:#ffe1f0;color:#bd286f" data-genre="sports romance">🏆 Sports romance</button>
-<button class="genreChip" style="background:#eee5ff;color:#7144b6" data-genre="romantasy">🧚 Romantasy</button>
-<button class="genreChip" style="background:#eee5ff;color:#7144b6" data-genre="thriller">🔪 Thriller</button>
-<button class="genreChip" style="background:#eee5ff;color:#7144b6" data-genre="fantasy">🐉 Fantasy</button>
-</div>
-<div id="searchResults" class="grid"><div class="empty">Search above for books or choose a genre.</div></div>
-</div></section>
 
-<section id="community" class="tab hidden">
-<div class="section"><div class="sectionHead"><div><h2>💬 Community</h2><p class="muted">Talk about books, tropes, characters, unpopular opinions and everything in between.</p></div><button class="pill pink" id="newRoomBtn">＋ New room</button></div><div id="rooms"></div></div>
+<!-- DISCOVER -->
+<section id="discover" class="page">
+
+  <div class="section-head">
+    <div>
+      <h2>Discover</h2>
+      <div class="muted">Search books, find your next read and decide where it belongs.</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input id="discoverSearch" placeholder="Search books, authors or genres...">
+    <button class="btn primary" onclick="performSearch()">Search</button>
+  </div>
+
+  <div id="searchStatus" class="muted"></div>
+  <br>
+  <div id="searchResults" class="book-grid"></div>
+
 </section>
 
-<section id="tbr" class="tab hidden"><div class="section"><div class="shelfHeader"><h2>💗 My TBR</h2><span id="tbrPrivacy" class="privateTag">Private</span></div><div id="tbrList" class="grid"></div></div></section>
-<section id="dnf" class="tab hidden"><div class="section"><div class="shelfHeader"><h2>💀 My DNF</h2><span id="dnfPrivacy" class="privateTag">Private</span></div><div id="dnfList" class="grid"></div></div></section>
-<section id="reread" class="tab hidden"><div class="section"><div class="shelfHeader"><h2>🔁 My Rereads</h2><span id="rereadPrivacy" class="privateTag">Private</span></div><div id="rereadList" class="grid"></div></div></section>
 
-<section id="profile" class="tab hidden"><div class="section"><h2>✨ My Profile</h2><div id="profileArea"></div></div></section>
-<section id="auth" class="tab hidden"><div class="section"><h2>💌 Join Guilty Pages</h2><p class="muted">Create an account to save shelves, rate books and join discussions.</p>
-<div class="field"><label>Email</label><input id="email" type="email"></div><div class="field"><label>Password</label><input id="password" type="password"></div><div class="field"><label>Display name</label><input id="displayName" placeholder="Your bookish name"></div>
-<div class="actions"><button class="pill pink" id="signInBtn">Sign in</button><button class="pill" id="signUpBtn">Create account</button></div></div></section>
+<!-- COMMUNITY -->
+<section id="community" class="page">
 
-<section id="discussion" class="tab hidden"><div class="section"><h2 id="discussionTitle">💬 Book discussion</h2>
-<div id="bookRating"></div><div class="field"><label>Post type</label><select id="commentType"><option value="discussion">Discussion</option><option value="confession">Confession</option><option value="recommendation">Recommendation</option><option value="unpopular_opinion">Unpopular opinion</option><option value="meme">Meme</option><option value="spoiler">Spoiler</option></select></div>
-<div class="field"><textarea id="commentText" rows="4" placeholder="Say what you really think…"></textarea></div><button class="pill pink" id="postCommentBtn">Post comment</button><div id="comments"></div></div></section>
+  <div class="section-head">
+    <div>
+      <h2>Community</h2>
+      <div class="muted">Talk about books. Spill the tea. Find readers who get it.</div>
+    </div>
+
+    <button class="btn primary" onclick="openCreateRoom()">+ Create Gossip Room</button>
+  </div>
+
+  <div class="notice">
+    💗 Gossip Rooms are designed as a membership feature. The site is structured so paid membership/payment can be connected later without rebuilding the community.
+  </div>
+
+  <div id="rooms" class="room-grid"></div>
+
+</section>
+
+
+<!-- TBR -->
+<section id="tbr" class="page">
+
+  <div class="section-head">
+    <div>
+      <h2>My TBR</h2>
+      <div class="muted">Your next reads, in the order you want to read them.</div>
+    </div>
+  </div>
+
+  <div class="notice">
+    Drag the books using the ↑ and ↓ buttons to decide what you read next.
+  </div>
+
+  <div id="tbrList"></div>
+
+</section>
+
+
+<!-- DNF -->
+<section id="dnf" class="page">
+
+  <div class="section-head">
+    <div>
+      <h2>DNF</h2>
+      <div class="muted">Books you decided weren't worth finishing.</div>
+    </div>
+  </div>
+
+  <div id="dnfGrid" class="book-grid"></div>
+
+</section>
+
+
+<!-- REREADS -->
+<section id="rereads" class="page">
+
+  <div class="section-head">
+    <div>
+      <h2>Rereads</h2>
+      <div class="muted">The books you couldn't stay away from.</div>
+    </div>
+  </div>
+
+  <div id="rereadGrid" class="book-grid"></div>
+
+</section>
+
+
+<!-- PROFILE -->
+<section id="profile" class="page">
+
+  <div id="profileContent"></div>
+
+</section>
+
 </main>
 
-<div id="modal" class="modal hidden"><div class="modalCard"><button class="close" id="closeModal">×</button><div id="modalContent"></div></div></div>
-<div id="toast" class="toast hidden"></div>
+<footer>
+  <strong>Guilty Pages</strong> · Your books. Your shelves. Your guilty pleasures. 💗
+</footer>
+
+
+<!-- BOOK MODAL -->
+<div id="bookModal" class="modal-bg">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modalTitle">Book</h2>
+      <button class="close" onclick="closeModal('bookModal')">×</button>
+    </div>
+
+    <div id="bookModalBody"></div>
+  </div>
+</div>
+
+
+<!-- AUTH MODAL -->
+<div id="authModal" class="modal-bg">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="authTitle">Welcome to Guilty Pages</h2>
+      <button class="close" onclick="closeModal('authModal')">×</button>
+    </div>
+
+    <div class="tabs">
+      <button id="loginTab" class="active" onclick="switchAuth('login')">Sign in</button>
+      <button id="signupTab" onclick="switchAuth('signup')">Create account</button>
+    </div>
+
+    <form id="authForm" class="form" onsubmit="handleAuth(event)">
+      <input id="authEmail" type="email" required placeholder="Email">
+      <input id="authPassword" type="password" required minlength="6" placeholder="Password">
+
+      <input id="authUsername"
+             class="hidden"
+             placeholder="Username">
+
+      <input id="authDisplayName"
+             class="hidden"
+             placeholder="Display name">
+
+      <button class="btn primary" id="authSubmit">Sign in</button>
+
+      <div id="authMessage" class="muted"></div>
+    </form>
+  </div>
+</div>
+
+
+<!-- CREATE ROOM -->
+<div id="roomModal" class="modal-bg">
+  <div class="modal">
+
+    <div class="modal-head">
+      <h2>Create Gossip Room</h2>
+      <button class="close" onclick="closeModal('roomModal')">×</button>
+    </div>
+
+    <div class="notice">
+      🔒 Rooms are intended to be available to Guilty Pages members.
+    </div>
+
+    <form class="form" onsubmit="createRoom(event)">
+      <input id="roomName" required placeholder="Room name">
+      <textarea id="roomDescription" placeholder="What are we gossiping about?"></textarea>
+
+      <button class="btn primary">Create Room</button>
+    </form>
+
+  </div>
+</div>
+
 
 <script>
-const SUPABASE_URL="https://wmpovzrwdvvmabxrcwtp.supabase.co";
-const SUPABASE_KEY="sb_publishable_m-YSGRdUnH0eXTBVC5r3sw_l6oLwWSz";
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const state={name:"",profile:null,shelves:{tbr:[],dnf:[],reread:[]},privacy:{tbr:false,dnf:false,reread:false}};
-const books=new Map();let discussionKey="";
+/* =========================================================
+   GUILTY PAGES
+   ========================================================= */
 
-const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-const key=b=>b.key||b.olid||b.isbn?.[0]||`${b.title}-${b.author_name?.[0]||""}`;
-const normalize=b=>({key:key(b),title:b.title||"Untitled",author:(b.author_name||[]).join(", "),cover:b.cover_i?`https://covers.openlibrary.org/b/id/${b.cover_i}-M.jpg`:(b.cover||"")});
-function toast(m){let x=document.getElementById("toast");x.textContent=m;x.classList.remove("hidden");setTimeout(()=>x.classList.add("hidden"),2200)}
-function showTab(id){document.querySelectorAll(".tab").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.tab===id));if(id==="community")loadRooms();if(id==="home")loadRanking()}
-function cover(b){return b.cover?`<img class="cover" src="${esc(b.cover)}" alt="${esc(b.title)}">`:`<div class="cover"></div>`}
+const SUPABASE_URL = "https://wmpovzrwdvvmabxrcwtp.supabase.co";
 
-function renderBook(b,buttons=true){
- let d=normalize(b);books.set(d.key,d);
- return `<article class="book">${cover(d)}<h3>${esc(d.title)}</h3><div class="author">${esc(d.author||"Unknown author")}</div>
- <div class="rating"><span class="stars">★★★★★</span><button data-rate="${esc(d.key)}">Rate</button></div>
- <div class="actions">${buttons?`<button class="pill pink" data-add="tbr" data-key="${esc(d.key)}">💗 TBR</button><button class="pill" data-add="dnf" data-key="${esc(d.key)}">💀 DNF</button><button class="pill" data-add="reread" data-key="${esc(d.key)}">🔁 Reread</button>`:""}<button class="pill dark" data-discuss="${esc(d.key)}">💬 Talk</button></div></article>`;
+const SUPABASE_KEY =
+"sb_publishable_m-YSGRdUnH0eXTBVC5r3sw_l6oLwWSz";
+
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+
+/* =========================================================
+   LOCAL STATE
+   ========================================================= */
+
+let currentUser = null;
+let authMode = "login";
+let searchBooks = [];
+let selectedBook = null;
+
+let localData = JSON.parse(
+  localStorage.getItem("guiltyPagesData") ||
+  '{"tbr":[],"dnf":[],"rereads":[],"ratings":{},"comments":[],"rooms":[]}'
+);
+
+function saveLocal(){
+  localStorage.setItem(
+    "guiltyPagesData",
+    JSON.stringify(localData)
+  );
 }
-async function searchGenre(genre){
- let q=genre.trim();
- if(!q){showTab("discover");return}
- document.getElementById("searchInput").value=q;
- let results=document.getElementById("searchResults");results.innerHTML="<div class='empty'>Finding "+esc(q)+" books…</div>";
- try{
-  let r=await fetch("https://openlibrary.org/search.json?q="+encodeURIComponent(q)+"&limit=12"),j=await r.json();
-  let html=j.docs?.length?j.docs.map(renderBook).join(""):"<div class='empty'>No books found for this genre yet. Try a broader search.</div>";
-  results.innerHTML=html;document.getElementById("homeBooks").innerHTML=j.docs?.slice(0,6).map(renderBook).join("")||"<div class='empty'>No books found.</div>";showTab("discover");
- }catch(e){results.innerHTML="<div class='empty'>Genre search failed. Try again.</div>"}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+document.querySelectorAll("[data-page]").forEach(button=>{
+  button.addEventListener("click",()=>{
+    showPage(button.dataset.page);
+  });
+});
+
+function showPage(page){
+
+  document.querySelectorAll(".page").forEach(p=>{
+    p.classList.remove("active");
+  });
+
+  const target=document.getElementById(page);
+
+  if(target){
+    target.classList.add("active");
+  }
+
+  document.querySelectorAll("[data-page]").forEach(b=>{
+    b.classList.toggle(
+      "active",
+      b.dataset.page===page
+    );
+  });
+
+  window.scrollTo({top:0,behavior:"smooth"});
+
+  if(page==="tbr") renderTBR();
+  if(page==="dnf") renderShelf("dnf");
+  if(page==="rereads") renderShelf("rereads");
+  if(page==="profile") renderProfile();
+  if(page==="community") renderRooms();
 }
-async function searchBooks(){
- let q=document.getElementById("searchInput").value.trim();if(!q)return;
- let results=document.getElementById("searchResults");results.innerHTML="<div class='empty'>Finding books…</div>";
- try{let r=await fetch("https://openlibrary.org/search.json?q="+encodeURIComponent(q)+"&limit=12"),j=await r.json();let html=j.docs?.length?j.docs.map(renderBook).join(""):"<div class='empty'>No books found.</div>";results.innerHTML=html;document.getElementById("homeBooks").innerHTML=j.docs?.slice(0,6).map(renderBook).join("")||"<div class='empty'>No books found.</div>";showTab("discover")}catch(e){results.innerHTML="<div class='empty'>Search failed. Try again.</div>"}}
-async function getUser(){return (await db.auth.getUser()).data.user}
-function updateProfileButton(){document.getElementById("profileBtn").textContent=state.name?`💗 ${state.name}`:"Sign in"}
-async function loadProfile(){
- let u=await getUser();if(!u){state.name="";state.profile=null;updateProfileButton();renderProfile();return}
- let {data}=await db.from("profiles").select("*").eq("id",u.id).maybeSingle();
- state.profile=data;state.name=data?.display_name||data?.username||u.email.split("@")[0];updateProfileButton();renderProfile();
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+document.getElementById("homeSearch").addEventListener(
+  "keydown",
+  e=>{
+    if(e.key==="Enter") searchFromHome();
+  }
+);
+
+document.getElementById("discoverSearch").addEventListener(
+  "keydown",
+  e=>{
+    if(e.key==="Enter") performSearch();
+  }
+);
+
+function searchFromHome(){
+
+  const q=document.getElementById("homeSearch").value.trim();
+
+  if(!q)return;
+
+  document.getElementById("discoverSearch").value=q;
+
+  showPage("discover");
+
+  performSearch();
 }
+
+function searchGenre(genre){
+
+  document.getElementById("discoverSearch").value=genre;
+
+  showPage("discover");
+
+  performSearch();
+}
+
+
+/* =========================================================
+   GOOGLE BOOKS
+   ========================================================= */
+
+async function performSearch(){
+
+  const q=document.getElementById("discoverSearch").value.trim();
+
+  if(!q)return;
+
+  const status=document.getElementById("searchStatus");
+  const results=document.getElementById("searchResults");
+
+  status.textContent="Searching Google Books…";
+  results.innerHTML="";
+
+  try{
+
+    const url =
+      "https://www.googleapis.com/books/v1/volumes" +
+      "?q="+encodeURIComponent(q)+
+      "&maxResults=30"+
+      "&printType=books";
+
+    const response=await fetch(url);
+
+    if(!response.ok){
+      throw new Error("Search failed");
+    }
+
+    const data=await response.json();
+
+    searchBooks=(data.items||[]).map(normalizeGoogleBook);
+
+    status.textContent =
+      searchBooks.length
+      ? `${searchBooks.length} books found`
+      : "No books found.";
+
+    renderBooks(searchBooks,results);
+
+  }catch(error){
+
+    console.error(error);
+
+    status.textContent=
+      "We couldn't search right now. Please try again.";
+
+  }
+}
+
+
+function normalizeGoogleBook(item){
+
+  const v=item.volumeInfo||{};
+
+  let cover =
+    v.imageLinks?.thumbnail ||
+    v.imageLinks?.smallThumbnail ||
+    "";
+
+  cover=cover.replace("http://","https://");
+
+  return {
+    id:item.id,
+    title:v.title||"Untitled",
+    authors:v.authors||["Unknown author"],
+    description:v.description||"",
+    categories:v.categories||[],
+    publishedDate:v.publishedDate||"",
+    publisher:v.publisher||"",
+    pageCount:v.pageCount||"",
+    cover,
+    isbn:
+      (v.industryIdentifiers||[]).find(
+        x=>x.type==="ISBN_13"
+      )?.identifier ||
+      (v.industryIdentifiers||[])[0]?.identifier ||
+      "",
+    preview:v.previewLink||"",
+    info:v.infoLink||"",
+    sale:v.saleInfo?.buyLink||""
+  };
+}
+
+
+/* =========================================================
+   BOOK DISPLAY
+   ========================================================= */
+
+function renderBooks(books,container){
+
+  if(!books.length){
+
+    container.innerHTML=
+      `<div class="empty">No books found yet. Try another search.</div>`;
+
+    return;
+  }
+
+  container.innerHTML=books.map(bookCardHTML).join("");
+}
+
+
+function bookCardHTML(book){
+
+  const rating =
+    getAverageRating(book.id);
+
+  const cover=book.cover
+    ? `<img class="cover"
+            src="${escapeHTML(book.cover)}"
+            alt="${escapeHTML(book.title)} cover"
+            onerror="this.outerHTML='<div class=&quot;cover-placeholder&quot;>${escapeHTML(book.title)}</div>'">`
+    : `<div class="cover-placeholder">
+         ${escapeHTML(book.title)}
+       </div>`;
+
+  return `
+    <article class="book-card">
+
+      ${cover}
+
+      <div class="book-info">
+
+        <div class="book-title">
+          ${escapeHTML(book.title)}
+        </div>
+
+        <div class="author">
+          ${escapeHTML(book.authors.join(", "))}
+        </div>
+
+        ${
+          rating.count
+          ? `<div class="rating">
+              ★ ${rating.average.toFixed(1)}
+              (${rating.count})
+             </div>`
+          : `<div class="muted">Not rated yet</div>`
+        }
+
+        <div class="card-actions">
+
+          <button class="btn small"
+            onclick='openBook(${JSON.stringify(book).replace(/'/g,"&#39;")})'>
+            View
+          </button>
+
+          <button class="btn small"
+            onclick='addToShelf("tbr",${JSON.stringify(book).replace(/'/g,"&#39;")})'>
+            + TBR
+          </button>
+
+        </div>
+
+      </div>
+    </article>
+  `;
+}
+
+
+/* =========================================================
+   BOOK MODAL
+   ========================================================= */
+
+function openBook(book){
+
+  selectedBook=book;
+
+  const rating=getAverageRating(book.id);
+
+  document.getElementById("modalTitle").textContent=book.title;
+
+  document.getElementById("bookModalBody").innerHTML=`
+
+    <div style="display:grid;grid-template-columns:130px 1fr;gap:18px;">
+
+      ${
+        book.cover
+        ? `<img src="${escapeHTML(book.cover)}"
+                style="width:130px;height:190px;object-fit:cover;border-radius:12px;">`
+        : `<div class="cover-placeholder"
+                style="height:190px;">
+              ${escapeHTML(book.title)}
+           </div>`
+      }
+
+      <div>
+
+        <h3 style="margin-top:0;">
+          ${escapeHTML(book.title)}
+        </h3>
+
+        <div class="muted">
+          ${escapeHTML(book.authors.join(", "))}
+        </div>
+
+        ${
+          book.publishedDate
+          ? `<p class="muted">
+              Published ${escapeHTML(book.publishedDate)}
+             </p>`
+          :""
+        }
+
+        ${
+          rating.count
+          ? `<p class="rating">
+              ★ ${rating.average.toFixed(1)}
+              from ${rating.count} Guilty Pages rating${rating.count===1?"":"s"}
+             </p>`
+          :""
+        }
+
+      </div>
+
+    </div>
+
+    ${
+      book.description
+      ? `<div class="section">
+          <h3>About the book</h3>
+          <p>${stripHTML(book.description)}</p>
+         </div>`
+      :""
+    }
+
+    <div class="section">
+
+      <h3>Put it somewhere 👀</h3>
+
+      <div class="toolbar">
+
+        <button class="btn primary"
+          onclick="addToShelf('tbr',selectedBook);closeModal('bookModal')">
+          TBR
+        </button>
+
+        <button class="btn"
+          onclick="addToShelf('dnf',selectedBook);closeModal('bookModal')">
+          DNF
+        </button>
+
+        <button class="btn"
+          onclick="addToShelf('rereads',selectedBook);closeModal('bookModal')">
+          Rereads
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="section">
+
+      <h3>Rate this book</h3>
+
+      <div class="stars" id="ratingStars">
+        ${[1,2,3,4,5].map(n=>`
+          <button
+            class="star ${getUserRating(book.id)>=n?"on":""}"
+            onclick="rateBook('${escapeHTML(book.id)}',${n})">
+            ★
+          </button>
+        `).join("")}
+      </div>
+
+    </div>
+
+    <div class="section">
+
+      <h3>Kindle / Store</h3>
+
+      <div class="toolbar">
+
+        ${
+          book.sale
+          ? `<a class="btn primary"
+               href="${escapeHTML(book.sale)}"
+               target="_blank"
+               rel="noopener">
+              Buy / Store
+             </a>`
+          :""
+        }
+
+        ${
+          book.preview
+          ? `<a class="btn"
+               href="${escapeHTML(book.preview)}"
+               target="_blank"
+               rel="noopener">
+              Preview
+             </a>`
+          :""
+        }
+
+        <a class="btn"
+           target="_blank"
+           rel="noopener"
+           href="https://www.amazon.com/s?k=${encodeURIComponent(book.title+" "+book.authors.join(" "))}">
+          Search Kindle
+        </a>
+
+      </div>
+
+    </div>
+
+    <div class="section">
+
+      <h3>Book Gossip 💋</h3>
+
+      <div class="notice">
+        This is where the book's gossip room will live.
+        Gossip Rooms are structured as a membership feature.
+      </div>
+
+      <button class="btn primary"
+        onclick="openBookRoom('${escapeHTML(book.id)}')">
+        Enter Gossip Room
+      </button>
+
+    </div>
+
+    <div class="section">
+
+      <h3>Comments</h3>
+
+      <div id="bookComments">
+        ${renderComments(book.id)}
+      </div>
+
+      <div class="form" style="margin-top:12px;">
+        <textarea
+          id="newComment"
+          placeholder="Spill the tea…"></textarea>
+
+        <button class="btn primary"
+          onclick="addComment('${escapeHTML(book.id)}')">
+          Post comment
+        </button>
+      </div>
+
+    </div>
+  `;
+
+  document.getElementById("bookModal").classList.add("show");
+}
+
+
+function closeModal(id){
+  document.getElementById(id).classList.remove("show");
+}
+
+
+/* =========================================================
+   SHELVES
+   ========================================================= */
+
+function addToShelf(shelf,book){
+
+  if(!book)return;
+
+  if(!localData[shelf]){
+    localData[shelf]=[];
+  }
+
+  const exists=localData[shelf].some(
+    b=>b.id===book.id
+  );
+
+  if(!exists){
+
+    localData[shelf].push({
+      ...book,
+      addedAt:Date.now()
+    });
+
+    saveLocal();
+  }
+
+  renderAllShelves();
+
+  alert(
+    `"${book.title}" added to ${shelf==="tbr"?"your TBR":shelf}.`
+  );
+}
+
+
+function removeFromShelf(shelf,id){
+
+  localData[shelf]=
+    localData[shelf].filter(
+      b=>b.id!==id
+    );
+
+  saveLocal();
+
+  renderAllShelves();
+}
+
+
+function renderAllShelves(){
+
+  renderTBR();
+  renderShelf("dnf");
+  renderShelf("rereads");
+}
+
+
+function renderTBR(){
+
+  const box=document.getElementById("tbrList");
+
+  const books=localData.tbr||[];
+
+  if(!books.length){
+
+    box.innerHTML=
+      `<div class="empty">
+        Your TBR is empty. Go find something dangerously tempting. 💗
+       </div>`;
+
+    return;
+  }
+
+  box.innerHTML=`
+
+    <div class="shelf-list">
+
+      ${books.map((book,index)=>`
+
+        <div class="shelf-row">
+
+          ${
+            book.cover
+            ? `<img src="${escapeHTML(book.cover)}">`
+            : `<div class="cover-placeholder"
+                    style="width:48px;height:65px;padding:4px;font-size:10px;">
+                 ${escapeHTML(book.title)}
+               </div>`
+          }
+
+          <div class="grow">
+
+            <strong>${escapeHTML(book.title)}</strong>
+
+            <div class="muted">
+              ${escapeHTML(book.authors.join(", "))}
+            </div>
+
+            <div class="muted">
+              Next-read position: ${index+1}
+            </div>
+
+          </div>
+
+          <button class="btn small"
+            onclick="moveTBR(${index},-1)"
+            ${index===0?"disabled":""}>
+            ↑
+          </button>
+
+          <button class="btn small"
+            onclick="moveTBR(${index},1)"
+            ${index===books.length-1?"disabled":""}>
+            ↓
+          </button>
+
+          <button class="btn small"
+            onclick='openBook(${JSON.stringify(book).replace(/'/g,"&#39;")})'>
+            View
+          </button>
+
+          <button class="btn small danger"
+            onclick="removeFromShelf('tbr','${escapeHTML(book.id)}')">
+            ×
+          </button>
+
+        </div>
+
+      `).join("")}
+
+    </div>
+  `;
+}
+
+
+function moveTBR(index,direction){
+
+  const newIndex=index+direction;
+
+  if(newIndex<0 ||
+     newIndex>=localData.tbr.length)return;
+
+  const temp=localData.tbr[index];
+
+  localData.tbr[index]=localData.tbr[newIndex];
+  localData.tbr[newIndex]=temp;
+
+  saveLocal();
+
+  renderTBR();
+}
+
+
+function renderShelf(shelf){
+
+  const id =
+    shelf==="dnf"
+    ? "dnfGrid"
+    : "rereadGrid";
+
+  const box=document.getElementById(id);
+
+  const books=localData[shelf]||[];
+
+  if(!books.length){
+
+    box.innerHTML=
+      `<div class="empty">
+        ${
+          shelf==="dnf"
+          ? "Nothing DNF'd yet."
+          : "No rereads yet."
+        }
+       </div>`;
+
+    return;
+  }
+
+  renderBooks(books,box);
+
+  box.querySelectorAll(".book-card").forEach(
+    (card,index)=>{
+
+      const actions=card.querySelector(".card-actions");
+
+      if(actions){
+
+        const remove=document.createElement("button");
+
+        remove.className="btn small danger";
+
+        remove.textContent="Remove";
+
+        remove.onclick=()=>{
+          removeFromShelf(shelf,books[index].id);
+        };
+
+        actions.appendChild(remove);
+      }
+    }
+  );
+}
+
+
+/* =========================================================
+   RATINGS
+   ========================================================= */
+
+function getUserRating(bookId){
+
+  return Number(
+    localData.ratings?.[bookId]?.user || 0
+  );
+}
+
+
+function rateBook(bookId,rating){
+
+  if(!localData.ratings){
+    localData.ratings={};
+  }
+
+  if(!localData.ratings[bookId]){
+    localData.ratings[bookId]={
+      ratings:[],
+      user:0
+    };
+  }
+
+  localData.ratings[bookId].user=rating;
+
+  if(!localData.ratings[bookId].ratings){
+    localData.ratings[bookId].ratings=[];
+  }
+
+  const username =
+    currentUser?.email ||
+    "You";
+
+  const existing=
+    localData.ratings[bookId].ratings.find(
+      r=>r.user===username
+    );
+
+  if(existing){
+    existing.rating=rating;
+  }else{
+    localData.ratings[bookId].ratings.push({
+      user:username,
+      rating
+    });
+  }
+
+  saveLocal();
+
+  if(selectedBook){
+    openBook(selectedBook);
+  }
+}
+
+
+function getAverageRating(bookId){
+
+  const item=localData.ratings?.[bookId];
+
+  if(!item || !item.ratings?.length){
+    return {
+      average:0,
+      count:0
+    };
+  }
+
+  const total=item.ratings.reduce(
+    (sum,r)=>sum+Number(r.rating),
+    0
+  );
+
+  return {
+    average:total/item.ratings.length,
+    count:item.ratings.length
+  };
+}
+
+
+/* =========================================================
+   COMMENTS
+   ========================================================= */
+
+function renderComments(bookId){
+
+  const comments=
+    (localData.comments||[])
+    .filter(c=>c.bookId===bookId);
+
+  if(!comments.length){
+    return `<div class="muted">
+      No gossip yet. Be the first to spill it.
+    </div>`;
+  }
+
+  return comments.map(c=>`
+
+    <div class="comment">
+
+      <strong>
+        ${escapeHTML(c.user)}
+      </strong>
+
+      <div>
+        ${escapeHTML(c.text)}
+      </div>
+
+    </div>
+
+  `).join("");
+}
+
+
+function addComment(bookId){
+
+  const input=document.getElementById("newComment");
+
+  if(!input)return;
+
+  const text=input.value.trim();
+
+  if(!text)return;
+
+  if(!localData.comments){
+    localData.comments=[];
+  }
+
+  localData.comments.push({
+    id:Date.now().toString(),
+    bookId,
+    user:currentUser?.email||"Anonymous reader",
+    text,
+    createdAt:Date.now()
+  });
+
+  saveLocal();
+
+  input.value="";
+
+  document.getElementById("bookComments").innerHTML=
+    renderComments(bookId);
+}
+
+
+/* =========================================================
+   ROOMS
+   ========================================================= */
+
+function openCreateRoom(){
+
+  document.getElementById("roomModal")
+    .classList.add("show");
+}
+
+
+function createRoom(event){
+
+  event.preventDefault();
+
+  const name=
+    document.getElementById("roomName")
+    .value.trim();
+
+  const description=
+    document.getElementById("roomDescription")
+    .value.trim();
+
+  if(!name)return;
+
+  if(!localData.rooms){
+    localData.rooms=[];
+  }
+
+  localData.rooms.push({
+    id:Date.now().toString(),
+    name,
+    description,
+    creator:currentUser?.email||"Anonymous",
+    members:0,
+    paid:true
+  });
+
+  saveLocal();
+
+  closeModal("roomModal");
+
+  document.getElementById("roomName").value="";
+  document.getElementById("roomDescription").value="";
+
+  renderRooms();
+}
+
+
+function renderRooms(){
+
+  const box=document.getElementById("rooms");
+
+  const rooms=localData.rooms||[];
+
+  const defaultRooms=[
+    {
+      id:"romance",
+      name:"Romance Readers",
+      description:"Enemies, lovers, morally grey men and everything in between.",
+      paid:true
+    },
+    {
+      id:"dark",
+      name:"Dark Romance Gossip",
+      description:"For the books you probably shouldn't admit you're obsessed with.",
+      paid:true
+    },
+    {
+      id:"fantasy",
+      name:"Fantasy & Romantasy",
+      description:"Dragons, kingdoms, magic and questionable decisions.",
+      paid:true
+    },
+    {
+      id:"thriller",
+      name:"Thriller & Mystery",
+      description:"Come discuss the suspects, twists and theories.",
+      paid:true
+    }
+  ];
+
+  const all=[...defaultRooms,...rooms];
+
+  box.innerHTML=all.map(room=>`
+
+    <div class="room-card">
+
+      <span class="lock">🔒 MEMBERS</span>
+
+      <h3>${escapeHTML(room.name)}</h3>
+
+      <p class="muted">
+        ${escapeHTML(room.description||"")}
+      </p>
+
+      <button class="btn primary"
+        onclick="enterRoom('${escapeHTML(room.id)}')">
+        Enter Gossip Room
+      </button>
+
+    </div>
+
+  `).join("");
+}
+
+
+function enterRoom(id){
+
+  alert(
+    "Gossip Rooms are being prepared as the paid membership area. The room structure is already built into Guilty Pages so membership/payment can be connected next."
+  );
+}
+
+
+function openBookRoom(bookId){
+
+  closeModal("bookModal");
+
+  showPage("community");
+
+  alert(
+    "This book's Gossip Room is reserved for the Guilty Pages membership area."
+  );
+}
+
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
 function renderProfile(){
- let a=document.getElementById("profileArea");if(!state.name){a.innerHTML="<div class='empty'>Sign in to create your profile.</div>";return}
- let initial=esc(state.name[0]?.toUpperCase()||"R");
- a.innerHTML=`<div class="profileHero"><div class="avatar">${initial}</div><div><strong>${esc(state.name)}</strong><div class="muted">Guilty Pages member · ${esc(state.profile?.username||"reader")}</div></div></div>
- <div class="field"><label>Display name</label><input id="profileName" value="${esc(state.name)}"></div>
- <h3>🔐 Shelf privacy</h3><p class="muted">Choose which shelves other readers can see.</p>
- ${["tbr","dnf","reread"].map(s=>`<div class="toggle"><span>${s==="tbr"?"💗 TBR":s==="dnf"?"💀 DNF":"🔁 Rereads"}</span><label><input type="checkbox" data-privacy="${s}" ${state.privacy[s]?"checked":""}> Public</label></div>`).join("")}
- <div class="actions"><button class="pill pink" onclick="saveProfile()">Save profile</button><button class="pill" onclick="showTab('tbr')">💗 TBR</button><button class="pill" onclick="showTab('dnf')">💀 DNF</button><button class="pill" onclick="showTab('reread')">🔁 Rereads</button><button class="pill dark" onclick="signOut()">Sign out</button></div>`;
+
+  const box=document.getElementById("profileContent");
+
+  const name=
+    currentUser?.user_metadata?.display_name ||
+    currentUser?.email?.split("@")[0] ||
+    "Guest Reader";
+
+  const username=
+    currentUser?.user_metadata?.username ||
+    name.toLowerCase().replace(/[^a-z0-9]/g,"");
+
+  const total=
+    (localData.tbr?.length||0)+
+    (localData.dnf?.length||0)+
+    (localData.rereads?.length||0);
+
+  box.innerHTML=`
+
+    <div class="profile-box">
+
+      <div class="avatar">
+        ${escapeHTML(name.charAt(0).toUpperCase())}
+      </div>
+
+      <div>
+        <h2 style="margin:0;">
+          ${escapeHTML(name)}
+        </h2>
+
+        <div class="muted">
+          @${escapeHTML(username)}
+        </div>
+
+        <div class="muted">
+          ${currentUser
+            ? "Guilty Pages reader"
+            : "Local demo profile — sign in to create your account"}
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section">
+
+      <h2>My Reading Life</h2>
+
+      <div class="genre-grid">
+
+        <div class="panel">
+          <strong>${localData.tbr?.length||0}</strong>
+          <div class="muted">TBR</div>
+        </div>
+
+        <div class="panel">
+          <strong>${localData.dnf?.length||0}</strong>
+          <div class="muted">DNF</div>
+        </div>
+
+        <div class="panel">
+          <strong>${localData.rereads?.length||0}</strong>
+          <div class="muted">Rereads</div>
+        </div>
+
+        <div class="panel">
+          <strong>${total}</strong>
+          <div class="muted">Books shelved</div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="section">
+
+      <h2>Public Profile</h2>
+
+      <div class="notice">
+        Your profile architecture is designed to support public profiles and public shelves as the community grows.
+      </div>
+
+      <button class="btn primary"
+        onclick="editProfile()">
+        Edit Profile
+      </button>
+
+      ${
+        currentUser
+        ? `<button class="btn danger"
+             onclick="signOut()">
+             Sign out
+           </button>`
+        : `<button class="btn primary"
+             onclick="openAuth()">
+             Create account
+           </button>`
+      }
+
+    </div>
+
+  `;
 }
-async function saveProfile(){
- let u=await getUser();if(!u)return;let name=document.getElementById("profileName").value.trim()||"Reader";
- let {error}=await db.from("profiles").upsert({id:u.id,username:name,display_name:name},{onConflict:"id"});
- if(error)return toast(error.message);
- state.name=name;for(let s of ["tbr","dnf","reread"])state.privacy[s]=!!document.querySelector(`[data-privacy="${s}"]`)?.checked;
- updateProfileButton();renderProfile();updatePrivacyLabels();toast("Profile saved 💗");
+
+
+function editProfile(){
+
+  alert(
+    "Profile editing is ready to connect to the Supabase profiles table. Your username and display name are already part of the account structure."
+  );
 }
-function updatePrivacyLabels(){for(let s of ["tbr","dnf","reread"]){let x=document.getElementById(s+"Privacy");x.textContent=state.privacy[s]?"Public":"Private";x.className=state.privacy[s]?"publicTag":"privateTag"}}
-async function addBook(shelf,k){
- let u=await getUser();if(!u){toast("Sign in first 💌");showTab("auth");return}
- let b=books.get(k);if(!b)return;let d=normalize(b);
- let {error}=await db.from("shelf_books").upsert({user_id:u.id,shelf,book_key:k,book_data:d},{onConflict:"user_id,shelf,book_key"});
- if(error)return toast(error.message);await db.from("book_activity").insert({user_id:u.id,book_key:k,activity_type:shelf});
- await loadShelves();await loadRanking();toast(`${d.title} added to ${shelf.toUpperCase()} 💗`);
+
+
+/* =========================================================
+   AUTH
+   ========================================================= */
+
+document.getElementById("authButton")
+  .addEventListener("click",()=>{
+
+    if(currentUser){
+      showPage("profile");
+    }else{
+      openAuth();
+    }
+
+  });
+
+
+function openAuth(){
+
+  document.getElementById("authModal")
+    .classList.add("show");
+
 }
-async function removeBook(shelf,k){
- let u=await getUser();if(!u)return;let {error}=await db.from("shelf_books").delete().eq("user_id",u.id).eq("shelf",shelf).eq("book_key",k);
- if(error)return toast(error.message);await loadShelves();toast("Removed from shelf");
+
+
+function switchAuth(mode){
+
+  authMode=mode;
+
+  const signup=mode==="signup";
+
+  document
+    .getElementById("loginTab")
+    .classList.toggle("active",!signup);
+
+  document
+    .getElementById("signupTab")
+    .classList.toggle("active",signup);
+
+  document
+    .getElementById("authUsername")
+    .classList.toggle("hidden",!signup);
+
+  document
+    .getElementById("authDisplayName")
+    .classList.toggle("hidden",!signup);
+
+  document.getElementById("authTitle").textContent=
+    signup
+    ? "Create your Guilty Pages account"
+    : "Welcome back";
+
+  document.getElementById("authSubmit").textContent=
+    signup
+    ? "Create account"
+    : "Sign in";
 }
-async function loadShelves(){
- let u=await getUser();if(!u)return;let {data,error}=await db.from("shelf_books").select("*").eq("user_id",u.id).order("created_at",{ascending:false});
- if(error)return toast(error.message);state.shelves={tbr:[],dnf:[],reread:[]};(data||[]).forEach(r=>{books.set(r.book_key,r.book_data);state.shelves[r.shelf].push(r.book_data)});
- ["tbr","dnf","reread"].forEach(s=>{let x=document.getElementById(s+"List");x.innerHTML=state.shelves[s].length?state.shelves[s].map(b=>renderBook(b,false)+`<button class="pill" data-remove="${s}" data-key="${esc(key(b))}">Remove</button>`).join(""):"<div class='empty'>Nothing here yet.</div>"});updatePrivacyLabels();
+
+
+async function handleAuth(event){
+
+  event.preventDefault();
+
+  const email=
+    document.getElementById("authEmail").value.trim();
+
+  const password=
+    document.getElementById("authPassword").value;
+
+  const message=
+    document.getElementById("authMessage");
+
+  message.textContent="Working…";
+
+  try{
+
+    if(authMode==="signup"){
+
+      const username=
+        document.getElementById("authUsername")
+        .value.trim();
+
+      const displayName=
+        document.getElementById("authDisplayName")
+        .value.trim();
+
+      const {data,error}=
+        await db.auth.signUp({
+          email,
+          password,
+          options:{
+            data:{
+              username,
+              display_name:displayName
+            }
+          }
+        });
+
+      if(error)throw error;
+
+      message.textContent=
+        "Account created. Check your email if email confirmation is enabled.";
+
+      if(data.user){
+        currentUser=data.user;
+        updateAuthUI();
+        renderProfile();
+      }
+
+    }else{
+
+      const {data,error}=
+        await db.auth.signInWithPassword({
+          email,
+          password
+        });
+
+      if(error)throw error;
+
+      currentUser=data.user;
+
+      updateAuthUI();
+
+      closeModal("authModal");
+
+      renderProfile();
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    message.textContent=
+      error.message ||
+      "Something went wrong.";
+
+  }
 }
-async function loadRanking(){
- let {data,error}=await db.from("book_activity").select("book_key").order("created_at",{ascending:false}).limit(300),box=document.getElementById("homeRanking");
- if(error){box.innerHTML="<div class='empty'>Ranking unavailable.</div>";return}
- let counts={};(data||[]).forEach(x=>counts[x.book_key]=(counts[x.book_key]||0)+1);let rows=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8);
- box.innerHTML=rows.length?rows.map(([k,n],i)=>{let b=books.get(k)||{};return `<div class="rank"><div class="rankNo">#${i+1}</div>${b.cover?`<img class="rankCover" src="${esc(b.cover)}">`:""}<div><strong>${esc(b.title||k)}</strong><div class="muted">${n} Guilty Pages ${n===1?"activity":"activities"}</div></div></div>`}).join(""):"<div class='empty'>Add books to your shelves and the community ranking will start building.</div>";
+
+
+async function signOut(){
+
+  try{
+    await db.auth.signOut();
+  }catch(e){
+    console.log(e);
+  }
+
+  currentUser=null;
+
+  updateAuthUI();
+
+  renderProfile();
+
 }
-async function signUp(){
- let email=document.getElementById("email").value.trim(),password=document.getElementById("password").value,display=document.getElementById("displayName").value.trim();if(!email||!password)return toast("Enter email and password");
- let {data,error}=await db.auth.signUp({email,password});if(error)return toast(error.message);if(data.user)await db.from("profiles").upsert({id:data.user.id,username:display||email.split("@")[0],display_name:display||email.split("@")[0]},{onConflict:"id"});
- await loadProfile();await loadShelves();showTab("home");toast("Account created 💗");
+
+
+function updateAuthUI(){
+
+  const button=
+    document.getElementById("authButton");
+
+  button.textContent=
+    currentUser
+    ? "Profile"
+    : "Sign in";
 }
-async function signIn(){
- let {error}=await db.auth.signInWithPassword({email:document.getElementById("email").value.trim(),password:document.getElementById("password").value});if(error)return toast(error.message);
- await loadProfile();await loadShelves();showTab("home");toast("Signed in successfully 💗");
+
+
+/* =========================================================
+   SUPABASE SESSION
+   ========================================================= */
+
+async function loadSession(){
+
+  try{
+
+    const {data}=await db.auth.getSession();
+
+    currentUser=data?.session?.user||null;
+
+    updateAuthUI();
+
+  }catch(error){
+
+    console.log(
+      "Supabase session unavailable; local mode remains active.",
+      error
+    );
+
+  }
 }
-async function signOut(){await db.auth.signOut();state.name="";state.profile=null;state.shelves={tbr:[],dnf:[],reread:[]};updateProfileButton();renderProfile();showTab("home");toast("Signed out")}
-async function openDiscussion(k){
- discussionKey=k;let b=books.get(k)||{};document.getElementById("discussionTitle").textContent=`💬 ${b.title||"Book discussion"}`;await loadBookRating();showTab("discussion");await loadComments();
+
+
+db.auth.onAuthStateChange(
+  (_event,session)=>{
+
+    currentUser=session?.user||null;
+
+    updateAuthUI();
+
+    if(
+      document
+      .getElementById("profile")
+      .classList.contains("active")
+    ){
+      renderProfile();
+    }
+
+  }
+);
+
+
+/* =========================================================
+   HOME BOOKS
+   ========================================================= */
+
+async function loadHomeBooks(){
+
+  const box=document.getElementById("homeBooks");
+
+  try{
+
+    const url =
+      "https://www.googleapis.com/books/v1/volumes" +
+      "?q=romance+fantasy"+
+      "&maxResults=8"+
+      "&orderBy=relevance";
+
+    const response=await fetch(url);
+
+    const data=await response.json();
+
+    const books=(data.items||[])
+      .map(normalizeGoogleBook);
+
+    renderBooks(books,box);
+
+  }catch(error){
+
+    box.innerHTML=
+      `<div class="empty">
+        Search Discover to find your next read.
+       </div>`;
+
+  }
 }
-async function loadBookRating(){
- let box=document.getElementById("bookRating");box.innerHTML=`<div class="section" style="margin:12px 0;background:#fff8fc"><strong>⭐ Reader rating</strong><div class="actions"><button class="pill" data-star="1">★ 1</button><button class="pill" data-star="2">★ 2</button><button class="pill" data-star="3">★ 3</button><button class="pill" data-star="4">★ 4</button><button class="pill pink" data-star="5">★ 5</button></div><div id="ratingSummary" class="muted">Rate this book after joining.</div></div>`;
- let {data}=await db.from("book_ratings").select("rating").eq("book_key",discussionKey);if(data?.length){let avg=data.reduce((a,x)=>a+x.rating,0)/data.length;document.getElementById("ratingSummary").textContent=`${avg.toFixed(1)} / 5 from ${data.length} reader${data.length===1?"":"s"}`}
+
+
+/* =========================================================
+   UTILITIES
+   ========================================================= */
+
+function escapeHTML(value){
+
+  return String(value??"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
 }
-async function rateBook(rating){
- let u=await getUser();if(!u){toast("Sign in to rate books 💌");showTab("auth");return}
- let {error}=await db.from("book_ratings").upsert({user_id:u.id,book_key:discussionKey,rating},{onConflict:"user_id,book_key"});if(error)return toast(error.message);await loadBookRating();toast("Rating saved ⭐");
+
+
+function stripHTML(html){
+
+  const div=document.createElement("div");
+
+  div.innerHTML=html;
+
+  return escapeHTML(
+    div.textContent||div.innerText||""
+  );
+
 }
-async function loadComments(){
- let box=document.getElementById("comments"),{data,error}=await db.from("book_comments").select("*").eq("book_key",discussionKey).order("created_at",{ascending:false});
- if(error){box.innerHTML="<div class='empty'>Comments need the community tables to be enabled.</div>";return}
- box.innerHTML=data?.length?data.map(c=>`<div class="comment"><div class="commentTop"><strong>Reader</strong><span class="commentType">${esc(c.comment_type)}</span></div><div style="margin-top:6px">${esc(c.comment)}</div></div>`).join(""):"<div class='empty'>Be the first to say something 👀</div>";
-}
-async function postComment(){
- let u=await getUser();if(!u){toast("Sign in to comment 💌");showTab("auth");return}
- let text=document.getElementById("commentText").value.trim();if(!text)return;
- let {error}=await db.from("book_comments").insert({user_id:u.id,book_key:discussionKey,comment:text,comment_type:document.getElementById("commentType").value});if(error)return toast(error.message);
- document.getElementById("commentText").value="";await loadComments();toast("Posted 💗");
-}
-async function loadRooms(){
- let box=document.getElementById("rooms"),{data,error}=await db.from("discussion_rooms").select("*").order("created_at",{ascending:false}).limit(30);
- if(error){box.innerHTML="<div class='empty'>Discussion rooms will appear here once the rooms table is enabled.</div>";return}
- box.innerHTML=data?.length?data.map(r=>`<div class="room"><h3>${esc(r.title)}</h3><div class="muted">${esc(r.description||"Member discussion room")} · ${r.is_private?"Private":"Open"}</div><button class="pill pink" data-room="${r.id}">Enter room</button></div>`).join(""):"<div class='empty'>No rooms yet. Create the first one.</div>";
-}
-async function newRoom(){
- let u=await getUser();if(!u){toast("Membership is required to create rooms 💌");showTab("auth");return}
- document.getElementById("modalContent").innerHTML=`<h2>＋ Create a discussion room</h2><div class="field"><label>Room name</label><input id="roomTitle" placeholder="Enemies-to-lovers, fantasy chaos…"></div><div class="field"><label>Description</label><textarea id="roomDesc" rows="3" placeholder="What will readers talk about?"></textarea></div><button class="pill pink" id="createRoom">Create room</button>`;document.getElementById("modal").classList.remove("hidden");
-}
-async function createRoom(){
- let u=await getUser();let title=document.getElementById("roomTitle").value.trim();if(!title)return toast("Give the room a name");
- let {error}=await db.from("discussion_rooms").insert({created_by:u.id,title,description:document.getElementById("roomDesc").value.trim(),is_private:false});if(error)return toast(error.message);
- document.getElementById("modal").classList.add("hidden");await loadRooms();toast("Room created 💗");
-}
-document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
-document.querySelectorAll("[data-genre]").forEach(b=>b.onclick=()=>{
- document.querySelectorAll("[data-genre]").forEach(x=>x.classList.remove("active"));
- b.classList.add("active");
- searchGenre(b.dataset.genre);
-});
-document.getElementById("profileBtn").onclick=async()=>{let u=await getUser();showTab(u?"profile":"auth");if(u)renderProfile()};
-document.getElementById("searchBtn").onclick=searchBooks;document.getElementById("searchInput").onkeydown=e=>{if(e.key==="Enter")searchBooks()};
-document.getElementById("signInBtn").onclick=signIn;document.getElementById("signUpBtn").onclick=signUp;document.getElementById("postCommentBtn").onclick=postComment;document.getElementById("newRoomBtn").onclick=newRoom;document.getElementById("closeModal").onclick=()=>document.getElementById("modal").classList.add("hidden");document.getElementById("modal").onclick=e=>{if(e.target.id==="modal")e.currentTarget.classList.add("hidden")};
-document.addEventListener("click",e=>{
- let a=e.target.closest("[data-add]");if(a)addBook(a.dataset.add,a.dataset.key);
- let r=e.target.closest("[data-remove]");if(r)removeBook(r.dataset.remove,r.dataset.key);
- let d=e.target.closest("[data-discuss]");if(d)openDiscussion(d.dataset.discuss);
- let s=e.target.closest("[data-star]");if(s)rateBook(Number(s.dataset.star));
- let rt=e.target.closest("[data-rate]");if(rt){discussionKey=rt.dataset.rate;openDiscussion(rt.dataset.rate)}
- let cr=e.target.closest("#createRoom");if(cr)createRoom();
-});
-(async()=>{await loadProfile();if(await getUser()){await loadShelves();await loadRanking()}})();
+
+
+/* =========================================================
+   INITIALISE
+   ========================================================= */
+
+(async function(){
+
+  renderAllShelves();
+
+  renderRooms();
+
+  renderProfile();
+
+  await loadSession();
+
+  loadHomeBooks();
+
+})();
+
 </script>
+
 </body>
 </html>
