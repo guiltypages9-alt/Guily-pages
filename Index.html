@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f7c7df">
 
 <title>Guilty Pages — Your Unapologetic Book Community</title>
 
@@ -10,41 +11,31 @@
 
 <style>
 :root{
-  --pink:#f58fba;
-  --pink-dark:#d85d91;
-  --pink-light:#fff0f7;
-  --lav:#a996df;
-  --lav-dark:#806ac4;
-  --purple:#60478f;
-  --cream:#fffafd;
-  --white:#ffffff;
-  --text:#392b3f;
-  --muted:#806f7f;
-  --border:#ead7e4;
-  --shadow:0 10px 30px rgba(104,65,111,.12);
-  --danger:#c65b76;
-  --success:#5b9b78;
+  --pink:#f6b6d4;
+  --pink2:#ffe2ef;
+  --pink3:#fff4f9;
+  --lav:#cdb9f5;
+  --lav2:#eee7ff;
+  --purple:#7557a8;
+  --dark:#3b2944;
+  --muted:#806d84;
+  --white:#fff;
+  --border:#ead9e8;
+  --shadow:0 12px 35px rgba(117,87,168,.13);
 }
 
 *{
   box-sizing:border-box;
 }
 
-html{
-  scroll-behavior:smooth;
-}
-
 body{
   margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:linear-gradient(135deg,#fff8fc 0%,#fdf6ff 50%,#fff 100%);
-  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:linear-gradient(180deg,#fff7fb 0%,#f9f3ff 100%);
+  color:var(--dark);
 }
 
-button,
-input,
-textarea,
-select{
+button,input{
   font:inherit;
 }
 
@@ -57,39 +48,35 @@ a{
   text-decoration:none;
 }
 
-/* =========================
-   HEADER
-========================= */
+.hidden{
+  display:none!important;
+}
 
-header{
+/* NAV */
+
+nav{
   position:sticky;
   top:0;
-  z-index:100;
-  background:rgba(255,250,253,.96);
-  backdrop-filter:blur(12px);
+  z-index:50;
+  background:rgba(255,248,252,.94);
+  backdrop-filter:blur(14px);
   border-bottom:1px solid var(--border);
 }
 
-.nav{
-  max-width:1200px;
+.nav-inner{
+  max-width:1180px;
   margin:auto;
   padding:14px 18px;
   display:flex;
   align-items:center;
-  gap:14px;
-  flex-wrap:wrap;
+  gap:18px;
 }
 
 .logo{
-  font-size:22px;
   font-weight:900;
+  font-size:21px;
   color:var(--purple);
-  cursor:pointer;
-  margin-right:auto;
-}
-
-.logo span{
-  color:var(--pink-dark);
+  white-space:nowrap;
 }
 
 .nav-links{
@@ -98,43 +85,38 @@ header{
   flex-wrap:wrap;
 }
 
-.nav-btn{
+.nav-links button{
   border:0;
   background:transparent;
-  color:var(--text);
+  color:var(--dark);
   padding:9px 11px;
-  border-radius:12px;
-  font-weight:700;
-}
-
-.nav-btn:hover,
-.nav-btn.active{
-  background:#f7e4f0;
-  color:var(--purple);
-}
-
-.auth-btn{
-  background:linear-gradient(135deg,var(--pink),var(--lav));
-  color:white;
-  border:0;
-  padding:10px 15px;
   border-radius:14px;
-  font-weight:800;
-  box-shadow:var(--shadow);
 }
 
-/* =========================
-   LAYOUT
-========================= */
+.nav-links button:hover{
+  background:var(--pink2);
+}
+
+.nav-spacer{
+  flex:1;
+}
+
+.profile-button{
+  border:1px solid var(--border);
+  background:white;
+  padding:8px 13px;
+  border-radius:18px;
+}
+
+/* GENERAL */
 
 .container{
-  width:min(1200px,92%);
+  width:min(1180px,calc(100% - 32px));
   margin:auto;
 }
 
 .page{
   display:none;
-  padding:35px 0 70px;
 }
 
 .page.active{
@@ -142,212 +124,228 @@ header{
 }
 
 .hero{
-  padding:55px 20px 35px;
+  padding:60px 0 35px;
+}
+
+.hero-box{
+  background:
+    radial-gradient(circle at top right,#e8dcff 0,#e8dcff00 35%),
+    radial-gradient(circle at bottom left,#ffd7e9 0,#ffd7e900 40%),
+    white;
+  border:1px solid var(--border);
+  border-radius:30px;
+  padding:45px 28px;
+  box-shadow:var(--shadow);
   text-align:center;
 }
 
 .hero h1{
-  margin:0 auto 12px;
-  max-width:800px;
-  font-size:clamp(38px,7vw,72px);
-  line-height:1;
+  margin:0 0 12px;
+  font-size:clamp(34px,7vw,64px);
+  line-height:1.05;
   color:var(--purple);
 }
 
-.hero h1 span{
-  color:var(--pink-dark);
-}
-
 .hero p{
-  max-width:680px;
-  margin:18px auto 25px;
-  font-size:18px;
-  line-height:1.6;
+  max-width:650px;
+  margin:0 auto 25px;
   color:var(--muted);
+  font-size:18px;
 }
 
-.hero-search{
-  max-width:700px;
-  margin:25px auto;
+.search-row{
   display:flex;
+  max-width:760px;
+  margin:auto;
   gap:10px;
-  background:white;
-  padding:9px;
-  border:1px solid var(--border);
-  border-radius:20px;
-  box-shadow:var(--shadow);
 }
 
-.hero-search input{
+.search-row input{
   flex:1;
   min-width:0;
-  border:0;
-  outline:0;
-  padding:13px 15px;
-  background:transparent;
+  border:2px solid var(--pink);
+  border-radius:18px;
+  padding:15px 17px;
+  background:white;
+  outline:none;
 }
 
 .primary{
   border:0;
-  background:linear-gradient(135deg,var(--pink),var(--lav));
+  border-radius:18px;
+  padding:14px 19px;
+  background:linear-gradient(135deg,#ef9fc5,#bca2ed);
   color:white;
-  padding:12px 18px;
-  border-radius:13px;
   font-weight:800;
+  box-shadow:0 7px 20px rgba(117,87,168,.2);
 }
 
 .secondary{
   border:1px solid var(--border);
+  border-radius:14px;
+  padding:10px 14px;
   background:white;
   color:var(--purple);
-  padding:11px 15px;
-  border-radius:12px;
-  font-weight:800;
+  font-weight:700;
 }
 
 .danger{
   border:0;
-  background:#f9e2e8;
-  color:var(--danger);
-  padding:10px 13px;
-  border-radius:11px;
+  border-radius:14px;
+  padding:10px 14px;
+  background:#ffe0ea;
+  color:#a84468;
   font-weight:700;
 }
 
+.section{
+  padding:28px 0;
+}
+
 .section-title{
-  margin:35px 0 18px;
-  color:var(--purple);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:16px;
 }
 
 .section-title h2{
-  margin:0 0 5px;
-}
-
-.section-title p{
   margin:0;
-  color:var(--muted);
+  color:var(--purple);
 }
 
-.card{
-  background:rgba(255,255,255,.94);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:20px;
-  box-shadow:var(--shadow);
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:18px;
-}
-
-/* =========================
-   DISCOVER
-========================= */
+/* DISCOVER */
 
 .discover-search{
-  display:flex;
-  gap:10px;
-  margin-bottom:25px;
+  margin:25px 0;
 }
 
 .discover-search input{
-  flex:1;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px;
+  width:100%;
+  border:2px solid var(--lav);
+  border-radius:18px;
+  padding:15px;
   outline:none;
-  background:white;
 }
 
 .status{
-  color:var(--muted);
-  margin:12px 0;
+  padding:13px 16px;
+  border-radius:15px;
+  margin:15px 0;
+  background:var(--lav2);
+  color:var(--purple);
+  display:none;
+}
+
+.status.show{
+  display:block;
 }
 
 .book-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
-  gap:20px;
+  grid-template-columns:repeat(auto-fill,minmax(185px,1fr));
+  gap:18px;
 }
 
 .book-card{
   background:white;
   border:1px solid var(--border);
-  border-radius:20px;
+  border-radius:21px;
   overflow:hidden;
-  box-shadow:var(--shadow);
+  box-shadow:0 7px 25px rgba(117,87,168,.08);
   display:flex;
   flex-direction:column;
 }
 
 .cover-wrap{
-  height:280px;
-  background:linear-gradient(135deg,#f8d7e7,#e6ddf8);
+  height:260px;
+  background:linear-gradient(135deg,#f7d7e8,#e8ddff);
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   overflow:hidden;
 }
 
-.cover-wrap img{
+.cover{
   width:100%;
   height:100%;
   object-fit:cover;
 }
 
 .no-cover{
-  padding:25px;
+  padding:20px;
   text-align:center;
-  font-weight:800;
   color:var(--purple);
+  font-weight:800;
 }
 
 .book-info{
-  padding:15px;
+  padding:14px;
   display:flex;
   flex-direction:column;
-  gap:9px;
+  flex:1;
 }
 
 .book-title{
   font-weight:900;
-  color:var(--purple);
   line-height:1.25;
+  margin-bottom:5px;
 }
 
 .book-author{
   color:var(--muted);
   font-size:14px;
+  margin-bottom:7px;
 }
 
-.book-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:7px;
-}
-
-.book-actions button{
+.book-year{
+  color:#a28da8;
   font-size:12px;
-  padding:9px 5px;
 }
 
-.rating-row{
+.card-actions{
+  margin-top:auto;
+  display:grid;
+  gap:7px;
+  padding-top:12px;
+}
+
+.shelf-row{
   display:flex;
-  align-items:center;
   gap:7px;
   flex-wrap:wrap;
 }
 
-.stars{
-  color:#e4a629;
-  letter-spacing:1px;
+.shelf-row button{
+  flex:1;
+  min-width:75px;
+  font-size:12px;
 }
 
-/* =========================
-   SHELVES
-========================= */
+/* GENRES */
+
+.genre-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+  gap:12px;
+}
+
+.genre{
+  border:1px solid var(--border);
+  background:white;
+  border-radius:18px;
+  padding:17px;
+  text-align:center;
+  font-weight:800;
+  color:var(--purple);
+}
+
+.genre:hover{
+  background:var(--pink2);
+}
+
+/* SHELVES */
 
 .shelf-tabs{
   display:flex;
@@ -356,17 +354,17 @@ header{
   margin-bottom:20px;
 }
 
-.shelf-tab{
+.shelf-tabs button{
   border:1px solid var(--border);
   background:white;
-  padding:11px 15px;
-  border-radius:13px;
+  padding:10px 15px;
+  border-radius:16px;
   color:var(--purple);
   font-weight:800;
 }
 
-.shelf-tab.active{
-  background:linear-gradient(135deg,var(--pink),var(--lav));
+.shelf-tabs button.active{
+  background:linear-gradient(135deg,#f4b2d1,#c7b2f0);
   color:white;
 }
 
@@ -379,348 +377,191 @@ header{
   display:flex;
   align-items:center;
   gap:14px;
+  padding:12px;
   background:white;
   border:1px solid var(--border);
-  border-radius:16px;
-  padding:12px;
+  border-radius:18px;
 }
 
-.shelf-mini-cover{
-  width:55px;
+.shelf-cover{
+  width:58px;
   height:78px;
   object-fit:cover;
-  border-radius:8px;
-  background:#f4e5ef;
+  border-radius:9px;
+  background:var(--pink2);
 }
 
-.shelf-item-info{
+.shelf-main{
   flex:1;
 }
 
-.shelf-item-title{
-  font-weight:900;
-  color:var(--purple);
+.shelf-main strong{
+  display:block;
 }
 
-.shelf-item-author{
+.shelf-main small{
   color:var(--muted);
-  font-size:13px;
-  margin-top:4px;
 }
 
-.shelf-buttons{
+.order-buttons{
   display:flex;
   gap:5px;
 }
 
-.icon-btn{
+.order-buttons button{
   border:1px solid var(--border);
   background:white;
-  width:38px;
-  height:38px;
-  border-radius:10px;
-  color:var(--purple);
-  font-weight:900;
+  border-radius:9px;
+  padding:6px 9px;
 }
 
-/* =========================
-   GENRES
-========================= */
+/* COMMUNITY */
 
-.genre-grid{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-}
-
-.genre{
-  border:1px solid #ead4e5;
-  background:#fff;
-  padding:12px 15px;
-  border-radius:30px;
-  color:var(--purple);
-  font-weight:800;
-  transition:.2s;
-}
-
-.genre:hover{
-  transform:translateY(-2px);
-  background:#fae9f2;
-}
-
-/* =========================
-   COMMUNITY
-========================= */
-
-.community-box{
+.community-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
   gap:18px;
 }
 
 .community-card{
-  background:linear-gradient(135deg,#fff,#fff1f8);
+  background:white;
   border:1px solid var(--border);
-  border-radius:20px;
+  border-radius:23px;
   padding:22px;
   box-shadow:var(--shadow);
 }
 
 .community-card h3{
   color:var(--purple);
+  margin-top:0;
 }
 
-/* =========================
-   PROFILE
-========================= */
-
-.profile-header{
-  display:flex;
-  align-items:center;
-  gap:18px;
-  flex-wrap:wrap;
+.rating{
+  color:#a26b9f;
+  font-size:20px;
+  letter-spacing:2px;
 }
 
-.avatar{
-  width:80px;
-  height:80px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--pink),var(--lav));
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:white;
-  font-size:30px;
-  font-weight:900;
+.comment-box{
+  margin-top:12px;
 }
 
-.profile-stats{
-  display:flex;
-  gap:25px;
-  flex-wrap:wrap;
-  margin-top:18px;
+.comment-box textarea{
+  width:100%;
+  min-height:90px;
+  resize:vertical;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px;
 }
 
-.stat{
-  text-align:center;
+/* PROFILE */
+
+.profile-card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:25px;
+  padding:25px;
+  box-shadow:var(--shadow);
+  max-width:700px;
 }
 
-.stat strong{
-  display:block;
-  font-size:24px;
-  color:var(--purple);
-}
-
-.stat span{
-  font-size:13px;
-  color:var(--muted);
-}
-
-/* =========================
-   FORMS / MODALS
-========================= */
-
-.form{
-  display:grid;
-  gap:13px;
-}
-
-.form label{
-  font-weight:800;
-  color:var(--purple);
-}
-
-.form input,
-.form textarea,
-.form select{
+.profile-card input{
   width:100%;
   border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px;
-  outline:none;
-  background:white;
+  border-radius:14px;
+  padding:13px;
+  margin:7px 0 14px;
 }
 
-.form textarea{
-  min-height:110px;
-  resize:vertical;
+/* MEMBERSHIP */
+
+.membership{
+  background:linear-gradient(135deg,#fff0f7,#eee8ff);
+  border:1px solid var(--border);
+  border-radius:25px;
+  padding:28px;
 }
+
+.membership h2{
+  color:var(--purple);
+}
+
+/* MODAL */
 
 .modal{
-  display:none;
   position:fixed;
   inset:0;
-  background:rgba(43,25,47,.48);
-  z-index:500;
+  z-index:100;
+  background:rgba(59,41,68,.45);
+  display:none;
   align-items:center;
   justify-content:center;
-  padding:20px;
+  padding:18px;
 }
 
-.modal.open{
+.modal.show{
   display:flex;
 }
 
 .modal-box{
-  width:min(520px,100%);
+  width:min(650px,100%);
   max-height:90vh;
   overflow:auto;
   background:white;
-  border-radius:22px;
+  border-radius:25px;
   padding:25px;
-  box-shadow:0 25px 70px rgba(0,0,0,.25);
-}
-
-.modal-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-}
-
-.modal-head h2{
-  margin:0;
-  color:var(--purple);
+  position:relative;
 }
 
 .close{
-  border:0;
-  background:#f5e8f1;
-  color:var(--purple);
-  width:35px;
-  height:35px;
-  border-radius:50%;
-  font-weight:900;
-}
-
-/* =========================
-   ROOMS
-========================= */
-
-.room-card{
-  background:white;
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:20px;
-  box-shadow:var(--shadow);
-}
-
-.locked{
-  position:relative;
-  overflow:hidden;
-}
-
-.locked:after{
-  content:"MEMBERS ONLY";
   position:absolute;
+  right:15px;
   top:15px;
-  right:-38px;
-  transform:rotate(38deg);
-  background:var(--purple);
-  color:white;
-  padding:7px 42px;
-  font-size:11px;
-  font-weight:900;
+  border:0;
+  background:var(--pink2);
+  border-radius:50%;
+  width:36px;
+  height:36px;
 }
 
-.comment{
-  padding:13px 0;
-  border-bottom:1px solid #f0e3ec;
-}
-
-.comment:last-child{
-  border-bottom:0;
-}
-
-.comment-user{
-  font-weight:900;
-  color:var(--purple);
-}
-
-.comment-text{
-  margin-top:5px;
-  color:var(--text);
-}
-
-/* =========================
-   EMPTY / ALERTS
-========================= */
-
-.empty{
-  background:white;
-  border:1px dashed var(--border);
-  border-radius:18px;
-  padding:35px 20px;
-  text-align:center;
-  color:var(--muted);
-}
-
-.alert{
-  padding:12px 14px;
-  border-radius:12px;
-  margin-bottom:12px;
-  display:none;
-}
-
-.alert.show{
-  display:block;
-}
-
-.alert.error{
-  background:#fde8ee;
-  color:#9c3e5b;
-}
-
-.alert.success{
-  background:#e8f6ee;
-  color:#387354;
-}
-
-/* =========================
-   FOOTER
-========================= */
+/* FOOTER */
 
 footer{
+  margin-top:50px;
+  padding:35px 0;
   text-align:center;
-  padding:35px 20px;
   color:var(--muted);
-  border-top:1px solid var(--border);
-  margin-top:30px;
 }
 
-/* =========================
-   MOBILE
-========================= */
+/* MOBILE */
 
 @media(max-width:700px){
-
-  .nav{
-    padding:10px;
-  }
-
-  .logo{
-    width:100%;
-    margin-right:0;
-    text-align:center;
+  .nav-inner{
+    align-items:flex-start;
+    flex-wrap:wrap;
   }
 
   .nav-links{
+    order:3;
     width:100%;
     overflow-x:auto;
     flex-wrap:nowrap;
-    padding-bottom:3px;
   }
 
-  .nav-btn{
+  .nav-links button{
     white-space:nowrap;
   }
 
   .hero{
-    padding-top:35px;
+    padding-top:28px;
   }
 
-  .hero-search,
-  .discover-search{
+  .hero-box{
+    padding:35px 18px;
+  }
+
+  .search-row{
     flex-direction:column;
   }
 
@@ -730,22 +571,14 @@ footer{
   }
 
   .cover-wrap{
-    height:230px;
-  }
-
-  .book-info{
-    padding:11px;
-  }
-
-  .book-actions{
-    grid-template-columns:1fr;
+    height:220px;
   }
 
   .shelf-item{
     align-items:flex-start;
   }
 
-  .shelf-buttons{
+  .order-buttons{
     flex-direction:column;
   }
 }
@@ -754,199 +587,126 @@ footer{
 
 <body>
 
-<header>
-  <div class="nav">
+<!-- NAVIGATION -->
 
-    <div class="logo" onclick="showPage('home')">
-      Guilty <span>Pages</span> 📖
-    </div>
+<nav>
+  <div class="nav-inner">
+
+    <div class="logo">💗 Guilty Pages</div>
 
     <div class="nav-links">
-
-      <button class="nav-btn active" data-page="home" onclick="showPage('home')">
-        Home
-      </button>
-
-      <button class="nav-btn" data-page="discover" onclick="showPage('discover')">
-        Discover
-      </button>
-
-      <button class="nav-btn" data-page="community" onclick="showPage('community')">
-        Community
-      </button>
-
-      <button class="nav-btn" data-page="tbr" onclick="showPage('tbr')">
-        TBR
-      </button>
-
-      <button class="nav-btn" data-page="dnf" onclick="showPage('dnf')">
-        DNF
-      </button>
-
-      <button class="nav-btn" data-page="rereads" onclick="showPage('rereads')">
-        Rereads
-      </button>
-
-      <button class="nav-btn" data-page="profile" onclick="showPage('profile')">
-        Profile
-      </button>
-
+      <button onclick="showPage('home')">Home</button>
+      <button onclick="showPage('discover')">Discover</button>
+      <button onclick="showPage('community')">Community</button>
+      <button onclick="showPage('tbr')">TBR</button>
+      <button onclick="showPage('dnf')">DNF</button>
+      <button onclick="showPage('rereads')">Rereads</button>
+      <button onclick="showPage('profile')">Profile</button>
     </div>
 
-    <button class="auth-btn" onclick="openAuth()">
-      Sign in
+    <div class="nav-spacer"></div>
+
+    <button class="profile-button" onclick="showPage('profile')">
+      👤 Me
     </button>
 
   </div>
-</header>
+</nav>
 
 
 <main>
 
-<!-- =========================
-     HOME
-========================= -->
+<!-- HOME -->
 
 <section id="home" class="page active">
 
-  <div class="hero">
+  <div class="container hero">
 
-    <h1>
-      Read it. <span>Rate it.</span><br>
-      Gossip about it.
-    </h1>
+    <div class="hero-box">
 
-    <p>
-      Your unapologetic book community for finding your next read,
-      building your shelves, rating books and talking about the ones
-      you absolutely cannot stop thinking about.
-    </p>
+      <h1>Read it.<br>Rate it.<br>Gossip about it.</h1>
 
-    <div class="hero-search">
+      <p>
+        Your unapologetic book community for guilty pleasures,
+        chaotic TBRs, questionable fictional men and books you
+        absolutely need to talk about.
+      </p>
 
-      <input
-        id="homeSearch"
-        type="search"
-        placeholder="Search for a book, author or series..."
-        onkeydown="if(event.key==='Enter') searchFromHome()"
-      >
+      <div class="search-row">
 
-      <button class="primary" onclick="searchFromHome()">
-        Search
-      </button>
+        <input
+          id="homeSearch"
+          type="search"
+          placeholder="Search for a book, author or series..."
+          onkeydown="if(event.key==='Enter') searchFromHome()"
+        >
+
+        <button class="primary" onclick="searchFromHome()">
+          🔎 Search
+        </button>
+
+      </div>
 
     </div>
 
   </div>
 
 
-  <div class="container">
+  <div class="container section">
 
     <div class="section-title">
-      <h2>Find your next obsession</h2>
-      <p>Search real books and decide where they belong on your shelves.</p>
+      <h2>📚 Discover your next obsession</h2>
     </div>
 
     <div class="genre-grid">
 
       <button class="genre" onclick="searchGenre('dark romance')">
-        Dark Romance
+        🖤 Dark Romance
       </button>
 
-      <button class="genre" onclick="searchGenre('close proximity romance')">
-        Close Proximity
+      <button class="genre" onclick="searchGenre('close proximity')">
+        🔥 Close Proximity
       </button>
 
       <button class="genre" onclick="searchGenre('enemies to lovers')">
-        Enemies to Lovers
+        ⚔️ Enemies to Lovers
       </button>
 
-      <button class="genre" onclick="searchGenre('workplace romance')">
-        Work Romance
+      <button class="genre" onclick="searchGenre('work romance')">
+        💼 Work Romance
       </button>
 
       <button class="genre" onclick="searchGenre('sports romance')">
-        Sports Romance
+        🏀 Sports Romance
       </button>
 
       <button class="genre" onclick="searchGenre('fantasy romance')">
-        Fantasy Romance
+        ✨ Fantasy Romance
       </button>
 
       <button class="genre" onclick="searchGenre('romantasy')">
-        Romantasy
+        🧚 Romantasy
       </button>
 
       <button class="genre" onclick="searchGenre('historical romance')">
-        Historical Romance
+        👑 Historical Romance
       </button>
 
       <button class="genre" onclick="searchGenre('thriller')">
-        Thriller
+        🔪 Thriller
       </button>
 
       <button class="genre" onclick="searchGenre('mystery')">
-        Mystery
+        🕵️ Mystery
       </button>
 
       <button class="genre" onclick="searchGenre('fantasy')">
-        Fantasy
+        🐉 Fantasy
       </button>
 
       <button class="genre" onclick="searchGenre('young adult')">
-        Young Adult
+        💕 Young Adult
       </button>
-
-    </div>
-
-
-    <div class="section-title">
-      <h2>Your Guilty Pages</h2>
-      <p>Everything starts with the books you choose.</p>
-    </div>
-
-    <div class="community-box">
-
-      <div class="community-card">
-        <h3>📚 TBR</h3>
-        <p>
-          Build your next-read list and put your books in the order
-          you actually want to read them.
-        </p>
-        <button class="secondary" onclick="showPage('tbr')">
-          Open TBR
-        </button>
-      </div>
-
-      <div class="community-card">
-        <h3>🚫 DNF</h3>
-        <p>
-          Keep track of the books you abandoned. No judgement here.
-        </p>
-        <button class="secondary" onclick="showPage('dnf')">
-          Open DNF
-        </button>
-      </div>
-
-      <div class="community-card">
-        <h3>🔁 Rereads</h3>
-        <p>
-          Keep your comfort reads and favourite repeat offenders together.
-        </p>
-        <button class="secondary" onclick="showPage('rereads')">
-          Open Rereads
-        </button>
-      </div>
-
-      <div class="community-card">
-        <h3>💬 Gossip Rooms</h3>
-        <p>
-          Every book can eventually have its own community discussion room.
-        </p>
-        <button class="secondary" onclick="showPage('community')">
-          See Community
-        </button>
-      </div>
 
     </div>
 
@@ -955,37 +715,36 @@ footer{
 </section>
 
 
-<!-- =========================
-     DISCOVER
-========================= -->
+<!-- DISCOVER -->
 
 <section id="discover" class="page">
 
-  <div class="container">
+  <div class="container section">
 
     <div class="section-title">
-      <h2>Discover Books</h2>
-      <p>Search real books and add them to your Guilty Pages shelves.</p>
+      <h2>🔎 Discover Books</h2>
     </div>
 
     <div class="discover-search">
 
-      <input
-        id="discoverSearch"
-        type="search"
-        placeholder="Search books or authors..."
-        onkeydown="if(event.key==='Enter') performSearch()"
-      >
+      <div class="search-row">
 
-      <button class="primary" onclick="performSearch()">
-        Search
-      </button>
+        <input
+          id="discoverSearch"
+          type="search"
+          placeholder="Search books..."
+          onkeydown="if(event.key==='Enter') performSearch()"
+        >
+
+        <button class="primary" onclick="performSearch()">
+          Search
+        </button>
+
+      </div>
 
     </div>
 
-    <div id="searchStatus" class="status">
-      Search for something scandalous...
-    </div>
+    <div id="searchStatus" class="status"></div>
 
     <div id="searchResults" class="book-grid"></div>
 
@@ -994,56 +753,93 @@ footer{
 </section>
 
 
-<!-- =========================
-     COMMUNITY
-========================= -->
+<!-- COMMUNITY -->
 
 <section id="community" class="page">
 
-  <div class="container">
+  <div class="container section">
 
     <div class="section-title">
-      <h2>Community</h2>
-      <p>
-        Talk about books, share opinions and eventually join book-specific
-        gossip rooms.
-      </p>
+      <h2>💬 Community</h2>
     </div>
 
-    <div class="community-box">
+    <div class="community-grid">
 
       <div class="community-card">
-        <h3>🔥 Trending Discussions</h3>
+
+        <h3>🔥 Guilty Pages Gossip</h3>
+
         <p>
-          Community discussions will appear here as Guilty Pages grows.
+          Talk about the books you're reading,
+          the characters you're obsessed with,
+          and the plot twists that personally offended you.
         </p>
-        <button class="secondary" onclick="openRoomInfo()">
-          Learn about rooms
+
+        <button class="primary" onclick="openRoomNotice()">
+          Enter Gossip Rooms
         </button>
+
       </div>
 
-      <div class="community-card locked">
-        <h3>💋 Book Gossip Rooms</h3>
+
+      <div class="community-card">
+
+        <h3>📈 Guilty Pages Rankings</h3>
+
         <p>
-          Each book can have its own discussion room for readers to gossip,
-          debate, recommend and react.
+          Rankings are designed around Guilty Pages
+          reader activity and ratings rather than bookstore ratings.
         </p>
-        <button class="primary" onclick="openMembership()">
-          Membership
+
+        <button class="secondary" onclick="showRankingInfo()">
+          How rankings work
         </button>
+
+      </div>
+
+
+      <div class="community-card">
+
+        <h3>👀 Public TBRs</h3>
+
+        <p>
+          Eventually you'll be able to browse other readers'
+          shelves and discover what everyone else is secretly
+          planning to read.
+        </p>
+
+        <button class="secondary" onclick="alert('Public profiles and TBR browsing are part of the Guilty Pages community structure.')">
+          Explore readers
+        </button>
+
       </div>
 
     </div>
 
 
-    <div class="section-title">
-      <h2>Recent Book Activity</h2>
-    </div>
+    <div class="section">
 
-    <div id="activityFeed" class="card">
-      <div class="empty">
-        Your community activity will appear here.
+      <div class="membership">
+
+        <h2>💎 Gossip Rooms Membership</h2>
+
+        <p>
+          Every book can eventually have its own private
+          Guilty Pages gossip room.
+        </p>
+
+        <p>
+          Membership is planned as the paid feature.
+          The site structure is already prepared so payment
+          can be connected later without rebuilding the book system.
+        </p>
+
+        <button class="primary" onclick="openRoomNotice()">
+          Coming Soon
+        </button>
+
       </div>
+
     </div>
 
   </div>
@@ -1051,183 +847,121 @@ footer{
 </section>
 
 
-<!-- =========================
-     TBR
-========================= -->
+<!-- TBR -->
 
 <section id="tbr" class="page">
 
-  <div class="container">
+  <div class="container section">
 
     <div class="section-title">
-      <h2>📚 Your TBR</h2>
-      <p>Drag-free ordering using the buttons. Your next read stays at the top.</p>
-    </div>
 
-    <div class="card">
+      <h2>📖 My TBR</h2>
 
-      <div class="shelf-tabs">
-
-        <button class="shelf-tab active" onclick="showPage('tbr')">
-          TBR
-        </button>
-
-        <button class="shelf-tab" onclick="showPage('dnf')">
-          DNF
-        </button>
-
-        <button class="shelf-tab" onclick="showPage('rereads')">
-          Rereads
-        </button>
-
-      </div>
-
-      <div id="tbrList" class="shelf-list"></div>
+      <button class="secondary" onclick="showPage('discover')">
+        + Find Books
+      </button>
 
     </div>
+
+    <p style="color:var(--muted)">
+      Your next-read queue. Move books up and down to decide
+      what you're reading next.
+    </p>
+
+    <div id="tbrList" class="shelf-list"></div>
 
   </div>
 
 </section>
 
 
-<!-- =========================
-     DNF
-========================= -->
+<!-- DNF -->
 
 <section id="dnf" class="page">
 
-  <div class="container">
+  <div class="container section">
 
     <div class="section-title">
+
       <h2>🚫 DNF</h2>
-      <p>Books you did not finish. Your reading history, your rules.</p>
-    </div>
 
-    <div class="card">
-
-      <div class="shelf-tabs">
-
-        <button class="shelf-tab" onclick="showPage('tbr')">
-          TBR
-        </button>
-
-        <button class="shelf-tab active" onclick="showPage('dnf')">
-          DNF
-        </button>
-
-        <button class="shelf-tab" onclick="showPage('rereads')">
-          Rereads
-        </button>
-
-      </div>
-
-      <div id="dnfList" class="shelf-list"></div>
+      <button class="secondary" onclick="showPage('discover')">
+        + Find Books
+      </button>
 
     </div>
+
+    <div id="dnfList" class="shelf-list"></div>
 
   </div>
 
 </section>
 
 
-<!-- =========================
-     REREADS
-========================= -->
+<!-- REREADS -->
 
 <section id="rereads" class="page">
 
-  <div class="container">
+  <div class="container section">
 
     <div class="section-title">
-      <h2>🔁 Rereads</h2>
-      <p>Your comfort reads and repeat offenders.</p>
-    </div>
 
-    <div class="card">
+      <h2>💞 Rereads</h2>
 
-      <div class="shelf-tabs">
-
-        <button class="shelf-tab" onclick="showPage('tbr')">
-          TBR
-        </button>
-
-        <button class="shelf-tab" onclick="showPage('dnf')">
-          DNF
-        </button>
-
-        <button class="shelf-tab active" onclick="showPage('rereads')">
-          Rereads
-        </button>
-
-      </div>
-
-      <div id="rereadsList" class="shelf-list"></div>
+      <button class="secondary" onclick="showPage('discover')">
+        + Find Books
+      </button>
 
     </div>
+
+    <div id="rereadsList" class="shelf-list"></div>
 
   </div>
 
 </section>
 
 
-<!-- =========================
-     PROFILE
-========================= -->
+<!-- PROFILE -->
 
 <section id="profile" class="page">
 
-  <div class="container">
+  <div class="container section">
 
     <div class="section-title">
-      <h2>Your Profile</h2>
-      <p>Your books, shelves and Guilty Pages identity.</p>
+      <h2>👤 My Profile</h2>
     </div>
 
-    <div class="card">
+    <div class="profile-card">
 
-      <div class="profile-header">
+      <h3>Guilty Pages Profile</h3>
 
-        <div id="profileAvatar" class="avatar">
-          G
-        </div>
+      <label>Username</label>
 
-        <div>
-          <h2 id="profileName">Guest Reader</h2>
-          <p id="profileUsername">@guest</p>
-        </div>
+      <input
+        id="profileUsername"
+        placeholder="@yourusername"
+      >
 
-      </div>
+      <label>Display name</label>
 
-      <div class="profile-stats">
+      <input
+        id="profileDisplayName"
+        placeholder="Your display name"
+      >
 
-        <div class="stat">
-          <strong id="statTbr">0</strong>
-          <span>TBR</span>
-        </div>
-
-        <div class="stat">
-          <strong id="statDnf">0</strong>
-          <span>DNF</span>
-        </div>
-
-        <div class="stat">
-          <strong id="statRereads">0</strong>
-          <span>Rereads</span>
-        </div>
-
-        <div class="stat">
-          <strong id="statRatings">0</strong>
-          <span>Ratings</span>
-        </div>
-
-      </div>
-
-      <br>
-
-      <button class="primary" onclick="openAuth()">
-        Sign in / Create account
+      <button class="primary" onclick="saveProfile()">
+        Save Profile
       </button>
+
+      <button
+        class="secondary"
+        style="margin-left:6px"
+        onclick="signInOrOut()"
+      >
+        Sign in / Sign out
+      </button>
+
+      <p id="profileStatus" style="color:var(--muted);margin-top:15px"></p>
 
     </div>
 
@@ -1239,182 +973,21 @@ footer{
 
 
 <footer>
-  Guilty Pages © 2026 · Your books. Your shelves. Your guilty pleasures.
+  <div class="container">
+    💗 Guilty Pages — Your books. Your shelves. Your guilty pleasures.
+  </div>
 </footer>
 
 
-<!-- =========================
-     AUTH MODAL
-========================= -->
+<!-- BOOK MODAL -->
 
-<div id="authModal" class="modal">
+<div id="bookModal" class="modal">
 
   <div class="modal-box">
 
-    <div class="modal-head">
+    <button class="close" onclick="closeModal()">×</button>
 
-      <h2>Guilty Pages Account</h2>
-
-      <button class="close" onclick="closeModal('authModal')">
-        ×
-      </button>
-
-    </div>
-
-    <br>
-
-    <div id="authAlert" class="alert"></div>
-
-    <form class="form" onsubmit="handleAuth(event)">
-
-      <label>Email</label>
-
-      <input
-        id="authEmail"
-        type="email"
-        required
-        placeholder="you@example.com"
-      >
-
-      <label>Password</label>
-
-      <input
-        id="authPassword"
-        type="password"
-        required
-        minlength="6"
-        placeholder="At least 6 characters"
-      >
-
-      <button class="primary" type="submit">
-        Sign in
-      </button>
-
-      <button
-        class="secondary"
-        type="button"
-        onclick="handleSignup()"
-      >
-        Create account
-      </button>
-
-    </form>
-
-  </div>
-
-</div>
-
-
-<!-- =========================
-     RATING MODAL
-========================= -->
-
-<div id="ratingModal" class="modal">
-
-  <div class="modal-box">
-
-    <div class="modal-head">
-
-      <h2>Rate this book</h2>
-
-      <button class="close" onclick="closeModal('ratingModal')">
-        ×
-      </button>
-
-    </div>
-
-    <br>
-
-    <div id="ratingBookTitle" class="book-title"></div>
-
-    <br>
-
-    <select id="ratingValue">
-      <option value="5">★★★★★ — 5</option>
-      <option value="4">★★★★☆ — 4</option>
-      <option value="3">★★★☆☆ — 3</option>
-      <option value="2">★★☆☆☆ — 2</option>
-      <option value="1">★☆☆☆☆ — 1</option>
-    </select>
-
-    <br><br>
-
-    <button class="primary" onclick="saveRating()">
-      Save Rating
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- =========================
-     MEMBERSHIP MODAL
-========================= -->
-
-<div id="membershipModal" class="modal">
-
-  <div class="modal-box">
-
-    <div class="modal-head">
-
-      <h2>💋 Guilty Pages Membership</h2>
-
-      <button class="close" onclick="closeModal('membershipModal')">
-        ×
-      </button>
-
-    </div>
-
-    <br>
-
-    <p>
-      Book-specific gossip rooms are planned as a paid membership feature.
-    </p>
-
-    <p>
-      The site structure is prepared so payments and membership access can
-      be connected later without rebuilding the whole website.
-    </p>
-
-    <div class="alert show success">
-      Membership payments coming in a later stage.
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- =========================
-     ROOM INFO MODAL
-========================= -->
-
-<div id="roomModal" class="modal">
-
-  <div class="modal-box">
-
-    <div class="modal-head">
-
-      <h2>📖 Gossip Rooms</h2>
-
-      <button class="close" onclick="closeModal('roomModal')">
-        ×
-      </button>
-
-    </div>
-
-    <br>
-
-    <p>
-      Every book can have its own room where readers can discuss the plot,
-      characters, romance, twists, favourite scenes and controversial takes.
-    </p>
-
-    <p>
-      Rooms are designed as a membership feature, with the payment system
-      to be connected later.
-    </p>
+    <div id="modalContent"></div>
 
   </div>
 
@@ -1423,176 +996,164 @@ footer{
 
 <script>
 
-/* =========================================================
+/* ============================================================
    SUPABASE
-========================================================= */
-
-/*
-  IMPORTANT:
-
-  Replace ONLY these two values with your real Supabase values.
-
-  SUPABASE_URL:
-  https://YOUR-PROJECT.supabase.co
-
-  SUPABASE_KEY:
-  your publishable/anon key
-*/
+   ============================================================ */
 
 const SUPABASE_URL =
   "https://wmpovzrwdvvmabxrcwtp.supabase.co";
 
-const SUPABASE_KEY =
-  "PASTE-YOUR-REAL-SUPABASE-PUBLISHABLE-OR-ANON-KEY-HERE";
+/*
+   IMPORTANT:
+   Replace ONLY the text below with your real Supabase
+   publishable/anon key.
 
+   Do not change the URL above.
+*/
+
+const SUPABASE_KEY =
+  "sb_publishable_m-YSGRdUnH0eXTBVC5r3sw_l6oLwWSz";;
 
 let supabaseClient = null;
 
-try{
+if(
+  SUPABASE_KEY &&
+  SUPABASE_KEY !== "sb_publishable_m-YSGRdUnH0eXTBVC5r3sw_l6oLwWSz"; &&
+  window.supabase
+){
+  supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+}
 
-  if(
-    SUPABASE_URL &&
-    SUPABASE_KEY &&
-    !SUPABASE_KEY.includes("PASTE-YOUR")
-  ){
 
-    supabaseClient =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-      );
+/* ============================================================
+   LOCAL STORAGE
+   ============================================================ */
+
+const STORAGE_KEYS = {
+  tbr:"gp_tbr",
+  dnf:"gp_dnf",
+  rereads:"gp_rereads",
+  ratings:"gp_ratings",
+  comments:"gp_comments",
+  profile:"gp_profile",
+  cache:"gp_book_search_cache"
+};
+
+
+function loadJSON(key, fallback){
+
+  try{
+
+    const raw =
+      localStorage.getItem(key);
+
+    if(!raw){
+      return fallback;
+    }
+
+    return JSON.parse(raw);
+
+  }catch(e){
+
+    return fallback;
 
   }
 
-}catch(error){
+}
 
-  console.error("Supabase initialization error:",error);
+
+function saveJSON(key,value){
+
+  localStorage.setItem(
+    key,
+    JSON.stringify(value)
+  );
 
 }
 
 
-/* =========================================================
-   LOCAL DATA
-========================================================= */
+let shelves = {
+  tbr:loadJSON(STORAGE_KEYS.tbr,[]),
+  dnf:loadJSON(STORAGE_KEYS.dnf,[]),
+  rereads:loadJSON(STORAGE_KEYS.rereads,[])
+};
 
-let shelves =
-  JSON.parse(localStorage.getItem("guiltyPagesShelves") || "null") ||
-  {
-    tbr:[],
-    dnf:[],
-    rereads:[]
-  };
 
 let ratings =
-  JSON.parse(localStorage.getItem("guiltyPagesRatings") || "{}");
-
-let searchBooks = [];
-
-let currentRatingBook = null;
+  loadJSON(STORAGE_KEYS.ratings,{});
 
 
-/* =========================================================
-   SAVE LOCAL DATA
-========================================================= */
-
-function saveLocalData(){
-
-  localStorage.setItem(
-    "guiltyPagesShelves",
-    JSON.stringify(shelves)
-  );
-
-  localStorage.setItem(
-    "guiltyPagesRatings",
-    JSON.stringify(ratings)
-  );
-
-}
+let comments =
+  loadJSON(STORAGE_KEYS.comments,{});
 
 
-/* =========================================================
+let searchCache =
+  loadJSON(STORAGE_KEYS.cache,{});
+
+
+/* ============================================================
    PAGE NAVIGATION
-========================================================= */
+   ============================================================ */
 
 function showPage(page){
 
-  document.querySelectorAll(".page").forEach(function(section){
-
-    section.classList.remove("active");
-
-  });
+  document
+    .querySelectorAll(".page")
+    .forEach(p=>{
+      p.classList.remove("active");
+    });
 
   const target =
     document.getElementById(page);
 
   if(target){
-
     target.classList.add("active");
-
   }
-
-  document.querySelectorAll(".nav-btn").forEach(function(button){
-
-    button.classList.remove("active");
-
-    if(button.dataset.page === page){
-
-      button.classList.add("active");
-
-    }
-
-  });
 
   window.scrollTo({
     top:0,
     behavior:"smooth"
   });
 
-  if(page === "tbr"){
-
+  if(page==="tbr"){
     renderShelf("tbr","tbrList");
-
   }
 
-  if(page === "dnf"){
-
+  if(page==="dnf"){
     renderShelf("dnf","dnfList");
-
   }
 
-  if(page === "rereads"){
-
+  if(page==="rereads"){
     renderShelf("rereads","rereadsList");
-
-  }
-
-  if(page === "profile"){
-
-    updateProfileStats();
-
   }
 
 }
 
 
-/* =========================================================
+/* ============================================================
    HOME SEARCH
-========================================================= */
+   ============================================================ */
 
 function searchFromHome(){
 
+  const input =
+    document.getElementById("homeSearch");
+
   const q =
-    document.getElementById("homeSearch")
-      .value
-      .trim();
+    input.value.trim();
 
   if(!q){
-
+    input.focus();
     return;
-
   }
 
-  document.getElementById("discoverSearch").value = q;
+  document
+    .getElementById("discoverSearch")
+    .value = q;
 
   showPage("discover");
 
@@ -1601,13 +1162,15 @@ function searchFromHome(){
 }
 
 
-/* =========================================================
+/* ============================================================
    GENRE SEARCH
-========================================================= */
+   ============================================================ */
 
 function searchGenre(genre){
 
-  document.getElementById("discoverSearch").value = genre;
+  document
+    .getElementById("discoverSearch")
+    .value = genre;
 
   showPage("discover");
 
@@ -1616,22 +1179,17 @@ function searchGenre(genre){
 }
 
 
-/* =========================================================
-   BOOK SEARCH
-========================================================= */
+/* ============================================================
+   OPEN LIBRARY SEARCH
+   ============================================================ */
 
 async function performSearch(){
 
+  const input =
+    document.getElementById("discoverSearch");
+
   const q =
-    document.getElementById("discoverSearch")
-      .value
-      .trim();
-
-  if(!q){
-
-    return;
-
-  }
+    input.value.trim();
 
   const status =
     document.getElementById("searchStatus");
@@ -1639,18 +1197,77 @@ async function performSearch(){
   const results =
     document.getElementById("searchResults");
 
+
+  if(!q){
+
+    status.textContent =
+      "Type a book title, author or series to search.";
+
+    status.classList.add("show");
+
+    results.innerHTML = "";
+
+    return;
+  }
+
+
   status.textContent =
-    "Searching books…";
+    "🔎 Searching the Guilty Pages book shelves...";
+
+  status.classList.add("show");
 
   results.innerHTML = "";
 
 
+  /*
+     Use cached result first.
+     This reduces repeated API calls.
+  */
+
+  const cacheKey =
+    q.toLowerCase();
+
+  if(searchCache[cacheKey]){
+
+    const cached =
+      searchCache[cacheKey];
+
+    renderBooks(cached);
+
+    status.textContent =
+      `${cached.length} book${cached.length===1?"":"s"} found.`;
+
+    return;
+  }
+
+
   try{
 
+    /*
+       Open Library specifically recommends requesting
+       only the fields an application actually needs.
+    */
+
+    const fields = [
+      "key",
+      "title",
+      "author_name",
+      "first_publish_year",
+      "cover_i",
+      "cover_edition_key",
+      "isbn",
+      "subject"
+    ].join(",");
+
+
     const url =
-      "https://www.googleapis.com/books/v1/volumes?q=" +
+      "https://openlibrary.org/search.json" +
+      "?q=" +
       encodeURIComponent(q) +
-      "&maxResults=20&printType=books";
+      "&limit=24" +
+      "&fields=" +
+      encodeURIComponent(fields);
+
 
     const response =
       await fetch(url);
@@ -1659,7 +1276,7 @@ async function performSearch(){
     if(!response.ok){
 
       throw new Error(
-        "Google Books request failed: " +
+        "Open Library returned HTTP " +
         response.status
       );
 
@@ -1670,328 +1287,323 @@ async function performSearch(){
       await response.json();
 
 
-    searchBooks =
-      (data.items || [])
-        .map(normalizeGoogleBook);
+    const books =
+      (data.docs || [])
+        .map(normalizeOpenLibraryBook)
+        .filter(book=>book.title);
 
 
-    if(!searchBooks.length){
+    if(!books.length){
 
       status.textContent =
-        "No books found. Try another title or author.";
+        "No books found. Try the title, author or series name.";
 
-      results.innerHTML =
-        `
-        <div class="empty">
-          No books found.<br><br>
-          Try another title, author or genre.
-        </div>
-        `;
+      status.classList.add("show");
 
       return;
-
     }
 
 
-    status.textContent =
-      searchBooks.length +
-      " books found";
+    /*
+       Save results locally so repeated searches
+       don't keep hitting the API.
+    */
 
+    searchCache[cacheKey] =
+      books;
 
-    renderBooks(
-      searchBooks,
-      results
+    /*
+       Keep cache from becoming enormous.
+    */
+
+    const cacheKeys =
+      Object.keys(searchCache);
+
+    if(cacheKeys.length > 30){
+
+      delete searchCache[
+        cacheKeys[0]
+      ];
+
+    }
+
+    saveJSON(
+      STORAGE_KEYS.cache,
+      searchCache
     );
 
+
+    renderBooks(books);
+
+
+    status.textContent =
+      `${books.length} books found.`;
 
   }catch(error){
 
-    console.error(
-      "BOOK SEARCH ERROR:",
-      error
-    );
-
+    console.error(error);
 
     status.textContent =
-      "Book search is temporarily unavailable.";
+      "The book search couldn't connect right now. " +
+      "Please try again in a moment.";
 
-
-    results.innerHTML =
-      `
-      <div class="empty">
-        <strong>We couldn't search right now.</strong>
-        <br><br>
-        Please check your internet connection
-        and try again.
-      </div>
-      `;
+    status.classList.add("show");
 
   }
 
 }
 
 
-/* =========================================================
-   GOOGLE BOOK NORMALIZER
-========================================================= */
+/* ============================================================
+   NORMALIZE OPEN LIBRARY BOOK
+   ============================================================ */
 
-function normalizeGoogleBook(item){
+function normalizeOpenLibraryBook(book){
 
-  const info =
-    item.volumeInfo || {};
+  let cover = "";
 
-  const image =
-    info.imageLinks &&
-    (
-      info.imageLinks.thumbnail ||
-      info.imageLinks.smallThumbnail
-    );
+  if(book.cover_i){
+
+    cover =
+      "https://covers.openlibrary.org/b/id/" +
+      book.cover_i +
+      "-L.jpg";
+
+  }else if(book.cover_edition_key){
+
+    cover =
+      "https://covers.openlibrary.org/b/olid/" +
+      book.cover_edition_key +
+      "-L.jpg";
+
+  }
 
 
   return {
 
     id:
-      item.id ||
-      "book-" +
-      Date.now() +
-      "-" +
-      Math.random(),
+      book.key ||
+      crypto.randomUUID(),
+
+    key:
+      book.key || "",
 
     title:
-      info.title ||
-      "Untitled",
+      book.title || "Untitled",
+
+    author:
+      Array.isArray(book.author_name)
+        ? book.author_name[0]
+        : "Unknown author",
 
     authors:
-      info.authors ||
-      ["Unknown author"],
+      Array.isArray(book.author_name)
+        ? book.author_name
+        : [],
+
+    year:
+      book.first_publish_year || "",
 
     cover:
-      image
-        ? image
-            .replace("http:","https:")
-            .replace("&edge=curl","")
+      cover,
+
+    coverId:
+      book.cover_i || "",
+
+    edition:
+      book.cover_edition_key || "",
+
+    isbn:
+      Array.isArray(book.isbn)
+        ? book.isbn[0]
         : "",
 
-    description:
-      info.description ||
-      "",
-
-    categories:
-      info.categories ||
-      [],
-
-    published:
-      info.publishedDate ||
-      "",
-
-    preview:
-      info.previewLink ||
-      "",
-
-    infoLink:
-      info.infoLink ||
-      "",
-
-    kindle:
-      "https://www.amazon.com/s?k=" +
-      encodeURIComponent(
-        (info.title || "") +
-        " " +
-        ((info.authors || []).join(" "))
-      )
+    subjects:
+      Array.isArray(book.subject)
+        ? book.subject.slice(0,8)
+        : []
 
   };
 
 }
 
 
-/* =========================================================
-   BOOK DISPLAY
-========================================================= */
+/* ============================================================
+   RENDER BOOK RESULTS
+   ============================================================ */
 
-function renderBooks(books, container){
+function renderBooks(books){
 
-  container.innerHTML = "";
+  const results =
+    document.getElementById("searchResults");
+
+  results.innerHTML = "";
 
 
-  books.forEach(function(book){
+  books.forEach(book=>{
 
     const card =
-      document.createElement("div");
+      document.createElement("article");
 
     card.className =
       "book-card";
 
 
-    const coverHTML =
-      book.cover
-        ?
-        `
-        <img
-          src="${escapeHTML(book.cover)}"
-          alt="${escapeHTML(book.title)} cover"
-          loading="lazy"
-        >
-        `
-        :
-        `
-        <div class="no-cover">
-          📖<br><br>
-          ${escapeHTML(book.title)}
-        </div>
-        `;
+    const safeTitle =
+      escapeHTML(book.title);
+
+    const safeAuthor =
+      escapeHTML(book.author);
 
 
-    const author =
-      escapeHTML(
-        book.authors.join(", ")
-      );
+    card.innerHTML = `
 
-
-    const existingRating =
-      ratings[book.id] || 0;
-
-
-    card.innerHTML =
-      `
       <div class="cover-wrap">
-        ${coverHTML}
+
+        ${
+          book.cover
+
+          ?
+
+          `<img
+             class="cover"
+             src="${book.cover}"
+             alt="${safeTitle} cover"
+             loading="lazy"
+             onerror="this.style.display='none';this.parentElement.innerHTML='<div class=&quot;no-cover&quot;>📚<br>No cover available</div>'"
+           >`
+
+          :
+
+          `<div class="no-cover">
+             📚<br>
+             ${safeTitle}
+           </div>`
+        }
+
       </div>
+
 
       <div class="book-info">
 
         <div class="book-title">
-          ${escapeHTML(book.title)}
+          ${safeTitle}
         </div>
 
         <div class="book-author">
-          ${author}
+          ${safeAuthor}
         </div>
 
-        <div class="rating-row">
+        ${
+          book.year
+          ?
+          `<div class="book-year">
+             First published ${book.year}
+           </div>`
+          :
+          ""
+        }
 
-          <span class="stars">
-            ${starString(existingRating)}
-          </span>
 
-          ${
-            existingRating
-              ? existingRating + "/5"
-              : "Not rated"
-          }
+        <div class="card-actions">
 
-        </div>
+          <div class="shelf-row">
 
-        <div class="book-actions">
+            <button
+              class="secondary"
+              onclick='addToShelf(${jsonForHTML(book)},"tbr")'
+            >
+              + TBR
+            </button>
 
-          <button
-            class="secondary"
-            onclick="addToShelfById('${escapeJS(book.id)}','tbr')"
-          >
-            + TBR
-          </button>
+            <button
+              class="secondary"
+              onclick='addToShelf(${jsonForHTML(book)},"dnf")'
+            >
+              DNF
+            </button>
 
-          <button
-            class="secondary"
-            onclick="addToShelfById('${escapeJS(book.id)}','dnf')"
-          >
-            DNF
-          </button>
+            <button
+              class="secondary"
+              onclick='addToShelf(${jsonForHTML(book)},"rereads")'
+            >
+              Reread
+            </button>
 
-          <button
-            class="secondary"
-            onclick="addToShelfById('${escapeJS(book.id)}','rereads')"
-          >
-            Reread
-          </button>
+          </div>
+
 
           <button
             class="primary"
-            onclick="openRating('${escapeJS(book.id)}')"
+            onclick='openBook(${jsonForHTML(book)})'
           >
-            Rate
-          </button>
-
-          <button
-            class="secondary"
-            onclick="openBook('${escapeJS(book.id)}')"
-          >
-            Details
+            📖 View Book
           </button>
 
         </div>
 
       </div>
-      `;
+    `;
 
 
-    container.appendChild(card);
-
-  });
-
-}
-
-
-/* =========================================================
-   FIND SEARCHED BOOK
-========================================================= */
-
-function findSearchBook(id){
-
-  return searchBooks.find(function(book){
-
-    return book.id === id;
+    results.appendChild(card);
 
   });
 
 }
 
 
-/* =========================================================
-   ADD BOOK TO SHELF
-========================================================= */
+/* ============================================================
+   SAFE BOOK JSON FOR INLINE BUTTONS
+   ============================================================ */
 
-function addToShelfById(id,shelf){
+function jsonForHTML(book){
 
-  const book =
-    findSearchBook(id);
-
-  if(!book){
-
-    return;
-
-  }
-
-  addToShelf(book,shelf);
+  return JSON.stringify(book)
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"&#39;")
+    .replace(/"/g,"&quot;");
 
 }
 
 
-/* =========================================================
-   ADD TO SHELF
-========================================================= */
+/*
+   Decode the HTML entities created above.
+*/
 
-function addToShelf(book,shelf){
+function decodeBook(value){
 
-  if(!shelves[shelf]){
+  const textarea =
+    document.createElement("textarea");
 
-    shelves[shelf] = [];
+  textarea.innerHTML =
+    value;
 
-  }
+  return JSON.parse(
+    textarea.value
+  );
 
-
-  const exists =
-    shelves[shelf].some(function(item){
-
-      return item.id === book.id;
-
-    });
+}
 
 
-  if(exists){
+/* ============================================================
+   SHELVES
+   ============================================================ */
+
+function addToShelf(book, shelf){
+
+  /*
+     Prevent duplicate books.
+  */
+
+  if(
+    shelves[shelf].some(
+      b=>b.id===book.id
+    )
+  ){
 
     alert(
-      `"${book.title}" is already on your ${shelf.toUpperCase()} shelf.`
+      `This book is already in your ${shelfName(shelf)} shelf.`
     );
 
     return;
@@ -1999,23 +1611,86 @@ function addToShelf(book,shelf){
   }
 
 
+  /*
+     If moving from another shelf,
+     remove it there first.
+  */
+
+  ["tbr","dnf","rereads"]
+    .forEach(other=>{
+
+      if(other!==shelf){
+
+        shelves[other] =
+          shelves[other].filter(
+            b=>b.id!==book.id
+          );
+
+      }
+
+    });
+
+
   shelves[shelf].push(book);
 
-  saveLocalData();
-
-  updateProfileStats();
+  saveShelves();
 
 
   alert(
-    `"${book.title}" was added to ${shelf.toUpperCase()}.`
+    `"${book.title}" added to ${shelfName(shelf)} 💗`
   );
 
+
+  renderCurrentShelfIfNeeded();
+
+}
+
+
+function shelfName(shelf){
+
+  if(shelf==="tbr") return "TBR";
+
+  if(shelf==="dnf") return "DNF";
+
+  return "Rereads";
+
+}
+
+
+function saveShelves(){
+
+  saveJSON(
+    STORAGE_KEYS.tbr,
+    shelves.tbr
+  );
+
+  saveJSON(
+    STORAGE_KEYS.dnf,
+    shelves.dnf
+  );
+
+  saveJSON(
+    STORAGE_KEYS.rereads,
+    shelves.rereads
+  );
+
+}
+
+
+function removeFromShelf(shelf,index){
+
+  shelves[shelf].splice(
+    index,
+    1
+  );
+
+  saveShelves();
 
   renderShelf(
     shelf,
-    shelf === "tbr"
+    shelf==="tbr"
       ? "tbrList"
-      : shelf === "dnf"
+      : shelf==="dnf"
         ? "dnfList"
         : "rereadsList"
   );
@@ -2023,174 +1698,66 @@ function addToShelf(book,shelf){
 }
 
 
-/* =========================================================
-   REMOVE FROM SHELF
-========================================================= */
+function renderCurrentShelfIfNeeded(){
 
-function removeFromShelf(shelf,id){
+  const active =
+    document.querySelector(".page.active");
 
-  shelves[shelf] =
-    shelves[shelf].filter(function(book){
+  if(!active) return;
 
-      return book.id !== id;
+  if(active.id==="tbr"){
+    renderShelf("tbr","tbrList");
+  }
 
-    });
+  if(active.id==="dnf"){
+    renderShelf("dnf","dnfList");
+  }
 
-
-  saveLocalData();
-
-  renderShelf(
-    shelf,
-    shelf === "tbr"
-      ? "tbrList"
-      : shelf === "dnf"
-        ? "dnfList"
-        : "rereadsList"
-  );
-
-  updateProfileStats();
+  if(active.id==="rereads"){
+    renderShelf("rereads","rereadsList");
+  }
 
 }
 
 
-/* =========================================================
-   MOVE SHELF
-========================================================= */
-
-function moveShelf(bookId,fromShelf,toShelf){
-
-  const index =
-    shelves[fromShelf].findIndex(function(book){
-
-      return book.id === bookId;
-
-    });
-
-
-  if(index === -1){
-
-    return;
-
-  }
-
-
-  const book =
-    shelves[fromShelf][index];
-
-
-  const alreadyThere =
-    shelves[toShelf].some(function(item){
-
-      return item.id === bookId;
-
-    });
-
-
-  if(!alreadyThere){
-
-    shelves[toShelf].push(book);
-
-  }
-
-
-  shelves[fromShelf].splice(index,1);
-
-  saveLocalData();
-
-  renderShelf(
-    fromShelf,
-    fromShelf === "tbr"
-      ? "tbrList"
-      : fromShelf === "dnf"
-        ? "dnfList"
-        : "rereadsList"
-  );
-
-  updateProfileStats();
-
-}
-
-
-/* =========================================================
-   TBR REORDER
-========================================================= */
-
-function moveTBR(index,direction){
-
-  const newIndex =
-    index + direction;
-
-
-  if(
-    newIndex < 0 ||
-    newIndex >= shelves.tbr.length
-  ){
-
-    return;
-
-  }
-
-
-  const temp =
-    shelves.tbr[index];
-
-
-  shelves.tbr[index] =
-    shelves.tbr[newIndex];
-
-
-  shelves.tbr[newIndex] =
-    temp;
-
-
-  saveLocalData();
-
-  renderShelf(
-    "tbr",
-    "tbrList"
-  );
-
-}
-
-
-/* =========================================================
+/* ============================================================
    RENDER SHELF
-========================================================= */
+   ============================================================ */
 
-function renderShelf(shelf,containerId){
+function renderShelf(shelf,elementId){
 
   const container =
-    document.getElementById(containerId);
+    document.getElementById(elementId);
+
+  if(!container) return;
 
 
-  if(!container){
-
-    return;
-
-  }
+  const list =
+    shelves[shelf];
 
 
-  const books =
-    shelves[shelf] || [];
+  if(!list.length){
 
+    container.innerHTML = `
 
-  if(!books.length){
+      <div class="community-card">
 
-    container.innerHTML =
-      `
-      <div class="empty">
-        <strong>Your ${shelf.toUpperCase()} is empty.</strong>
-        <br><br>
-        Go to Discover and add some books.
-        <br><br>
+        <h3>Your ${shelfName(shelf)} is empty.</h3>
+
+        <p>
+          Find a book and add it here.
+        </p>
+
         <button
           class="primary"
           onclick="showPage('discover')"
         >
-          Discover Books
+          🔎 Find Books
         </button>
+
       </div>
-      `;
+
+    `;
 
     return;
 
@@ -2200,7 +1767,7 @@ function renderShelf(shelf,containerId){
   container.innerHTML = "";
 
 
-  books.forEach(function(book,index){
+  list.forEach((book,index)=>{
 
     const item =
       document.createElement("div");
@@ -2209,142 +1776,90 @@ function renderShelf(shelf,containerId){
       "shelf-item";
 
 
-    const cover =
-      book.cover
+    item.innerHTML = `
+
+      ${
+        book.cover
+
         ?
+
         `<img
-          class="shelf-mini-cover"
-          src="${escapeHTML(book.cover)}"
-          alt=""
-        >`
+           class="shelf-cover"
+           src="${book.cover}"
+           alt=""
+         >`
+
         :
-        `
-        <div
-          class="shelf-mini-cover"
-          style="display:flex;align-items:center;justify-content:center;"
-        >
-          📖
-        </div>
-        `;
+
+        `<div
+           class="shelf-cover"
+           style="display:flex;align-items:center;justify-content:center"
+         >
+           📚
+         </div>`
+      }
 
 
-    let buttons = "";
+      <div class="shelf-main">
 
-
-    if(shelf === "tbr"){
-
-      buttons =
-        `
-        <button
-          class="icon-btn"
-          title="Move up"
-          onclick="moveTBR(${index},-1)"
-        >
-          ↑
-        </button>
-
-        <button
-          class="icon-btn"
-          title="Move down"
-          onclick="moveTBR(${index},1)"
-        >
-          ↓
-        </button>
-
-        <button
-          class="icon-btn"
-          title="Move to rereads"
-          onclick="moveShelf('${escapeJS(book.id)}','tbr','rereads')"
-        >
-          🔁
-        </button>
-
-        <button
-          class="icon-btn"
-          title="Move to DNF"
-          onclick="moveShelf('${escapeJS(book.id)}','tbr','dnf')"
-        >
-          ×
-        </button>
-        `;
-
-    }else if(shelf === "dnf"){
-
-      buttons =
-        `
-        <button
-          class="icon-btn"
-          title="Move to TBR"
-          onclick="moveShelf('${escapeJS(book.id)}','dnf','tbr')"
-        >
-          + 
-        </button>
-
-        <button
-          class="icon-btn"
-          title="Move to Rereads"
-          onclick="moveShelf('${escapeJS(book.id)}','dnf','rereads')"
-        >
-          🔁
-        </button>
-        `;
-
-    }else{
-
-      buttons =
-        `
-        <button
-          class="icon-btn"
-          title="Move to TBR"
-          onclick="moveShelf('${escapeJS(book.id)}','rereads','tbr')"
-        >
-          +
-        </button>
-
-        <button
-          class="icon-btn"
-          title="Move to DNF"
-          onclick="moveShelf('${escapeJS(book.id)}','rereads','dnf')"
-        >
-          ×
-        </button>
-        `;
-
-    }
-
-
-    buttons +=
-      `
-      <button
-        class="icon-btn"
-        title="Remove"
-        onclick="removeFromShelf('${shelf}','${escapeJS(book.id)}')"
-      >
-        🗑
-      </button>
-      `;
-
-
-    item.innerHTML =
-      `
-      ${cover}
-
-      <div class="shelf-item-info">
-
-        <div class="shelf-item-title">
+        <strong>
           ${escapeHTML(book.title)}
-        </div>
+        </strong>
 
-        <div class="shelf-item-author">
-          ${escapeHTML(book.authors.join(", "))}
-        </div>
+        <small>
+          ${escapeHTML(book.author)}
+        </small>
+
+        ${
+          shelf==="tbr"
+          ?
+          `<div style="margin-top:5px;color:var(--purple);font-size:12px">
+             Next-read position #${index+1}
+           </div>`
+          :
+          ""
+        }
 
       </div>
 
-      <div class="shelf-buttons">
-        ${buttons}
-      </div>
-      `;
+
+      ${
+        shelf==="tbr"
+
+        ?
+
+        `<div class="order-buttons">
+
+          <button
+            onclick="moveBook('tbr',${index},-1)"
+            title="Move up"
+          >
+            ↑
+          </button>
+
+          <button
+            onclick="moveBook('tbr',${index},1)"
+            title="Move down"
+          >
+            ↓
+          </button>
+
+        </div>`
+
+        :
+
+        ""
+      }
+
+
+      <button
+        class="danger"
+        onclick="removeFromShelf('${shelf}',${index})"
+      >
+        Remove
+      </button>
+
+    `;
 
 
     container.appendChild(item);
@@ -2354,449 +1869,692 @@ function renderShelf(shelf,containerId){
 }
 
 
-/* =========================================================
-   RATING
-========================================================= */
+/* ============================================================
+   TBR REORDERING
+   ============================================================ */
 
-function openRating(id){
+function moveBook(shelf,index,direction){
 
-  const book =
-    findSearchBook(id);
+  const list =
+    shelves[shelf];
+
+  const newIndex =
+    index + direction;
 
 
-  if(!book){
-
+  if(
+    newIndex<0 ||
+    newIndex>=list.length
+  ){
     return;
-
   }
 
 
-  currentRatingBook =
-    book;
+  const temp =
+    list[index];
+
+  list[index] =
+    list[newIndex];
+
+  list[newIndex] =
+    temp;
 
 
-  document.getElementById(
-    "ratingBookTitle"
-  ).textContent =
-    book.title;
+  saveShelves();
 
-
-  document.getElementById(
-    "ratingValue"
-  ).value =
-    ratings[id] || 5;
-
-
-  document.getElementById(
-    "ratingModal"
-  ).classList.add("open");
-
-}
-
-
-function saveRating(){
-
-  if(!currentRatingBook){
-
-    return;
-
-  }
-
-
-  const value =
-    Number(
-      document.getElementById(
-        "ratingValue"
-      ).value
-    );
-
-
-  ratings[currentRatingBook.id] =
-    value;
-
-
-  saveLocalData();
-
-  closeModal("ratingModal");
-
-
-  const currentResults =
-    document.getElementById(
-      "searchResults"
-    );
-
-
-  if(currentResults){
-
-    renderBooks(
-      searchBooks,
-      currentResults
-    );
-
-  }
-
-
-  updateProfileStats();
-
-
-  alert(
-    `You rated "${currentRatingBook.title}" ${value}/5.`
+  renderShelf(
+    shelf,
+    "tbrList"
   );
 
 }
 
 
-/* =========================================================
-   STAR DISPLAY
-========================================================= */
-
-function starString(value){
-
-  if(!value){
-
-    return "☆☆☆☆☆";
-
-  }
-
-
-  let result = "";
-
-
-  for(let i=1;i<=5;i++){
-
-    result +=
-      i <= value
-        ? "★"
-        : "☆";
-
-  }
-
-
-  return result;
-
-}
-
-
-/* =========================================================
+/* ============================================================
    BOOK DETAILS
-========================================================= */
+   ============================================================ */
 
-function openBook(id){
-
-  const book =
-    findSearchBook(id);
-
-
-  if(!book){
-
-    return;
-
-  }
-
-
-  const categories =
-    book.categories.length
-      ? book.categories.join(", ")
-      : "Not listed";
-
-
-  const description =
-    book.description
-      ? stripHTML(book.description).slice(0,900) + "…"
-      : "No description available.";
-
-
-  const existing =
-    document.getElementById(
-      "bookDetailsModal"
-    );
-
-
-  if(existing){
-
-    existing.remove();
-
-  }
-
+function openBook(book){
 
   const modal =
-    document.createElement("div");
+    document.getElementById("bookModal");
+
+  const content =
+    document.getElementById("modalContent");
 
 
-  modal.id =
-    "bookDetailsModal";
-
-  modal.className =
-    "modal open";
+  const currentRating =
+    ratings[book.id] || 0;
 
 
-  modal.innerHTML =
-    `
-    <div class="modal-box">
+  content.innerHTML = `
 
-      <div class="modal-head">
+    <div style="display:grid;grid-template-columns:150px 1fr;gap:22px">
 
-        <h2>${escapeHTML(book.title)}</h2>
+      <div>
 
-        <button
-          class="close"
-          onclick="this.closest('.modal').remove()"
-        >
-          ×
-        </button>
+        ${
+          book.cover
+
+          ?
+
+          `<img
+             src="${book.cover}"
+             style="width:100%;border-radius:15px"
+             alt=""
+           >`
+
+          :
+
+          `<div
+             style="height:220px;background:var(--pink2);border-radius:15px;display:flex;align-items:center;justify-content:center;text-align:center"
+           >
+             📚
+           </div>`
+        }
 
       </div>
 
-      <br>
 
-      <p>
-        <strong>Author:</strong>
-        ${escapeHTML(book.authors.join(", "))}
-      </p>
+      <div>
 
-      <p>
-        <strong>Genre:</strong>
-        ${escapeHTML(categories)}
-      </p>
+        <h2 style="color:var(--purple);margin-top:0">
+          ${escapeHTML(book.title)}
+        </h2>
 
-      <p>
-        <strong>Published:</strong>
-        ${escapeHTML(book.published || "Not listed")}
-      </p>
-
-      <p>
-        ${escapeHTML(description)}
-      </p>
-
-      <br>
-
-      <div class="book-actions">
-
-        <button
-          class="primary"
-          onclick="addToShelfById('${escapeJS(book.id)}','tbr')"
-        >
-          + Add to TBR
-        </button>
-
-        <button
-          class="secondary"
-          onclick="openRating('${escapeJS(book.id)}')"
-        >
-          Rate
-        </button>
-
-        <a
-          class="secondary"
-          href="${escapeHTML(book.kindle)}"
-          target="_blank"
-          rel="noopener"
-          style="text-align:center"
-        >
-          Kindle / Store
-        </a>
+        <p>
+          <strong>Author:</strong>
+          ${escapeHTML(book.author)}
+        </p>
 
         ${
-          book.preview
-            ?
-            `
-            <a
-              class="secondary"
-              href="${escapeHTML(book.preview)}"
-              target="_blank"
-              rel="noopener"
-              style="text-align:center"
-            >
-              Preview
-            </a>
-            `
-            :
-            ""
+          book.year
+          ?
+          `<p>
+             <strong>First published:</strong>
+             ${book.year}
+           </p>`
+          :
+          ""
         }
 
-        <button
-          class="secondary"
-          onclick="openMembership()"
+
+        <h3>💗 Your Guilty Pages Rating</h3>
+
+        <div
+          id="ratingButtons"
+          class="rating"
         >
-          💬 Gossip Room
-        </button>
+          ${ratingButtons(book,currentRating)}
+        </div>
+
+
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:18px">
+
+          <button
+            class="secondary"
+            onclick='addToShelf(${jsonForHTML(book)},"tbr");closeModal()'
+          >
+            + TBR
+          </button>
+
+          <button
+            class="secondary"
+            onclick='addToShelf(${jsonForHTML(book)},"dnf");closeModal()'
+          >
+            DNF
+          </button>
+
+          <button
+            class="secondary"
+            onclick='addToShelf(${jsonForHTML(book)},"rereads");closeModal()'
+          >
+            Reread
+          </button>
+
+          <button
+            class="primary"
+            onclick='openStore("${encodeURIComponent(book.title)}")'
+          >
+            📱 Kindle / Store
+          </button>
+
+        </div>
 
       </div>
 
     </div>
+
+
+    <hr style="border:0;border-top:1px solid var(--border);margin:25px 0">
+
+
+    <h3 style="color:var(--purple)">
+      💬 Gossip about this book
+    </h3>
+
+    <div id="commentsArea">
+      ${renderComments(book.id)}
+    </div>
+
+
+    <div class="comment-box">
+
+      <textarea
+        id="newComment"
+        placeholder="Say what you're really thinking..."
+      ></textarea>
+
+      <button
+        class="primary"
+        style="margin-top:8px"
+        onclick='addComment("${book.id}")'
+      >
+        Post Gossip
+      </button>
+
+    </div>
+
+
+    <div
+      class="membership"
+      style="margin-top:20px"
+    >
+
+      <h3>💎 Private Gossip Room</h3>
+
+      <p>
+        The private room for this book will be part of
+        Guilty Pages Membership.
+      </p>
+
+      <button
+        class="primary"
+        onclick="openRoomNotice()"
+      >
+        Membership Coming Soon
+      </button>
+
+    </div>
+
+  `;
+
+
+  modal.classList.add("show");
+
+}
+
+
+/* ============================================================
+   RATINGS
+   ============================================================ */
+
+function ratingButtons(book,current){
+
+  let html = "";
+
+  for(let i=1;i<=5;i++){
+
+    html += `
+
+      <button
+        style="
+          border:0;
+          background:transparent;
+          font-size:25px;
+          cursor:pointer;
+          opacity:${i<=current?1:.35}
+        "
+        onclick='rateBook("${book.id}",${i})'
+      >
+        ⭐
+      </button>
+
     `;
 
+  }
 
-  document.body.appendChild(modal);
-
-}
-
-
-/* =========================================================
-   AUTH
-========================================================= */
-
-function openAuth(){
-
-  document
-    .getElementById("authModal")
-    .classList.add("open");
+  return html;
 
 }
 
 
-async function handleAuth(event){
+function rateBook(bookId,rating){
 
-  event.preventDefault();
+  ratings[bookId] =
+    rating;
+
+  saveJSON(
+    STORAGE_KEYS.ratings,
+    ratings
+  );
 
 
-  if(!supabaseClient){
-
-    showAlert(
-      "authAlert",
-      "Please connect your Supabase key first.",
-      "error"
+  const buttons =
+    document.getElementById(
+      "ratingButtons"
     );
+
+  if(buttons){
+
+    buttons.innerHTML =
+      ratingButtons(
+        {id:bookId},
+        rating
+      );
+
+  }
+
+}
+
+
+/* ============================================================
+   COMMENTS
+   ============================================================ */
+
+function renderComments(bookId){
+
+  const list =
+    comments[bookId] || [];
+
+
+  if(!list.length){
+
+    return `
+      <p style="color:var(--muted)">
+        No gossip yet. Be the first person to say something.
+      </p>
+    `;
+
+  }
+
+
+  return list.map(comment=>`
+
+    <div
+      style="
+        background:var(--pink3);
+        border:1px solid var(--border);
+        border-radius:15px;
+        padding:12px;
+        margin-bottom:8px
+      "
+    >
+
+      <strong>
+        ${escapeHTML(comment.name || "Anonymous Reader")}
+      </strong>
+
+      <p style="margin:5px 0 0">
+        ${escapeHTML(comment.text)}
+      </p>
+
+    </div>
+
+  `).join("");
+
+}
+
+
+function addComment(bookId){
+
+  const input =
+    document.getElementById("newComment");
+
+
+  if(!input) return;
+
+
+  const text =
+    input.value.trim();
+
+
+  if(!text){
+
+    input.focus();
 
     return;
 
   }
 
 
-  const email =
-    document.getElementById(
-      "authEmail"
-    ).value.trim();
+  if(!comments[bookId]){
+    comments[bookId] = [];
+  }
 
 
-  const password =
-    document.getElementById(
-      "authPassword"
-    ).value;
-
-
-  try{
-
-    const result =
-      await supabaseClient.auth.signInWithPassword({
-        email:email,
-        password:password
-      });
-
-
-    if(result.error){
-
-      throw result.error;
-
-    }
-
-
-    closeModal("authModal");
-
-    alert("Welcome back to Guilty Pages!");
-
-
-    await loadUserProfile();
-
-
-  }catch(error){
-
-    showAlert(
-      "authAlert",
-      error.message ||
-      "Sign in failed.",
-      "error"
+  const profile =
+    loadJSON(
+      STORAGE_KEYS.profile,
+      {}
     );
 
+
+  comments[bookId].push({
+
+    name:
+      profile.displayName ||
+      profile.username ||
+      "Anonymous Reader",
+
+    text:text,
+
+    createdAt:
+      new Date().toISOString()
+
+  });
+
+
+  saveJSON(
+    STORAGE_KEYS.comments,
+    comments
+  );
+
+
+  /*
+     Refresh only the comments area.
+  */
+
+  const area =
+    document.getElementById(
+      "commentsArea"
+    );
+
+  if(area){
+
+    area.innerHTML =
+      renderComments(bookId);
+
   }
+
+
+  input.value = "";
 
 }
 
 
-async function handleSignup(){
+/* ============================================================
+   KINDLE / STORE
+   ============================================================ */
 
-  if(!supabaseClient){
+function openStore(encodedTitle){
 
-    showAlert(
-      "authAlert",
-      "Please connect your Supabase key first.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  const email =
-    document.getElementById(
-      "authEmail"
-    ).value.trim();
-
-
-  const password =
-    document.getElementById(
-      "authPassword"
-    ).value;
-
-
-  if(!email || !password){
-
-    showAlert(
-      "authAlert",
-      "Enter your email and password first.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  try{
-
-    const result =
-      await supabaseClient.auth.signUp({
-        email:email,
-        password:password
-      });
-
-
-    if(result.error){
-
-      throw result.error;
-
-    }
-
-
-    showAlert(
-      "authAlert",
-      "Account created. Check your email if email confirmation is enabled.",
-      "success"
+  const title =
+    decodeURIComponent(
+      encodedTitle
     );
 
 
-  }catch(error){
+  const url =
+    "https://www.amazon.com/s?k=" +
+    encodeURIComponent(title) +
+    "+Kindle";
 
-    showAlert(
-      "authAlert",
-      error.message ||
-      "Account creation failed.",
-      "error"
-    );
 
-  }
+  window.open(
+    url,
+    "_blank"
+  );
 
 }
 
 
-/* =========================================================
+/* ============================================================
+   MEMBERSHIP
+   ============================================================ */
+
+function openRoomNotice(){
+
+  alert(
+    "💎 Guilty Pages Membership is planned for the private book gossip rooms. Payment will be connected here later."
+  );
+
+}
+
+
+function showRankingInfo(){
+
+  alert(
+    "Guilty Pages rankings are designed around Guilty Pages reader ratings and community activity — not bookstore star ratings."
+  );
+
+}
+
+
+/* ============================================================
    PROFILE
-========================================================= */
+   ============================================================ */
 
-async function loadUserProfile(){
+async function saveProfile(){
+
+  const username =
+    document
+      .getElementById("profileUsername")
+      .value
+      .trim();
+
+
+  const displayName =
+    document
+      .getElementById("profileDisplayName")
+      .value
+      .trim();
+
+
+  if(!username){
+
+    alert(
+      "Please enter a username."
+    );
+
+    return;
+
+  }
+
+
+  const profile = {
+
+    username:
+
+      username.replace(
+        /^@/,
+        ""
+      ),
+
+    displayName:
+
+      displayName ||
+      username,
+
+  };
+
+
+  saveJSON(
+    STORAGE_KEYS.profile,
+    profile
+  );
+
+
+  const status =
+    document.getElementById(
+      "profileStatus"
+    );
+
+
+  status.textContent =
+    "Profile saved 💗";
+
+
+  /*
+     Save to Supabase when a user is signed in.
+     This does not stop the local profile from working.
+  */
+
+  if(supabaseClient){
+
+    try{
+
+      const {
+        data:{
+          user
+        }
+      } =
+        await supabaseClient
+          .auth
+          .getUser();
+
+
+      if(user){
+
+        await supabaseClient
+          .from("profiles")
+          .upsert({
+
+            id:user.id,
+
+            username:
+              profile.username,
+
+            display_name:
+              profile.displayName
+
+          });
+
+
+      }
+
+    }catch(error){
+
+      console.log(
+        "Supabase profile sync:",
+        error
+      );
+
+    }
+
+  }
+
+}
+
+
+async function loadProfile(){
+
+  const profile =
+    loadJSON(
+      STORAGE_KEYS.profile,
+      {}
+    );
+
+
+  const username =
+    document.getElementById(
+      "profileUsername"
+    );
+
+  const displayName =
+    document.getElementById(
+      "profileDisplayName"
+    );
+
+
+  if(username){
+
+    username.value =
+      profile.username || "";
+
+  }
+
+
+  if(displayName){
+
+    displayName.value =
+      profile.displayName || "";
+
+  }
+
+
+  /*
+     If signed in, try loading the profile
+     from Supabase too.
+  */
+
+  if(supabaseClient){
+
+    try{
+
+      const {
+        data:{
+          user
+        }
+      } =
+        await supabaseClient
+          .auth
+          .getUser();
+
+
+      if(user){
+
+        const {
+          data,
+          error
+        } =
+          await supabaseClient
+            .from("profiles")
+            .select(
+              "username,display_name"
+            )
+            .eq(
+              "id",
+              user.id
+            )
+            .maybeSingle();
+
+
+        if(!error && data){
+
+          if(username){
+
+            username.value =
+              data.username || "";
+
+          }
+
+          if(displayName){
+
+            displayName.value =
+              data.display_name || "";
+
+          }
+
+        }
+
+      }
+
+    }catch(error){
+
+      console.log(
+        "Profile load:",
+        error
+      );
+
+    }
+
+  }
+
+}
+
+
+/* ============================================================
+   AUTH
+   ============================================================ */
+
+async function signInOrOut(){
 
   if(!supabaseClient){
+
+    alert(
+      "Supabase is not connected yet. Check that you pasted your real Supabase key into the code."
+    );
 
     return;
 
@@ -2805,54 +2563,82 @@ async function loadUserProfile(){
 
   try{
 
-    const result =
-      await supabaseClient.auth.getUser();
+    const {
+      data:{
+        user
+      }
+    } =
+      await supabaseClient
+        .auth
+        .getUser();
 
 
-    if(result.error || !result.data.user){
+    if(user){
+
+      await supabaseClient
+        .auth
+        .signOut();
+
+
+      alert(
+        "You have been signed out."
+      );
 
       return;
 
     }
 
 
-    const user =
-      result.data.user;
+    const email =
+      prompt(
+        "Enter your email address:"
+      );
 
 
-    const emailName =
-      (
-        user.email ||
-        "reader"
-      )
-      .split("@")[0];
+    if(!email){
+      return;
+    }
 
 
-    document.getElementById(
-      "profileName"
-    ).textContent =
-      emailName;
+    const {
+      error
+    } =
+      await supabaseClient
+        .auth
+        .signInWithOtp({
+
+          email:email,
+
+          options:{
+            emailRedirectTo:
+              window.location.origin
+          }
+
+        });
 
 
-    document.getElementById(
-      "profileUsername"
-    ).textContent =
-      "@" + emailName;
+    if(error){
+
+      alert(
+        error.message
+      );
+
+      return;
+
+    }
 
 
-    document.getElementById(
-      "profileAvatar"
-    ).textContent =
-      emailName
-        .charAt(0)
-        .toUpperCase();
+    alert(
+      "Check your email for the Guilty Pages sign-in link."
+    );
 
 
   }catch(error){
 
-    console.error(
-      "PROFILE ERROR:",
-      error
+    console.error(error);
+
+    alert(
+      "Something went wrong while signing in."
     );
 
   }
@@ -2860,208 +2646,89 @@ async function loadUserProfile(){
 }
 
 
-/* =========================================================
-   PROFILE STATS
-========================================================= */
+/* ============================================================
+   ESCAPE HTML
+   ============================================================ */
 
-function updateProfileStats(){
+function escapeHTML(value){
 
-  document.getElementById(
-    "statTbr"
-  ).textContent =
-    shelves.tbr.length;
-
-
-  document.getElementById(
-    "statDnf"
-  ).textContent =
-    shelves.dnf.length;
-
-
-  document.getElementById(
-    "statRereads"
-  ).textContent =
-    shelves.rereads.length;
-
-
-  document.getElementById(
-    "statRatings"
-  ).textContent =
-    Object.keys(ratings).length;
+  return String(
+    value ?? ""
+  )
+  .replace(/&/g,"&amp;")
+  .replace(/</g,"&lt;")
+  .replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;")
+  .replace(/'/g,"&#039;");
 
 }
 
 
-/* =========================================================
-   MEMBERSHIP
-========================================================= */
+/* ============================================================
+   MODAL
+   ============================================================ */
 
-function openMembership(){
+function closeModal(){
 
   document
-    .getElementById("membershipModal")
-    .classList.add("open");
+    .getElementById("bookModal")
+    .classList
+    .remove("show");
 
 }
 
 
-function openRoomInfo(){
-
-  document
-    .getElementById("roomModal")
-    .classList.add("open");
-
-}
-
-
-/* =========================================================
-   MODALS
-========================================================= */
-
-function closeModal(id){
-
-  const modal =
-    document.getElementById(id);
-
-
-  if(modal){
-
-    modal.classList.remove("open");
-
-  }
-
-}
-
-
-document.querySelectorAll(".modal").forEach(function(modal){
-
-  modal.addEventListener(
+document
+  .getElementById("bookModal")
+  .addEventListener(
     "click",
     function(event){
 
-      if(event.target === modal){
-
-        modal.classList.remove("open");
-
+      if(
+        event.target === this
+      ){
+        closeModal();
       }
 
     }
   );
 
-});
+
+/* ============================================================
+   STARTUP
+   ============================================================ */
+
+loadProfile();
+
+renderShelf(
+  "tbr",
+  "tbrList"
+);
+
+renderShelf(
+  "dnf",
+  "dnfList"
+);
+
+renderShelf(
+  "rereads",
+  "rereadsList"
+);
 
 
-/* =========================================================
-   ALERTS
-========================================================= */
-
-function showAlert(id,message,type){
-
-  const box =
-    document.getElementById(id);
-
-
-  if(!box){
-
-    return;
-
-  }
-
-
-  box.textContent =
-    message;
-
-
-  box.className =
-    "alert show " +
-    type;
-
-}
-
-
-/* =========================================================
-   SECURITY / DISPLAY HELPERS
-========================================================= */
-
-function escapeHTML(value){
-
-  return String(value || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-function escapeJS(value){
-
-  return String(value || "")
-    .replace(/\\/g,"\\\\")
-    .replace(/'/g,"\\'");
-}
-
-
-function stripHTML(value){
-
-  const div =
-    document.createElement("div");
-
-  div.innerHTML =
-    value || "";
-
-  return div.textContent ||
-    div.innerText ||
-    "";
-
-}
-
-
-/* =========================================================
-   INITIALIZE
-========================================================= */
-
-function initializeApp(){
-
-  renderShelf(
-    "tbr",
-    "tbrList"
-  );
-
-  renderShelf(
-    "dnf",
-    "dnfList"
-  );
-
-  renderShelf(
-    "rereads",
-    "rereadsList"
-  );
-
-  updateProfileStats();
-
-  loadUserProfile();
-
-}
-
-
-initializeApp();
-
-
-/* =========================================================
-   SUPABASE AUTH LISTENER
-========================================================= */
+/*
+   Supabase auth listener.
+*/
 
 if(supabaseClient){
 
-  supabaseClient.auth.onAuthStateChange(
-    function(){
-
-      loadUserProfile();
-
-    }
-  );
+  supabaseClient
+    .auth
+    .onAuthStateChange(
+      function(){
+        loadProfile();
+      }
+    );
 
 }
 
