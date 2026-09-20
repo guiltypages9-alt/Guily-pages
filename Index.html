@@ -954,7 +954,63 @@ function searchFromHome(){
 
   showPage("discover");
 
-  performSearch();
+async function performSearch(){
+
+  const q = document.getElementById("discoverSearch").value.trim();
+
+  if(!q) return;
+
+  const status = document.getElementById("searchStatus");
+  const results = document.getElementById("searchResults");
+
+  status.textContent = "Searching books…";
+  results.innerHTML = "";
+
+  try {
+
+    const url =
+      "https://www.googleapis.com/books/v1/volumes?q=" +
+      encodeURIComponent(q) +
+      "&maxResults=20&printType=books";
+
+    const response = await fetch(url);
+
+    if(!response.ok){
+      throw new Error("Google Books request failed: " + response.status);
+    }
+
+    const data = await response.json();
+
+    searchBooks = (data.items || []).map(normalizeGoogleBook);
+
+    if(!searchBooks.length){
+      status.textContent = "No books found. Try another search.";
+      results.innerHTML =
+        `<div class="empty">
+          No books found. Try another title or author.
+        </div>`;
+      return;
+    }
+
+    status.textContent =
+      `${searchBooks.length} books found`;
+
+    renderBooks(searchBooks, results);
+
+  } catch(error) {
+
+    console.error("BOOK SEARCH ERROR:", error);
+
+    status.textContent =
+      "Book search is temporarily unavailable.";
+
+    results.innerHTML =
+      `<div class="empty">
+        <strong>Book search couldn't connect.</strong>
+        <br><br>
+        Please try again in a moment.
+      </div>`;
+  }
 }
 
 function searchGenre(genre){
