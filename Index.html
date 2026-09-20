@@ -3,392 +3,384 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f7c7df">
-
+<meta name="theme-color" content="#ff3f9f">
 <title>Guilty Pages — Your Unapologetic Book Community</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root{
-  --pink:#f6b6d4;
-  --pink2:#ffe2ef;
-  --pink3:#fff4f9;
-  --lav:#cdb9f5;
-  --lav2:#eee7ff;
-  --purple:#7557a8;
-  --dark:#3b2944;
-  --muted:#806d84;
+  --hot:#ff2994;
+  --pink:#ff4da6;
+  --light:#ffd1e7;
+  --lav:#b99aff;
+  --purple:#7044a5;
+  --deep:#34162f;
+  --cream:#fff8fc;
   --white:#fff;
-  --border:#ead9e8;
-  --shadow:0 12px 35px rgba(117,87,168,.13);
+  --muted:#795f77;
+  --border:#f1b8d8;
+  --shadow:0 12px 35px rgba(115,45,100,.18);
 }
 
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
   margin:0;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  background:linear-gradient(180deg,#fff7fb 0%,#f9f3ff 100%);
-  color:var(--dark);
+  color:var(--deep);
+  background:
+    radial-gradient(circle at 10% 10%,#ff9acb 0,transparent 28%),
+    radial-gradient(circle at 90% 20%,#d4b9ff 0,transparent 28%),
+    linear-gradient(135deg,#ff3f9f 0%,#ff79b8 45%,#d7baff 100%);
+  min-height:100vh;
 }
 
-button,input{
-  font:inherit;
-}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
 
-button{
-  cursor:pointer;
-}
+.page{display:none}
+.page.active{display:block}
 
-a{
-  color:inherit;
-  text-decoration:none;
+.container{
+  width:min(1180px,calc(100% - 28px));
+  margin:auto;
 }
-
-.hidden{
-  display:none!important;
-}
-
-/* NAV */
 
 nav{
   position:sticky;
   top:0;
   z-index:50;
-  background:rgba(255,248,252,.94);
-  backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(16px);
+  border-bottom:2px solid rgba(255,41,148,.18);
 }
 
 .nav-inner{
   max-width:1180px;
   margin:auto;
-  padding:14px 18px;
+  padding:12px 14px;
   display:flex;
   align-items:center;
-  gap:18px;
+  gap:12px;
+  flex-wrap:wrap;
 }
 
 .logo{
-  font-weight:900;
   font-size:21px;
-  color:var(--purple);
+  font-weight:950;
+  color:var(--hot);
   white-space:nowrap;
 }
 
 .nav-links{
   display:flex;
-  gap:7px;
-  flex-wrap:wrap;
+  gap:4px;
+  overflow-x:auto;
+  flex:1;
 }
 
 .nav-links button{
   border:0;
   background:transparent;
-  color:var(--dark);
-  padding:9px 11px;
-  border-radius:14px;
+  color:var(--deep);
+  padding:9px 10px;
+  border-radius:13px;
+  white-space:nowrap;
+  font-weight:700;
 }
 
 .nav-links button:hover{
-  background:var(--pink2);
+  background:var(--light);
 }
 
-.nav-spacer{
-  flex:1;
-}
-
-.profile-button{
-  border:1px solid var(--border);
-  background:white;
-  padding:8px 13px;
-  border-radius:18px;
-}
-
-/* GENERAL */
-
-.container{
-  width:min(1180px,calc(100% - 32px));
-  margin:auto;
-}
-
-.page{
-  display:none;
-}
-
-.page.active{
-  display:block;
+.profile-btn{
+  border:0;
+  background:var(--purple);
+  color:white;
+  border-radius:16px;
+  padding:9px 13px;
+  font-weight:800;
 }
 
 .hero{
-  padding:60px 0 35px;
+  padding:32px 0 20px;
 }
 
 .hero-box{
   background:
-    radial-gradient(circle at top right,#e8dcff 0,#e8dcff00 35%),
-    radial-gradient(circle at bottom left,#ffd7e9 0,#ffd7e900 40%),
-    white;
-  border:1px solid var(--border);
-  border-radius:30px;
-  padding:45px 28px;
-  box-shadow:var(--shadow);
+    radial-gradient(circle at 100% 0,#e5cfff 0,transparent 35%),
+    radial-gradient(circle at 0 100%,#ffadd3 0,transparent 38%),
+    rgba(255,255,255,.97);
+  border:2px solid rgba(255,255,255,.8);
+  border-radius:32px;
+  padding:38px 20px;
   text-align:center;
+  box-shadow:var(--shadow);
 }
 
 .hero h1{
-  margin:0 0 12px;
-  font-size:clamp(34px,7vw,64px);
-  line-height:1.05;
-  color:var(--purple);
+  margin:0;
+  font-size:clamp(38px,8vw,70px);
+  line-height:.98;
+  color:var(--hot);
+  text-shadow:2px 3px 0 #ffd0e8;
 }
 
 .hero p{
-  max-width:650px;
-  margin:0 auto 25px;
+  max-width:720px;
+  margin:18px auto 25px;
   color:var(--muted);
   font-size:18px;
 }
 
 .search-row{
   display:flex;
-  max-width:760px;
+  gap:9px;
+  max-width:780px;
   margin:auto;
-  gap:10px;
 }
 
 .search-row input{
   flex:1;
   min-width:0;
-  border:2px solid var(--pink);
-  border-radius:18px;
+  border:3px solid var(--pink);
+  border-radius:19px;
   padding:15px 17px;
-  background:white;
   outline:none;
+  background:white;
 }
 
 .primary{
   border:0;
-  border-radius:18px;
-  padding:14px 19px;
-  background:linear-gradient(135deg,#ef9fc5,#bca2ed);
+  border-radius:17px;
+  padding:13px 18px;
+  background:linear-gradient(135deg,#ff2994,#9d73e8);
   color:white;
-  font-weight:800;
-  box-shadow:0 7px 20px rgba(117,87,168,.2);
+  font-weight:900;
+  box-shadow:0 7px 18px rgba(112,68,165,.22);
 }
 
 .secondary{
   border:1px solid var(--border);
-  border-radius:14px;
-  padding:10px 14px;
+  border-radius:13px;
+  padding:9px 12px;
   background:white;
   color:var(--purple);
-  font-weight:700;
+  font-weight:800;
 }
 
 .danger{
   border:0;
-  border-radius:14px;
-  padding:10px 14px;
-  background:#ffe0ea;
-  color:#a84468;
-  font-weight:700;
+  border-radius:12px;
+  padding:8px 11px;
+  background:#ffe0ed;
+  color:#a52b62;
+  font-weight:800;
 }
 
 .section{
-  padding:28px 0;
+  padding:20px 0;
 }
 
 .section-title{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:12px;
-  margin-bottom:16px;
+  gap:10px;
+  margin-bottom:14px;
 }
 
 .section-title h2{
   margin:0;
-  color:var(--purple);
+  color:white;
+  font-size:27px;
+  text-shadow:0 2px 5px rgba(80,20,60,.25);
 }
 
-/* DISCOVER */
+/* HOME FEATURE CARDS */
 
-.discover-search{
-  margin:25px 0;
-}
-
-.discover-search input{
-  width:100%;
-  border:2px solid var(--lav);
-  border-radius:18px;
-  padding:15px;
-  outline:none;
-}
-
-.status{
-  padding:13px 16px;
-  border-radius:15px;
-  margin:15px 0;
-  background:var(--lav2);
-  color:var(--purple);
-  display:none;
-}
-
-.status.show{
-  display:block;
-}
-
-.book-grid{
+.feature-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(185px,1fr));
-  gap:18px;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
 }
 
-.book-card{
-  background:white;
-  border:1px solid var(--border);
-  border-radius:21px;
-  overflow:hidden;
-  box-shadow:0 7px 25px rgba(117,87,168,.08);
-  display:flex;
-  flex-direction:column;
-}
-
-.cover-wrap{
-  height:260px;
-  background:linear-gradient(135deg,#f7d7e8,#e8ddff);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  overflow:hidden;
-}
-
-.cover{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.no-cover{
+.feature-card{
+  background:rgba(255,255,255,.96);
+  border-radius:23px;
   padding:20px;
-  text-align:center;
+  box-shadow:var(--shadow);
+  border:2px solid rgba(255,255,255,.7);
+}
+
+.feature-card h3{
+  margin:0 0 8px;
   color:var(--purple);
-  font-weight:800;
 }
 
-.book-info{
-  padding:14px;
-  display:flex;
-  flex-direction:column;
-  flex:1;
-}
-
-.book-title{
-  font-weight:900;
-  line-height:1.25;
-  margin-bottom:5px;
-}
-
-.book-author{
+.feature-card p{
   color:var(--muted);
-  font-size:14px;
-  margin-bottom:7px;
+  margin:5px 0;
 }
 
-.book-year{
-  color:#a28da8;
-  font-size:12px;
-}
-
-.card-actions{
-  margin-top:auto;
-  display:grid;
-  gap:7px;
-  padding-top:12px;
-}
-
-.shelf-row{
+.rank-change{
   display:flex;
-  gap:7px;
-  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  padding:9px 0;
+  border-bottom:1px solid #f2d9e8;
 }
 
-.shelf-row button{
-  flex:1;
-  min-width:75px;
-  font-size:12px;
-}
+.rank-change:last-child{border-bottom:0}
+
+.up{color:#d62a8a;font-weight:900}
+.down{color:#8059b0;font-weight:900}
 
 /* GENRES */
 
 .genre-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
-  gap:12px;
+  gap:10px;
 }
 
 .genre{
-  border:1px solid var(--border);
-  background:white;
+  border:2px solid rgba(255,255,255,.7);
+  background:rgba(255,255,255,.94);
   border-radius:18px;
-  padding:17px;
-  text-align:center;
-  font-weight:800;
+  padding:16px 10px;
+  color:var(--purple);
+  font-weight:900;
+  box-shadow:0 5px 16px rgba(80,30,70,.12);
+}
+
+/* BOOKS */
+
+.discover-box{
+  background:rgba(255,255,255,.96);
+  padding:18px;
+  border-radius:25px;
+  box-shadow:var(--shadow);
+}
+
+.discover-box h2{
   color:var(--purple);
 }
 
-.genre:hover{
-  background:var(--pink2);
+.status{
+  display:none;
+  margin:13px 0;
+  padding:12px;
+  border-radius:13px;
+  background:#fff0f8;
+  color:var(--purple);
+  font-weight:700;
+}
+
+.status.show{display:block}
+
+.book-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(175px,1fr));
+  gap:16px;
+}
+
+.book-card{
+  background:white;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  border:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+}
+
+.cover{
+  width:100%;
+  height:250px;
+  object-fit:cover;
+  background:#f5d6e8;
+}
+
+.no-cover{
+  height:250px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:20px;
+  background:linear-gradient(135deg,#ffd4e9,#ded0ff);
+  color:var(--purple);
+  font-weight:900;
+}
+
+.book-info{
+  padding:13px;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+}
+
+.book-title{
+  font-weight:950;
+  line-height:1.2;
+}
+
+.book-author{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:5px;
+}
+
+.book-year{
+  color:#a1849c;
+  font-size:12px;
+  margin-top:4px;
+}
+
+.card-buttons{
+  display:grid;
+  gap:6px;
+  margin-top:auto;
+  padding-top:12px;
+}
+
+.mini-row{
+  display:flex;
+  gap:5px;
+}
+
+.mini-row button{
+  flex:1;
+  font-size:11px;
+  padding:8px 4px;
 }
 
 /* SHELVES */
 
-.shelf-tabs{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-bottom:20px;
-}
-
-.shelf-tabs button{
-  border:1px solid var(--border);
-  background:white;
-  padding:10px 15px;
-  border-radius:16px;
-  color:var(--purple);
-  font-weight:800;
-}
-
-.shelf-tabs button.active{
-  background:linear-gradient(135deg,#f4b2d1,#c7b2f0);
-  color:white;
-}
-
 .shelf-list{
   display:grid;
-  gap:12px;
+  gap:11px;
 }
 
 .shelf-item{
   display:flex;
   align-items:center;
-  gap:14px;
-  padding:12px;
+  gap:12px;
   background:white;
-  border:1px solid var(--border);
   border-radius:18px;
+  padding:11px;
+  box-shadow:var(--shadow);
 }
 
 .shelf-cover{
   width:58px;
   height:78px;
   object-fit:cover;
-  border-radius:9px;
-  background:var(--pink2);
+  border-radius:8px;
+  background:#ffd5e8;
 }
 
 .shelf-main{
@@ -405,13 +397,13 @@ nav{
 
 .order-buttons{
   display:flex;
-  gap:5px;
+  gap:4px;
 }
 
 .order-buttons button{
   border:1px solid var(--border);
   background:white;
-  border-radius:9px;
+  border-radius:8px;
   padding:6px 9px;
 }
 
@@ -419,15 +411,14 @@ nav{
 
 .community-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:18px;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:15px;
 }
 
 .community-card{
   background:white;
-  border:1px solid var(--border);
   border-radius:23px;
-  padding:22px;
+  padding:21px;
   box-shadow:var(--shadow);
 }
 
@@ -436,129 +427,106 @@ nav{
   margin-top:0;
 }
 
-.rating{
-  color:#a26b9f;
-  font-size:20px;
-  letter-spacing:2px;
+.spicy{
+  background:
+    linear-gradient(135deg,#fff,#ffe3ef);
+  border:3px solid #ff8cbd;
 }
 
-.comment-box{
-  margin-top:12px;
+.spicy h3{
+  color:#e32988;
 }
 
-.comment-box textarea{
-  width:100%;
-  min-height:90px;
-  resize:vertical;
+.room{
+  background:#fff;
   border:1px solid var(--border);
-  border-radius:14px;
-  padding:12px;
+  border-radius:17px;
+  padding:13px;
+  margin:8px 0;
+}
+
+.room strong{
+  color:var(--purple);
 }
 
 /* PROFILE */
 
 .profile-card{
-  background:white;
-  border:1px solid var(--border);
-  border-radius:25px;
-  padding:25px;
-  box-shadow:var(--shadow);
   max-width:700px;
+  background:white;
+  border-radius:25px;
+  padding:23px;
+  box-shadow:var(--shadow);
+}
+
+.profile-card label{
+  display:block;
+  font-weight:800;
+  color:var(--purple);
+  margin-top:12px;
 }
 
 .profile-card input{
   width:100%;
   border:1px solid var(--border);
-  border-radius:14px;
-  padding:13px;
-  margin:7px 0 14px;
-}
-
-/* MEMBERSHIP */
-
-.membership{
-  background:linear-gradient(135deg,#fff0f7,#eee8ff);
-  border:1px solid var(--border);
-  border-radius:25px;
-  padding:28px;
-}
-
-.membership h2{
-  color:var(--purple);
+  border-radius:13px;
+  padding:12px;
+  margin-top:5px;
 }
 
 /* MODAL */
 
 .modal{
+  display:none;
   position:fixed;
   inset:0;
   z-index:100;
-  background:rgba(59,41,68,.45);
-  display:none;
+  background:rgba(40,15,35,.55);
+  padding:16px;
   align-items:center;
   justify-content:center;
-  padding:18px;
 }
 
-.modal.show{
-  display:flex;
-}
+.modal.show{display:flex}
 
 .modal-box{
+  background:white;
   width:min(650px,100%);
   max-height:90vh;
   overflow:auto;
-  background:white;
   border-radius:25px;
-  padding:25px;
+  padding:23px;
   position:relative;
 }
 
 .close{
   position:absolute;
-  right:15px;
-  top:15px;
+  top:12px;
+  right:12px;
+  width:35px;
+  height:35px;
   border:0;
-  background:var(--pink2);
   border-radius:50%;
-  width:36px;
-  height:36px;
-}
-
-/* FOOTER */
-
-footer{
-  margin-top:50px;
-  padding:35px 0;
-  text-align:center;
-  color:var(--muted);
+  background:#ffd8ea;
+  color:#8b2b61;
+  font-size:20px;
 }
 
 /* MOBILE */
 
-@media(max-width:700px){
-  .nav-inner{
-    align-items:flex-start;
-    flex-wrap:wrap;
+@media(max-width:750px){
+
+  .feature-grid{
+    grid-template-columns:1fr;
   }
 
   .nav-links{
-    order:3;
     width:100%;
-    overflow-x:auto;
-    flex-wrap:nowrap;
-  }
-
-  .nav-links button{
-    white-space:nowrap;
+    order:3;
   }
 
   .hero{
-    padding-top:28px;
-  }
-
-  .hero-box{
-    padding:35px 18px;
+    padding-top:18px;
   }
 
   .search-row{
@@ -567,10 +535,10 @@ footer{
 
   .book-grid{
     grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:12px;
+    gap:11px;
   }
 
-  .cover-wrap{
+  .cover,.no-cover{
     height:220px;
   }
 
@@ -587,8 +555,6 @@ footer{
 
 <body>
 
-<!-- NAVIGATION -->
-
 <nav>
   <div class="nav-inner">
 
@@ -604,9 +570,7 @@ footer{
       <button onclick="showPage('profile')">Profile</button>
     </div>
 
-    <div class="nav-spacer"></div>
-
-    <button class="profile-button" onclick="showPage('profile')">
+    <button class="profile-btn" onclick="showPage('profile')">
       👤 Me
     </button>
 
@@ -628,17 +592,16 @@ footer{
 
       <p>
         Your unapologetic book community for guilty pleasures,
-        chaotic TBRs, questionable fictional men and books you
-        absolutely need to talk about.
+        chaotic TBRs, questionable fictional men and books
+        you absolutely need to talk about.
       </p>
 
       <div class="search-row">
 
         <input
           id="homeSearch"
-          type="search"
-          placeholder="Search for a book, author or series..."
-          onkeydown="if(event.key==='Enter') searchFromHome()"
+          placeholder="Search a book, author or series..."
+          onkeydown="if(event.key==='Enter')searchFromHome()"
         >
 
         <button class="primary" onclick="searchFromHome()">
@@ -655,7 +618,115 @@ footer{
   <div class="container section">
 
     <div class="section-title">
-      <h2>📚 Discover your next obsession</h2>
+      <h2>🏆 What's Happening on Guilty Pages</h2>
+    </div>
+
+    <div class="feature-grid">
+
+      <div class="feature-card">
+
+        <h3>📈 Ranking Changes</h3>
+
+        <div class="rank-change">
+          <span>Twisted Love</span>
+          <span class="up">▲ 12</span>
+        </div>
+
+        <div class="rank-change">
+          <span>The Love Hypothesis</span>
+          <span class="up">▲ 7</span>
+        </div>
+
+        <div class="rank-change">
+          <span>Icebreaker</span>
+          <span class="down">▼ 3</span>
+        </div>
+
+        <div class="rank-change">
+          <span>Fourth Wing</span>
+          <span class="up">▲ 5</span>
+        </div>
+
+        <p style="font-size:12px">
+          Community rankings will be powered by Guilty Pages
+          reader ratings and activity.
+        </p>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <h3>💗 Top Rated Romance</h3>
+
+        <div class="rank-change">
+          <span>⭐ Twisted Love</span>
+          <strong>4.8</strong>
+        </div>
+
+        <div class="rank-change">
+          <span>⭐ The Spanish Love Deception</span>
+          <strong>4.7</strong>
+        </div>
+
+        <div class="rank-change">
+          <span>⭐ Icebreaker</span>
+          <strong>4.6</strong>
+        </div>
+
+        <button
+          class="secondary"
+          style="margin-top:10px"
+          onclick="searchGenre('romance')"
+        >
+          Discover Romance
+        </button>
+
+      </div>
+
+
+      <div class="feature-card spicy">
+
+        <h3>🌶️ Spicy Gossip Rooms</h3>
+
+        <p>
+          Every book gets a place to gossip.
+        </p>
+
+        <div class="room">
+          🔥 Dark Romance
+          <strong> · 18+ discussions</strong>
+        </div>
+
+        <div class="room">
+          💋 Enemies to Lovers
+          <strong> · 42 discussions</strong>
+        </div>
+
+        <div class="room">
+          🥵 Sports Romance
+          <strong> · 27 discussions</strong>
+        </div>
+
+        <button
+          class="primary"
+          style="margin-top:8px"
+          onclick="showPage('community')"
+        >
+          Enter the Gossip
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="container section">
+
+    <div class="section-title">
+      <h2>🔥 Top Rated by Genre</h2>
     </div>
 
     <div class="genre-grid">
@@ -664,16 +735,8 @@ footer{
         🖤 Dark Romance
       </button>
 
-      <button class="genre" onclick="searchGenre('close proximity')">
-        🔥 Close Proximity
-      </button>
-
       <button class="genre" onclick="searchGenre('enemies to lovers')">
         ⚔️ Enemies to Lovers
-      </button>
-
-      <button class="genre" onclick="searchGenre('work romance')">
-        💼 Work Romance
       </button>
 
       <button class="genre" onclick="searchGenre('sports romance')">
@@ -721,19 +784,16 @@ footer{
 
   <div class="container section">
 
-    <div class="section-title">
-      <h2>🔎 Discover Books</h2>
-    </div>
+    <div class="discover-box">
 
-    <div class="discover-search">
+      <h2>🔎 Discover Books</h2>
 
       <div class="search-row">
 
         <input
           id="discoverSearch"
-          type="search"
-          placeholder="Search books..."
-          onkeydown="if(event.key==='Enter') performSearch()"
+          placeholder="Search by title, author or series..."
+          onkeydown="if(event.key==='Enter')performSearch()"
         >
 
         <button class="primary" onclick="performSearch()">
@@ -742,9 +802,11 @@ footer{
 
       </div>
 
+      <div id="searchStatus" class="status"></div>
+
     </div>
 
-    <div id="searchStatus" class="status"></div>
+    <div style="height:15px"></div>
 
     <div id="searchResults" class="book-grid"></div>
 
@@ -760,23 +822,23 @@ footer{
   <div class="container section">
 
     <div class="section-title">
-      <h2>💬 Community</h2>
+      <h2>💬 Guilty Pages Community</h2>
     </div>
 
     <div class="community-grid">
 
-      <div class="community-card">
+      <div class="community-card spicy">
 
-        <h3>🔥 Guilty Pages Gossip</h3>
+        <h3>🌶️ Spicy Gossip Rooms</h3>
 
         <p>
-          Talk about the books you're reading,
-          the characters you're obsessed with,
-          and the plot twists that personally offended you.
+          Every book can have its own room where readers can
+          gossip about characters, plot twists, chemistry,
+          red flags and everything else.
         </p>
 
-        <button class="primary" onclick="openRoomNotice()">
-          Enter Gossip Rooms
+        <button class="primary" onclick="membershipNotice()">
+          💎 Membership Rooms
         </button>
 
       </div>
@@ -784,14 +846,15 @@ footer{
 
       <div class="community-card">
 
-        <h3>📈 Guilty Pages Rankings</h3>
+        <h3>🏆 Guilty Pages Rankings</h3>
 
         <p>
-          Rankings are designed around Guilty Pages
-          reader activity and ratings rather than bookstore ratings.
+          Rankings are intended to reflect Guilty Pages
+          reader ratings and activity rather than bookstore
+          star ratings.
         </p>
 
-        <button class="secondary" onclick="showRankingInfo()">
+        <button class="secondary" onclick="rankingNotice()">
           How rankings work
         </button>
 
@@ -800,42 +863,15 @@ footer{
 
       <div class="community-card">
 
-        <h3>👀 Public TBRs</h3>
+        <h3>👀 Reader Profiles</h3>
 
         <p>
-          Eventually you'll be able to browse other readers'
-          shelves and discover what everyone else is secretly
-          planning to read.
+          Public profiles will let readers show their shelves,
+          TBRs, ratings and reading personality.
         </p>
 
-        <button class="secondary" onclick="alert('Public profiles and TBR browsing are part of the Guilty Pages community structure.')">
-          Explore readers
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <div class="section">
-
-      <div class="membership">
-
-        <h2>💎 Gossip Rooms Membership</h2>
-
-        <p>
-          Every book can eventually have its own private
-          Guilty Pages gossip room.
-        </p>
-
-        <p>
-          Membership is planned as the paid feature.
-          The site structure is already prepared so payment
-          can be connected later without rebuilding the book system.
-        </p>
-
-        <button class="primary" onclick="openRoomNotice()">
-          Coming Soon
+        <button class="secondary" onclick="showPage('profile')">
+          My Profile
         </button>
 
       </div>
@@ -863,8 +899,8 @@ footer{
 
     </div>
 
-    <p style="color:var(--muted)">
-      Your next-read queue. Move books up and down to decide
+    <p style="color:white">
+      Your reading queue. Move books up and down to decide
       what you're reading next.
     </p>
 
@@ -883,7 +919,7 @@ footer{
 
     <div class="section-title">
 
-      <h2>🚫 DNF</h2>
+      <h2>🚫 My DNF</h2>
 
       <button class="secondary" onclick="showPage('discover')">
         + Find Books
@@ -906,7 +942,7 @@ footer{
 
     <div class="section-title">
 
-      <h2>💞 Rereads</h2>
+      <h2>💞 My Rereads</h2>
 
       <button class="secondary" onclick="showPage('discover')">
         + Find Books
@@ -933,7 +969,9 @@ footer{
 
     <div class="profile-card">
 
-      <h3>Guilty Pages Profile</h3>
+      <h3 style="color:var(--purple)">
+        Your Guilty Pages Profile
+      </h3>
 
       <label>Username</label>
 
@@ -953,15 +991,11 @@ footer{
         Save Profile
       </button>
 
-      <button
-        class="secondary"
-        style="margin-left:6px"
-        onclick="signInOrOut()"
-      >
+      <button class="secondary" onclick="authAction()">
         Sign in / Sign out
       </button>
 
-      <p id="profileStatus" style="color:var(--muted);margin-top:15px"></p>
+      <p id="profileStatus" style="color:var(--muted)"></p>
 
     </div>
 
@@ -972,10 +1006,15 @@ footer{
 </main>
 
 
-<footer>
-  <div class="container">
-    💗 Guilty Pages — Your books. Your shelves. Your guilty pleasures.
-  </div>
+<footer style="
+  background:rgba(255,255,255,.92);
+  padding:35px 0;
+  margin-top:30px;
+  text-align:center;
+  color:var(--purple);
+  font-weight:800;
+">
+  💗 Guilty Pages — Your books. Your shelves. Your guilty pleasures.
 </footer>
 
 
@@ -996,66 +1035,65 @@ footer{
 
 <script>
 
-/* ============================================================
+/* =========================================================
    SUPABASE
-   ============================================================ */
+   ========================================================= */
 
 const SUPABASE_URL =
   "https://wmpovzrwdvvmabxrcwtp.supabase.co";
 
-/*
-   IMPORTANT:
-   Replace ONLY the text below with your real Supabase
-   publishable/anon key.
-
-   Do not change the URL above.
-*/
-
 const SUPABASE_KEY =
-  "sb_publishable_m-YSGRdUnH0eXTBVC5r3sw_l6oLwWSz";;
+  "sb_publishable_m-YSGRdUnH0eXTBVC5r3sw_l6oLwWSz";
 
 let supabaseClient = null;
 
-if(
-  SUPABASE_KEY &&
-  SUPABASE_KEY !== "sb_publishable_m-YSGRdUnH0eXTBVC5r3sw_l6oLwWSz"; &&
-  window.supabase
-){
-  supabaseClient =
-    window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
+try{
+  if(window.supabase){
+    supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+  }
+}catch(error){
+  console.log("Supabase unavailable:",error);
 }
 
 
-/* ============================================================
-   LOCAL STORAGE
-   ============================================================ */
+/* =========================================================
+   STORAGE
+   ========================================================= */
 
-const STORAGE_KEYS = {
-  tbr:"gp_tbr",
-  dnf:"gp_dnf",
-  rereads:"gp_rereads",
-  ratings:"gp_ratings",
-  comments:"gp_comments",
-  profile:"gp_profile",
-  cache:"gp_book_search_cache"
+const KEY_TBR = "guilty_pages_tbr";
+const KEY_DNF = "guilty_pages_dnf";
+const KEY_REREADS = "guilty_pages_rereads";
+const KEY_RATINGS = "guilty_pages_ratings";
+const KEY_COMMENTS = "guilty_pages_comments";
+const KEY_PROFILE = "guilty_pages_profile";
+
+let shelves = {
+  tbr:read(KEY_TBR,[]),
+  dnf:read(KEY_DNF,[]),
+  rereads:read(KEY_REREADS,[])
 };
 
+let ratings =
+  read(KEY_RATINGS,{});
 
-function loadJSON(key, fallback){
+let comments =
+  read(KEY_COMMENTS,{});
+
+
+function read(key,fallback){
 
   try{
 
-    const raw =
+    const value =
       localStorage.getItem(key);
 
-    if(!raw){
-      return fallback;
-    }
-
-    return JSON.parse(raw);
+    return value
+      ? JSON.parse(value)
+      : fallback;
 
   }catch(e){
 
@@ -1066,7 +1104,7 @@ function loadJSON(key, fallback){
 }
 
 
-function saveJSON(key,value){
+function write(key,value){
 
   localStorage.setItem(
     key,
@@ -1076,42 +1114,23 @@ function saveJSON(key,value){
 }
 
 
-let shelves = {
-  tbr:loadJSON(STORAGE_KEYS.tbr,[]),
-  dnf:loadJSON(STORAGE_KEYS.dnf,[]),
-  rereads:loadJSON(STORAGE_KEYS.rereads,[])
-};
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
 
-
-let ratings =
-  loadJSON(STORAGE_KEYS.ratings,{});
-
-
-let comments =
-  loadJSON(STORAGE_KEYS.comments,{});
-
-
-let searchCache =
-  loadJSON(STORAGE_KEYS.cache,{});
-
-
-/* ============================================================
-   PAGE NAVIGATION
-   ============================================================ */
-
-function showPage(page){
+function showPage(id){
 
   document
     .querySelectorAll(".page")
-    .forEach(p=>{
-      p.classList.remove("active");
+    .forEach(page=>{
+      page.classList.remove("active");
     });
 
-  const target =
-    document.getElementById(page);
+  const page =
+    document.getElementById(id);
 
-  if(target){
-    target.classList.add("active");
+  if(page){
+    page.classList.add("active");
   }
 
   window.scrollTo({
@@ -1119,41 +1138,41 @@ function showPage(page){
     behavior:"smooth"
   });
 
-  if(page==="tbr"){
+  if(id==="tbr"){
     renderShelf("tbr","tbrList");
   }
 
-  if(page==="dnf"){
+  if(id==="dnf"){
     renderShelf("dnf","dnfList");
   }
 
-  if(page==="rereads"){
+  if(id==="rereads"){
     renderShelf("rereads","rereadsList");
   }
 
 }
 
 
-/* ============================================================
-   HOME SEARCH
-   ============================================================ */
+/* =========================================================
+   SEARCH
+   ========================================================= */
 
 function searchFromHome(){
 
   const input =
     document.getElementById("homeSearch");
 
-  const q =
+  const query =
     input.value.trim();
 
-  if(!q){
+  if(!query){
     input.focus();
     return;
   }
 
   document
     .getElementById("discoverSearch")
-    .value = q;
+    .value = query;
 
   showPage("discover");
 
@@ -1161,10 +1180,6 @@ function searchFromHome(){
 
 }
 
-
-/* ============================================================
-   GENRE SEARCH
-   ============================================================ */
 
 function searchGenre(genre){
 
@@ -1179,17 +1194,13 @@ function searchGenre(genre){
 }
 
 
-/* ============================================================
-   OPEN LIBRARY SEARCH
-   ============================================================ */
-
 async function performSearch(){
 
-  const input =
-    document.getElementById("discoverSearch");
-
-  const q =
-    input.value.trim();
+  const query =
+    document
+      .getElementById("discoverSearch")
+      .value
+      .trim();
 
   const status =
     document.getElementById("searchStatus");
@@ -1198,75 +1209,39 @@ async function performSearch(){
     document.getElementById("searchResults");
 
 
-  if(!q){
+  if(!query){
 
     status.textContent =
-      "Type a book title, author or series to search.";
+      "Enter a book title, author or series.";
 
     status.classList.add("show");
 
     results.innerHTML = "";
 
     return;
+
   }
 
 
   status.textContent =
-    "🔎 Searching the Guilty Pages book shelves...";
+    "🔎 Searching books...";
 
   status.classList.add("show");
 
   results.innerHTML = "";
 
 
-  /*
-     Use cached result first.
-     This reduces repeated API calls.
-  */
-
-  const cacheKey =
-    q.toLowerCase();
-
-  if(searchCache[cacheKey]){
-
-    const cached =
-      searchCache[cacheKey];
-
-    renderBooks(cached);
-
-    status.textContent =
-      `${cached.length} book${cached.length===1?"":"s"} found.`;
-
-    return;
-  }
-
-
   try{
-
-    /*
-       Open Library specifically recommends requesting
-       only the fields an application actually needs.
-    */
-
-    const fields = [
-      "key",
-      "title",
-      "author_name",
-      "first_publish_year",
-      "cover_i",
-      "cover_edition_key",
-      "isbn",
-      "subject"
-    ].join(",");
-
 
     const url =
       "https://openlibrary.org/search.json" +
       "?q=" +
-      encodeURIComponent(q) +
+      encodeURIComponent(query) +
       "&limit=24" +
       "&fields=" +
-      encodeURIComponent(fields);
+      encodeURIComponent(
+        "key,title,author_name,first_publish_year,cover_i"
+      );
 
 
     const response =
@@ -1276,8 +1251,7 @@ async function performSearch(){
     if(!response.ok){
 
       throw new Error(
-        "Open Library returned HTTP " +
-        response.status
+        "HTTP " + response.status
       );
 
     }
@@ -1289,148 +1263,75 @@ async function performSearch(){
 
     const books =
       (data.docs || [])
-        .map(normalizeOpenLibraryBook)
-        .filter(book=>book.title);
+      .map(book=>({
+
+        id:
+          book.key ||
+          (
+            book.title +
+            "-" +
+            (book.author_name || []).join("-")
+          ),
+
+        title:
+          book.title ||
+          "Untitled",
+
+        author:
+          Array.isArray(book.author_name)
+            ? book.author_name[0]
+            : "Unknown author",
+
+        year:
+          book.first_publish_year ||
+          "",
+
+        cover:
+          book.cover_i
+            ? "https://covers.openlibrary.org/b/id/" +
+              book.cover_i +
+              "-L.jpg"
+            : ""
+
+      }))
+      .filter(book=>book.title);
 
 
     if(!books.length){
 
       status.textContent =
-        "No books found. Try the title, author or series name.";
+        "No books found. Try another search.";
 
-      status.classList.add("show");
+      results.innerHTML = "";
 
       return;
-    }
-
-
-    /*
-       Save results locally so repeated searches
-       don't keep hitting the API.
-    */
-
-    searchCache[cacheKey] =
-      books;
-
-    /*
-       Keep cache from becoming enormous.
-    */
-
-    const cacheKeys =
-      Object.keys(searchCache);
-
-    if(cacheKeys.length > 30){
-
-      delete searchCache[
-        cacheKeys[0]
-      ];
 
     }
-
-    saveJSON(
-      STORAGE_KEYS.cache,
-      searchCache
-    );
 
 
     renderBooks(books);
-
 
     status.textContent =
       `${books.length} books found.`;
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "BOOK SEARCH ERROR:",
+      error
+    );
 
     status.textContent =
-      "The book search couldn't connect right now. " +
-      "Please try again in a moment.";
-
-    status.classList.add("show");
+      "Book search couldn't connect right now. Please try again.";
 
   }
 
 }
 
 
-/* ============================================================
-   NORMALIZE OPEN LIBRARY BOOK
-   ============================================================ */
-
-function normalizeOpenLibraryBook(book){
-
-  let cover = "";
-
-  if(book.cover_i){
-
-    cover =
-      "https://covers.openlibrary.org/b/id/" +
-      book.cover_i +
-      "-L.jpg";
-
-  }else if(book.cover_edition_key){
-
-    cover =
-      "https://covers.openlibrary.org/b/olid/" +
-      book.cover_edition_key +
-      "-L.jpg";
-
-  }
-
-
-  return {
-
-    id:
-      book.key ||
-      crypto.randomUUID(),
-
-    key:
-      book.key || "",
-
-    title:
-      book.title || "Untitled",
-
-    author:
-      Array.isArray(book.author_name)
-        ? book.author_name[0]
-        : "Unknown author",
-
-    authors:
-      Array.isArray(book.author_name)
-        ? book.author_name
-        : [],
-
-    year:
-      book.first_publish_year || "",
-
-    cover:
-      cover,
-
-    coverId:
-      book.cover_i || "",
-
-    edition:
-      book.cover_edition_key || "",
-
-    isbn:
-      Array.isArray(book.isbn)
-        ? book.isbn[0]
-        : "",
-
-    subjects:
-      Array.isArray(book.subject)
-        ? book.subject.slice(0,8)
-        : []
-
-  };
-
-}
-
-
-/* ============================================================
-   RENDER BOOK RESULTS
-   ============================================================ */
+/* =========================================================
+   BOOK RESULTS
+   ========================================================= */
 
 function renderBooks(books){
 
@@ -1440,7 +1341,7 @@ function renderBooks(books){
   results.innerHTML = "";
 
 
-  books.forEach(book=>{
+  books.forEach((book,index)=>{
 
     const card =
       document.createElement("article");
@@ -1449,93 +1350,85 @@ function renderBooks(books){
       "book-card";
 
 
-    const safeTitle =
-      escapeHTML(book.title);
+    const coverHTML =
+      book.cover
 
-    const safeAuthor =
-      escapeHTML(book.author);
+      ?
+
+      `<img
+        class="cover"
+        src="${book.cover}"
+        alt="${escapeHTML(book.title)} cover"
+        loading="lazy"
+        onerror="this.outerHTML='<div class=&quot;no-cover&quot;>📚<br>Cover unavailable</div>'"
+      >`
+
+      :
+
+      `<div class="no-cover">
+        📚<br>
+        ${escapeHTML(book.title)}
+      </div>`;
 
 
     card.innerHTML = `
 
-      <div class="cover-wrap">
-
-        ${
-          book.cover
-
-          ?
-
-          `<img
-             class="cover"
-             src="${book.cover}"
-             alt="${safeTitle} cover"
-             loading="lazy"
-             onerror="this.style.display='none';this.parentElement.innerHTML='<div class=&quot;no-cover&quot;>📚<br>No cover available</div>'"
-           >`
-
-          :
-
-          `<div class="no-cover">
-             📚<br>
-             ${safeTitle}
-           </div>`
-        }
-
-      </div>
-
+      ${coverHTML}
 
       <div class="book-info">
 
         <div class="book-title">
-          ${safeTitle}
+          ${escapeHTML(book.title)}
         </div>
 
         <div class="book-author">
-          ${safeAuthor}
+          ${escapeHTML(book.author)}
         </div>
 
         ${
           book.year
           ?
           `<div class="book-year">
-             First published ${book.year}
-           </div>`
+            First published ${book.year}
+          </div>`
           :
           ""
         }
 
+        <div class="card-buttons">
 
-        <div class="card-actions">
-
-          <div class="shelf-row">
+          <div class="mini-row">
 
             <button
               class="secondary"
-              onclick='addToShelf(${jsonForHTML(book)},"tbr")'
+              data-action="tbr"
+              data-index="${index}"
             >
               + TBR
             </button>
 
             <button
               class="secondary"
-              onclick='addToShelf(${jsonForHTML(book)},"dnf")'
+              data-action="dnf"
+              data-index="${index}"
             >
               DNF
             </button>
 
             <button
               class="secondary"
-              onclick='addToShelf(${jsonForHTML(book)},"rereads")'
+              data-action="rereads"
+              data-index="${index}"
             >
               Reread
             </button>
 
           </div>
 
-
           <button
             class="primary"
-            onclick='openBook(${jsonForHTML(book)})'
+            data-action="view"
+            data-index="${index}"
           >
             📖 View Book
           </button>
@@ -1546,87 +1439,85 @@ function renderBooks(books){
     `;
 
 
+    card.dataset.book =
+      JSON.stringify(book);
+
+
     results.appendChild(card);
 
   });
 
-}
-
-
-/* ============================================================
-   SAFE BOOK JSON FOR INLINE BUTTONS
-   ============================================================ */
-
-function jsonForHTML(book){
-
-  return JSON.stringify(book)
-    .replace(/\\/g,"\\\\")
-    .replace(/'/g,"&#39;")
-    .replace(/"/g,"&quot;");
-
-}
-
-
-/*
-   Decode the HTML entities created above.
-*/
-
-function decodeBook(value){
-
-  const textarea =
-    document.createElement("textarea");
-
-  textarea.innerHTML =
-    value;
-
-  return JSON.parse(
-    textarea.value
-  );
-
-}
-
-
-/* ============================================================
-   SHELVES
-   ============================================================ */
-
-function addToShelf(book, shelf){
 
   /*
-     Prevent duplicate books.
+     Event delegation.
+     This is deliberately used instead of putting large
+     book objects inside onclick attributes.
   */
 
-  if(
-    shelves[shelf].some(
-      b=>b.id===book.id
-    )
-  ){
+  results.onclick =
+    function(event){
 
-    alert(
-      `This book is already in your ${shelfName(shelf)} shelf.`
-    );
+      const button =
+        event.target.closest("button");
 
-    return;
+      if(!button){
+        return;
+      }
 
-  }
+      const card =
+        button.closest(".book-card");
+
+      if(!card){
+        return;
+      }
+
+      const book =
+        JSON.parse(
+          card.dataset.book
+        );
+
+      const action =
+        button.dataset.action;
 
 
-  /*
-     If moving from another shelf,
-     remove it there first.
-  */
+      if(
+        action==="tbr" ||
+        action==="dnf" ||
+        action==="rereads"
+      ){
 
-  ["tbr","dnf","rereads"]
-    .forEach(other=>{
-
-      if(other!==shelf){
-
-        shelves[other] =
-          shelves[other].filter(
-            b=>b.id!==book.id
-          );
+        addToShelf(
+          book,
+          action
+        );
 
       }
+
+
+      if(action==="view"){
+
+        openBook(book);
+
+      }
+
+    };
+
+}
+
+
+/* =========================================================
+   SHELVES
+   ========================================================= */
+
+function addToShelf(book,shelf){
+
+  ["tbr","dnf","rereads"]
+    .forEach(name=>{
+
+      shelves[name] =
+        shelves[name].filter(
+          item=>item.id!==book.id
+        );
 
     });
 
@@ -1635,22 +1526,20 @@ function addToShelf(book, shelf){
 
   saveShelves();
 
-
   alert(
     `"${book.title}" added to ${shelfName(shelf)} 💗`
   );
 
-
-  renderCurrentShelfIfNeeded();
+  renderCurrentShelf();
 
 }
 
 
-function shelfName(shelf){
+function shelfName(name){
 
-  if(shelf==="tbr") return "TBR";
+  if(name==="tbr") return "TBR";
 
-  if(shelf==="dnf") return "DNF";
+  if(name==="dnf") return "DNF";
 
   return "Rereads";
 
@@ -1659,51 +1548,32 @@ function shelfName(shelf){
 
 function saveShelves(){
 
-  saveJSON(
-    STORAGE_KEYS.tbr,
-    shelves.tbr
-  );
-
-  saveJSON(
-    STORAGE_KEYS.dnf,
-    shelves.dnf
-  );
-
-  saveJSON(
-    STORAGE_KEYS.rereads,
-    shelves.rereads
-  );
+  write(KEY_TBR,shelves.tbr);
+  write(KEY_DNF,shelves.dnf);
+  write(KEY_REREADS,shelves.rereads);
 
 }
 
 
 function removeFromShelf(shelf,index){
 
-  shelves[shelf].splice(
-    index,
-    1
-  );
+  shelves[shelf].splice(index,1);
 
   saveShelves();
 
-  renderShelf(
-    shelf,
-    shelf==="tbr"
-      ? "tbrList"
-      : shelf==="dnf"
-        ? "dnfList"
-        : "rereadsList"
-  );
+  renderCurrentShelf();
 
 }
 
 
-function renderCurrentShelfIfNeeded(){
+function renderCurrentShelf(){
 
   const active =
     document.querySelector(".page.active");
 
-  if(!active) return;
+  if(!active){
+    return;
+  }
 
   if(active.id==="tbr"){
     renderShelf("tbr","tbrList");
@@ -1720,16 +1590,14 @@ function renderCurrentShelfIfNeeded(){
 }
 
 
-/* ============================================================
-   RENDER SHELF
-   ============================================================ */
-
 function renderShelf(shelf,elementId){
 
   const container =
     document.getElementById(elementId);
 
-  if(!container) return;
+  if(!container){
+    return;
+  }
 
 
   const list =
@@ -1742,7 +1610,9 @@ function renderShelf(shelf,elementId){
 
       <div class="community-card">
 
-        <h3>Your ${shelfName(shelf)} is empty.</h3>
+        <h3 style="color:var(--purple)">
+          Your ${shelfName(shelf)} is empty.
+        </h3>
 
         <p>
           Find a book and add it here.
@@ -1780,25 +1650,23 @@ function renderShelf(shelf,elementId){
 
       ${
         book.cover
-
         ?
-
         `<img
-           class="shelf-cover"
-           src="${book.cover}"
-           alt=""
-         >`
-
+          class="shelf-cover"
+          src="${book.cover}"
+          alt=""
+        >`
         :
-
-        `<div
-           class="shelf-cover"
-           style="display:flex;align-items:center;justify-content:center"
-         >
-           📚
-         </div>`
+        `<div class="shelf-cover"
+          style="
+            display:flex;
+            align-items:center;
+            justify-content:center
+          "
+        >
+          📚
+        </div>`
       }
-
 
       <div class="shelf-main">
 
@@ -1813,44 +1681,32 @@ function renderShelf(shelf,elementId){
         ${
           shelf==="tbr"
           ?
-          `<div style="margin-top:5px;color:var(--purple);font-size:12px">
-             Next-read position #${index+1}
-           </div>`
+          `<div style="color:var(--purple);font-size:12px;margin-top:4px">
+            Next read #${index+1}
+          </div>`
           :
           ""
         }
 
       </div>
 
-
       ${
         shelf==="tbr"
-
         ?
-
         `<div class="order-buttons">
 
-          <button
-            onclick="moveBook('tbr',${index},-1)"
-            title="Move up"
-          >
+          <button onclick="moveBook(${index},-1)">
             ↑
           </button>
 
-          <button
-            onclick="moveBook('tbr',${index},1)"
-            title="Move down"
-          >
+          <button onclick="moveBook(${index},1)">
             ↓
           </button>
 
         </div>`
-
         :
-
         ""
       }
-
 
       <button
         class="danger"
@@ -1869,14 +1725,10 @@ function renderShelf(shelf,elementId){
 }
 
 
-/* ============================================================
-   TBR REORDERING
-   ============================================================ */
-
-function moveBook(shelf,index,direction){
+function moveBook(index,direction){
 
   const list =
-    shelves[shelf];
+    shelves.tbr;
 
   const newIndex =
     index + direction;
@@ -1890,29 +1742,29 @@ function moveBook(shelf,index,direction){
   }
 
 
-  const temp =
-    list[index];
-
-  list[index] =
-    list[newIndex];
-
-  list[newIndex] =
-    temp;
+  [
+    list[index],
+    list[newIndex]
+  ] =
+  [
+    list[newIndex],
+    list[index]
+  ];
 
 
   saveShelves();
 
   renderShelf(
-    shelf,
+    "tbr",
     "tbrList"
   );
 
 }
 
 
-/* ============================================================
+/* =========================================================
    BOOK DETAILS
-   ============================================================ */
+   ========================================================= */
 
 function openBook(book){
 
@@ -1923,34 +1775,34 @@ function openBook(book){
     document.getElementById("modalContent");
 
 
-  const currentRating =
+  const rating =
     ratings[book.id] || 0;
 
 
   content.innerHTML = `
 
-    <div style="display:grid;grid-template-columns:150px 1fr;gap:22px">
+    <div style="
+      display:grid;
+      grid-template-columns:140px 1fr;
+      gap:20px
+    ">
 
       <div>
 
         ${
           book.cover
-
           ?
-
           `<img
-             src="${book.cover}"
-             style="width:100%;border-radius:15px"
-             alt=""
-           >`
-
+            src="${book.cover}"
+            style="
+              width:100%;
+              border-radius:14px
+            "
+          >`
           :
-
-          `<div
-             style="height:220px;background:var(--pink2);border-radius:15px;display:flex;align-items:center;justify-content:center;text-align:center"
-           >
-             📚
-           </div>`
+          `<div class="no-cover">
+            📚
+          </div>`
         }
 
       </div>
@@ -1958,7 +1810,7 @@ function openBook(book){
 
       <div>
 
-        <h2 style="color:var(--purple);margin-top:0">
+        <h2 style="color:var(--purple)">
           ${escapeHTML(book.title)}
         </h2>
 
@@ -1971,52 +1823,56 @@ function openBook(book){
           book.year
           ?
           `<p>
-             <strong>First published:</strong>
-             ${book.year}
-           </p>`
+            <strong>First published:</strong>
+            ${book.year}
+          </p>`
           :
           ""
         }
 
 
-        <h3>💗 Your Guilty Pages Rating</h3>
+        <h3 style="color:var(--purple)">
+          💗 Your Guilty Pages Rating
+        </h3>
 
-        <div
-          id="ratingButtons"
-          class="rating"
-        >
-          ${ratingButtons(book,currentRating)}
+        <div id="modalRating">
+          ${ratingHTML(book.id,rating)}
         </div>
 
 
-        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:18px">
+        <div style="
+          display:flex;
+          gap:7px;
+          flex-wrap:wrap;
+          margin-top:15px
+        ">
 
           <button
             class="secondary"
-            onclick='addToShelf(${jsonForHTML(book)},"tbr");closeModal()'
+            onclick='modalShelf("tbr")'
           >
             + TBR
           </button>
 
           <button
             class="secondary"
-            onclick='addToShelf(${jsonForHTML(book)},"dnf");closeModal()'
+            onclick='modalShelf("dnf")'
           >
             DNF
           </button>
 
           <button
             class="secondary"
-            onclick='addToShelf(${jsonForHTML(book)},"rereads");closeModal()'
+            onclick='modalShelf("rereads")'
           >
             Reread
           </button>
 
           <button
             class="primary"
-            onclick='openStore("${encodeURIComponent(book.title)}")'
+            onclick='openKindle("${encodeURIComponent(book.title)}")'
           >
-            📱 Kindle / Store
+            📱 Kindle
           </button>
 
         </div>
@@ -2026,42 +1882,46 @@ function openBook(book){
     </div>
 
 
-    <hr style="border:0;border-top:1px solid var(--border);margin:25px 0">
+    <hr style="
+      border:0;
+      border-top:1px solid var(--border);
+      margin:22px 0
+    ">
 
 
     <h3 style="color:var(--purple)">
-      💬 Gossip about this book
+      🌶️ Gossip about this book
     </h3>
 
-    <div id="commentsArea">
-      ${renderComments(book.id)}
+    <div id="commentArea">
+      ${commentsHTML(book.id)}
     </div>
 
 
-    <div class="comment-box">
+    <textarea
+      id="commentInput"
+      placeholder="Say what you're really thinking..."
+      style="
+        width:100%;
+        min-height:90px;
+        border:1px solid var(--border);
+        border-radius:13px;
+        padding:12px
+      "
+    ></textarea>
 
-      <textarea
-        id="newComment"
-        placeholder="Say what you're really thinking..."
-      ></textarea>
-
-      <button
-        class="primary"
-        style="margin-top:8px"
-        onclick='addComment("${book.id}")'
-      >
-        Post Gossip
-      </button>
-
-    </div>
-
-
-    <div
-      class="membership"
-      style="margin-top:20px"
+    <button
+      class="primary"
+      style="margin-top:7px"
+      onclick='postComment("${book.id}")'
     >
+      Post Gossip
+    </button>
 
-      <h3>💎 Private Gossip Room</h3>
+
+    <div class="feature-card spicy" style="margin-top:20px">
+
+      <h3>🌶️ Private Gossip Room</h3>
 
       <p>
         The private room for this book will be part of
@@ -2070,9 +1930,9 @@ function openBook(book){
 
       <button
         class="primary"
-        onclick="openRoomNotice()"
+        onclick="membershipNotice()"
       >
-        Membership Coming Soon
+        💎 Join Membership
       </button>
 
     </div>
@@ -2080,32 +1940,74 @@ function openBook(book){
   `;
 
 
+  window.currentModalBook =
+    book;
+
   modal.classList.add("show");
 
 }
 
 
-/* ============================================================
+function modalShelf(shelf){
+
+  if(!window.currentModalBook){
+    return;
+  }
+
+  addToShelf(
+    window.currentModalBook,
+    shelf
+  );
+
+  closeModal();
+
+}
+
+
+function closeModal(){
+
+  document
+    .getElementById("bookModal")
+    .classList.remove("show");
+
+}
+
+
+document
+  .getElementById("bookModal")
+  .addEventListener(
+    "click",
+    function(event){
+
+      if(event.target===this){
+        closeModal();
+      }
+
+    }
+  );
+
+
+/* =========================================================
    RATINGS
-   ============================================================ */
+   ========================================================= */
 
-function ratingButtons(book,current){
+function ratingHTML(bookId,current){
 
-  let html = "";
+  let html="";
 
   for(let i=1;i<=5;i++){
 
     html += `
 
       <button
+        onclick="rateBook('${bookId}',${i})"
         style="
           border:0;
-          background:transparent;
+          background:none;
           font-size:25px;
-          cursor:pointer;
-          opacity:${i<=current?1:.35}
+          opacity:${i<=current?1:.3};
+          padding:2px
         "
-        onclick='rateBook("${book.id}",${i})'
       >
         ⭐
       </button>
@@ -2124,22 +2026,22 @@ function rateBook(bookId,rating){
   ratings[bookId] =
     rating;
 
-  saveJSON(
-    STORAGE_KEYS.ratings,
+  write(
+    KEY_RATINGS,
     ratings
   );
 
 
-  const buttons =
+  const area =
     document.getElementById(
-      "ratingButtons"
+      "modalRating"
     );
 
-  if(buttons){
+  if(area){
 
-    buttons.innerHTML =
-      ratingButtons(
-        {id:bookId},
+    area.innerHTML =
+      ratingHTML(
+        bookId,
         rating
       );
 
@@ -2148,11 +2050,11 @@ function rateBook(bookId,rating){
 }
 
 
-/* ============================================================
+/* =========================================================
    COMMENTS
-   ============================================================ */
+   ========================================================= */
 
-function renderComments(bookId){
+function commentsHTML(bookId){
 
   const list =
     comments[bookId] || [];
@@ -2162,32 +2064,30 @@ function renderComments(bookId){
 
     return `
       <p style="color:var(--muted)">
-        No gossip yet. Be the first person to say something.
+        No gossip yet. Be the first.
       </p>
     `;
 
   }
 
 
-  return list.map(comment=>`
+  return list.map(item=>`
 
-    <div
-      style="
-        background:var(--pink3);
-        border:1px solid var(--border);
-        border-radius:15px;
-        padding:12px;
-        margin-bottom:8px
-      "
-    >
+    <div style="
+      background:#fff1f8;
+      border:1px solid var(--border);
+      border-radius:13px;
+      padding:11px;
+      margin-bottom:7px
+    ">
 
       <strong>
-        ${escapeHTML(comment.name || "Anonymous Reader")}
+        ${escapeHTML(item.name)}
       </strong>
 
-      <p style="margin:5px 0 0">
-        ${escapeHTML(comment.text)}
-      </p>
+      <div>
+        ${escapeHTML(item.text)}
+      </div>
 
     </div>
 
@@ -2196,38 +2096,32 @@ function renderComments(bookId){
 }
 
 
-function addComment(bookId){
+function postComment(bookId){
 
   const input =
-    document.getElementById("newComment");
-
-
-  if(!input) return;
-
+    document.getElementById(
+      "commentInput"
+    );
 
   const text =
     input.value.trim();
 
 
   if(!text){
-
-    input.focus();
-
     return;
-
-  }
-
-
-  if(!comments[bookId]){
-    comments[bookId] = [];
   }
 
 
   const profile =
-    loadJSON(
-      STORAGE_KEYS.profile,
+    read(
+      KEY_PROFILE,
       {}
     );
+
+
+  if(!comments[bookId]){
+    comments[bookId]=[];
+  }
 
 
   comments[bookId].push({
@@ -2239,57 +2133,43 @@ function addComment(bookId){
 
     text:text,
 
-    createdAt:
+    date:
       new Date().toISOString()
 
   });
 
 
-  saveJSON(
-    STORAGE_KEYS.comments,
+  write(
+    KEY_COMMENTS,
     comments
   );
 
 
-  /*
-     Refresh only the comments area.
-  */
-
-  const area =
-    document.getElementById(
-      "commentsArea"
-    );
-
-  if(area){
-
-    area.innerHTML =
-      renderComments(bookId);
-
-  }
+  document
+    .getElementById("commentArea")
+    .innerHTML =
+      commentsHTML(bookId);
 
 
-  input.value = "";
+  input.value="";
 
 }
 
 
-/* ============================================================
-   KINDLE / STORE
-   ============================================================ */
+/* =========================================================
+   KINDLE
+   ========================================================= */
 
-function openStore(encodedTitle){
+function openKindle(title){
 
-  const title =
-    decodeURIComponent(
-      encodedTitle
-    );
-
+  const decoded =
+    decodeURIComponent(title);
 
   const url =
     "https://www.amazon.com/s?k=" +
-    encodeURIComponent(title) +
-    "+Kindle";
-
+    encodeURIComponent(
+      decoded + " Kindle"
+    );
 
   window.open(
     url,
@@ -2299,31 +2179,31 @@ function openStore(encodedTitle){
 }
 
 
-/* ============================================================
+/* =========================================================
    MEMBERSHIP
-   ============================================================ */
+   ========================================================= */
 
-function openRoomNotice(){
+function membershipNotice(){
 
   alert(
-    "💎 Guilty Pages Membership is planned for the private book gossip rooms. Payment will be connected here later."
+    "💎 Guilty Pages Membership is coming soon. Private spicy gossip rooms will be the paid feature."
   );
 
 }
 
 
-function showRankingInfo(){
+function rankingNotice(){
 
   alert(
-    "Guilty Pages rankings are designed around Guilty Pages reader ratings and community activity — not bookstore star ratings."
+    "🏆 Guilty Pages rankings are designed to use reader ratings and community activity rather than bookstore ratings."
   );
 
 }
 
 
-/* ============================================================
+/* =========================================================
    PROFILE
-   ============================================================ */
+   ========================================================= */
 
 async function saveProfile(){
 
@@ -2331,7 +2211,8 @@ async function saveProfile(){
     document
       .getElementById("profileUsername")
       .value
-      .trim();
+      .trim()
+      .replace(/^@/,"");
 
 
   const displayName =
@@ -2352,56 +2233,45 @@ async function saveProfile(){
   }
 
 
-  const profile = {
+  const profile={
 
-    username:
-
-      username.replace(
-        /^@/,
-        ""
-      ),
+    username:username,
 
     displayName:
-
       displayName ||
-      username,
+      username
 
   };
 
 
-  saveJSON(
-    STORAGE_KEYS.profile,
+  write(
+    KEY_PROFILE,
     profile
   );
 
 
-  const status =
-    document.getElementById(
-      "profileStatus"
-    );
-
-
-  status.textContent =
-    "Profile saved 💗";
+  document
+    .getElementById("profileStatus")
+    .textContent =
+      "Profile saved 💗";
 
 
   /*
-     Save to Supabase when a user is signed in.
-     This does not stop the local profile from working.
+     Supabase sync is optional.
+     It cannot interfere with book search.
   */
 
   if(supabaseClient){
 
     try{
 
-      const {
-        data:{
-          user
-        }
-      } =
+      const result =
         await supabaseClient
           .auth
           .getUser();
+
+      const user =
+        result.data.user;
 
 
       if(user){
@@ -2420,13 +2290,12 @@ async function saveProfile(){
 
           });
 
-
       }
 
     }catch(error){
 
       console.log(
-        "Supabase profile sync:",
+        "Profile sync:",
         error
       );
 
@@ -2437,11 +2306,11 @@ async function saveProfile(){
 }
 
 
-async function loadProfile(){
+function loadProfile(){
 
   const profile =
-    loadJSON(
-      STORAGE_KEYS.profile,
+    read(
+      KEY_PROFILE,
       {}
     );
 
@@ -2451,109 +2320,35 @@ async function loadProfile(){
       "profileUsername"
     );
 
-  const displayName =
+  const display =
     document.getElementById(
       "profileDisplayName"
     );
 
 
   if(username){
-
     username.value =
       profile.username || "";
-
   }
 
-
-  if(displayName){
-
-    displayName.value =
+  if(display){
+    display.value =
       profile.displayName || "";
-
-  }
-
-
-  /*
-     If signed in, try loading the profile
-     from Supabase too.
-  */
-
-  if(supabaseClient){
-
-    try{
-
-      const {
-        data:{
-          user
-        }
-      } =
-        await supabaseClient
-          .auth
-          .getUser();
-
-
-      if(user){
-
-        const {
-          data,
-          error
-        } =
-          await supabaseClient
-            .from("profiles")
-            .select(
-              "username,display_name"
-            )
-            .eq(
-              "id",
-              user.id
-            )
-            .maybeSingle();
-
-
-        if(!error && data){
-
-          if(username){
-
-            username.value =
-              data.username || "";
-
-          }
-
-          if(displayName){
-
-            displayName.value =
-              data.display_name || "";
-
-          }
-
-        }
-
-      }
-
-    }catch(error){
-
-      console.log(
-        "Profile load:",
-        error
-      );
-
-    }
-
   }
 
 }
 
 
-/* ============================================================
+/* =========================================================
    AUTH
-   ============================================================ */
+   ========================================================= */
 
-async function signInOrOut(){
+async function authAction(){
 
   if(!supabaseClient){
 
     alert(
-      "Supabase is not connected yet. Check that you pasted your real Supabase key into the code."
+      "Supabase is not available right now."
     );
 
     return;
@@ -2563,22 +2358,17 @@ async function signInOrOut(){
 
   try{
 
-    const {
-      data:{
-        user
-      }
-    } =
+    const result =
       await supabaseClient
         .auth
         .getUser();
 
 
-    if(user){
+    if(result.data.user){
 
       await supabaseClient
         .auth
         .signOut();
-
 
       alert(
         "You have been signed out."
@@ -2600,9 +2390,7 @@ async function signInOrOut(){
     }
 
 
-    const {
-      error
-    } =
+    const response =
       await supabaseClient
         .auth
         .signInWithOtp({
@@ -2617,10 +2405,10 @@ async function signInOrOut(){
         });
 
 
-    if(error){
+    if(response.error){
 
       alert(
-        error.message
+        response.error.message
       );
 
       return;
@@ -2632,13 +2420,12 @@ async function signInOrOut(){
       "Check your email for the Guilty Pages sign-in link."
     );
 
-
   }catch(error){
 
     console.error(error);
 
     alert(
-      "Something went wrong while signing in."
+      "There was a problem connecting to Supabase."
     );
 
   }
@@ -2646,57 +2433,25 @@ async function signInOrOut(){
 }
 
 
-/* ============================================================
-   ESCAPE HTML
-   ============================================================ */
+/* =========================================================
+   SECURITY / DISPLAY
+   ========================================================= */
 
 function escapeHTML(value){
 
-  return String(
-    value ?? ""
-  )
-  .replace(/&/g,"&amp;")
-  .replace(/</g,"&lt;")
-  .replace(/>/g,"&gt;")
-  .replace(/"/g,"&quot;")
-  .replace(/'/g,"&#039;");
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
 
-/* ============================================================
-   MODAL
-   ============================================================ */
-
-function closeModal(){
-
-  document
-    .getElementById("bookModal")
-    .classList
-    .remove("show");
-
-}
-
-
-document
-  .getElementById("bookModal")
-  .addEventListener(
-    "click",
-    function(event){
-
-      if(
-        event.target === this
-      ){
-        closeModal();
-      }
-
-    }
-  );
-
-
-/* ============================================================
-   STARTUP
-   ============================================================ */
+/* =========================================================
+   START
+   ========================================================= */
 
 loadProfile();
 
@@ -2714,23 +2469,6 @@ renderShelf(
   "rereads",
   "rereadsList"
 );
-
-
-/*
-   Supabase auth listener.
-*/
-
-if(supabaseClient){
-
-  supabaseClient
-    .auth
-    .onAuthStateChange(
-      function(){
-        loadProfile();
-      }
-    );
-
-}
 
 </script>
 
