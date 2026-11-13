@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<script>document.documentElement.classList.add("gp-booting");</script>
+<style>html.gp-booting main{visibility:hidden}</style>
 <title>Guilty Pages — Your Unapologetic Book Community</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
@@ -507,7 +509,23 @@ let recoverySessionReady=false;
 db.auth.onAuthStateChange((event, session)=>{state.user=session?.user||null;if(event==="PASSWORD_RECOVERY"){recoverySessionReady=true;showPasswordRecovery()}setTimeout(async()=>{await loadProfile();if(state.user)await loadShelves();updateAuthUI();if(event==="PASSWORD_RECOVERY")showPasswordRecovery()},0)});
 async function processRecoveryUrl(){const params=recoveryParams();const type=params.get("type");const code=params.get("code");const tokenHash=params.get("token_hash");if(type!=="recovery"&&!code&&!tokenHash)return;try{if(tokenHash&&type==="recovery"){const {data,error}=await db.auth.verifyOtp({token_hash:tokenHash,type:"recovery"});if(error)throw error;if(data?.session)recoverySessionReady=true;}else if(code){const {data,error}=await db.auth.exchangeCodeForSession(code);if(error)throw error;if(data?.session)recoverySessionReady=true;}else{const {data,error}=await db.auth.getSession();if(error)throw error;if(data?.session)recoverySessionReady=true;}if(recoverySessionReady){showPasswordRecovery();history.replaceState({},document.title,window.location.pathname);return;}if(type==="recovery"){showTab("auth");toast("The recovery link was opened, but Supabase did not establish a reset session. Request a fresh email and open its link directly.");}}catch(error){showTab("auth");toast("This reset link could not be verified. Request a fresh password-reset email.");console.error("Password recovery verification failed:",error);}}
 async function restoreNavigation(){let tab="home",bookKey="",roomKey="",query="",savedBook=null;try{tab=sessionStorage.getItem("gp:lastTab")||"home";bookKey=sessionStorage.getItem("gp:activeBookKey")||"";roomKey=sessionStorage.getItem("gp:activeRoomKey")||"";query=sessionStorage.getItem("gp:searchQuery")||"";savedBook=JSON.parse(sessionStorage.getItem("gp:activeBook")||"null");}catch(e){}if(savedBook?.key)cacheBook(savedBook);state.activeBookKey=bookKey||savedBook?.key||null;state.activeRoomKey=roomKey||null;state.searchQuery=query;if(tab==="bookroom"&&state.activeRoomKey){await ensureRoom(state.activeRoomKey);return}if(tab==="discussion"&&state.activeBookKey){await openDiscussion(state.activeBookKey);return}if(tab==="bookdetails"&&state.activeBookKey){openBookDetails(state.activeBookKey);return}showTab(["home","discover","community","tbr","dnf","reread","reading","finished","profile","auth","membership"].includes(tab)?tab:"home");if(tab==="discover"&&query){$("discoverSearchInput").value=query;await searchBooks(query)}}
-(async()=>{loadGenreTheme("");setAuthMode("signin");await loadProfile();if(state.user)await loadShelves();await loadRanking();updateAuthUI();await processRecoveryUrl();if(!recoverySessionReady)await restoreNavigation()})();
+(async()=>{
+ try{
+  loadGenreTheme("");
+  setAuthMode("signin");
+  await loadProfile();
+  if(state.user)await loadShelves();
+  await loadRanking();
+  updateAuthUI();
+  await processRecoveryUrl();
+  if(!recoverySessionReady)await restoreNavigation();
+ }catch(error){
+  console.error("Guilty Pages startup:",error);
+  showTab("home");
+ }finally{
+  document.documentElement.classList.remove("gp-booting");
+ }
+})();
 
 </script>
 </body>
