@@ -4,7 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script>document.documentElement.classList.add("gp-booting");</script>
-<style>html.gp-booting body{visibility:hidden}</style>
+<style>html.gp-booting body{visibility:hidden}
+.joshManager{margin:16px 0 18px;padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--softBg);color:var(--ink)}
+.joshManager h3{margin:0 0 5px}.joshFormGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}.joshFormGrid .field{min-width:0}.joshOwnerActions{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.joshOwnerActions button:disabled{opacity:.4;cursor:not-allowed}.josh-shelf-card{min-width:0}
+@media(max-width:560px){.joshFormGrid{grid-template-columns:1fr}.joshOwnerActions button{flex:1 1 auto}}
+</style>
 <title>Guilty Pages — Your Unapologetic Book Community</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
@@ -363,16 +367,91 @@ let authMode="signin";
 function setAuthMode(mode){authMode=mode;const signingUp=mode==="signup";$("authHeading").textContent=signingUp?"💌 Join Guilty Pages":"💌 Sign in to Guilty Pages";$("authIntro").textContent=signingUp?"Create your account with a private email, password and one public name.":"Welcome back! Sign in to open your saved shelves and gossip.";$("signupNameField").classList.toggle("hidden",!signingUp);$("authSubmitBtn").textContent=signingUp?"Create account":"Sign in";$("switchToSignUpBtn").classList.toggle("hidden",signingUp);$("switchToSignInBtn").classList.toggle("hidden",!signingUp);$("password").autocomplete=signingUp?"new-password":"current-password";}
 function updateAuthUI(){const btn=$("profileBtn");btn.textContent=state.user?`💗 @${state.profile?.username||"My Profile"}`:"My Profile";$("headerSignIn").classList.toggle("hidden",!!state.user);$("headerSignUp").classList.toggle("hidden",!!state.user);$("headerSignOut").classList.toggle("hidden",!state.user);$("authStatus").textContent=state.user?`Signed in as ${state.profile?.username?"@"+state.profile.username:(state.user.email||"your account")}`:"You are browsing as a guest.";$("signupNameField").classList.toggle("hidden",!!state.user||authMode!=="signup")}
 async function loadProfile(){state.user=await getUser();if(!state.user){state.profile=null;updateAuthUI();renderProfile();return}const {data,error}=await db.from("profiles").select("id,username,display_name,created_at").eq("id",state.user.id).maybeSingle();if(error)console.warn("Profile read:",error.message);state.profile=data||null;if(!state.profile){const base=(state.user.user_metadata?.username||(state.user.email||"reader").split("@")[0]).toLowerCase().replace(/[^a-z0-9_]/g,"").slice(0,25)||"reader";const result=await db.from("profiles").upsert({id:state.user.id,username:base,display_name:base},{onConflict:"id"}).select().maybeSingle();if(!result.error)state.profile=result.data}const themeResult=await db.from("profiles").select("preferred_theme").eq("id",state.user.id).maybeSingle();if(!themeResult.error&&themeResult.data?.preferred_theme&&genrePalettes[themeResult.data.preferred_theme]){state.profile={...(state.profile||{}),preferred_theme:themeResult.data.preferred_theme};try{localStorage.setItem(GLOBAL_THEME_KEY,themeResult.data.preferred_theme);}catch(e){}applyGenreTheme("",themeResult.data.preferred_theme);}else if(themeResult.error){console.warn("Profile theme read:",themeResult.error.message);}updateAuthUI();renderProfile()}
-const JOSH_SHELF_BOOKS=[
- {key:"gp-josh-butcher-blackbird",title:"Butcher & Blackbird",author:"Brynne Weaver",description:"A dark romantic comedy about two rival murderers whose friendship, competition and chemistry become gloriously complicated.",source:"Guilty Pages Josh-approved collection",genres:["Dark romantic comedy","Morally grey characters","Obsessive devotion"]},
- {key:"gp-josh-hans",title:"Hans",author:"S.J. Tilly",description:"A dark, funny, possessive romance featuring an intense hero with an unexpectedly devoted side.",source:"Guilty Pages Josh-approved collection",genres:["Dark romance","Morally grey hero","Obsessive devotion"]},
- {key:"gp-josh-failure-to-match",title:"Failure to Match",author:"Kyra Parsi",description:"A sharp, funny contemporary romance packed with banter, chemistry and a hero who is far from boring.",source:"Guilty Pages Josh-approved collection",genres:["Contemporary romance","Enemies to lovers","Banter"]}
-];
-function renderJoshShelf(){
- const box=$("joshShelfList");if(!box)return;
- box.innerHTML=JOSH_SHELF_BOOKS.map(book=>renderBook(book)).join("");
- loadCardRatings(box,JOSH_SHELF_BOOKS.map(book=>book.key));
+
+const JOSH_OWNER_UID="628c3bcc-7eed-4c0f-b37b-fbf0a2c12e4a";
+const JOSH_DEFAULTS={
+ "gp-josh-butcher-blackbird":{description:"A dark romantic comedy about two rival murderers whose friendship, competition and chemistry become gloriously complicated.",genres:["Dark romantic comedy","Morally grey characters","Obsessive devotion"]},
+ "gp-josh-hans":{description:"A dark, funny, possessive romance featuring an intense hero with an unexpectedly devoted side.",genres:["Dark romance","Morally grey hero","Obsessive devotion"]},
+ "gp-josh-failure-to-match":{description:"A sharp, funny contemporary romance packed with banter, chemistry and a hero who is far from boring.",genres:["Contemporary romance","Enemies to lovers","Banter"]}
+};
+let joshShelfRows=[];
+function isJoshOwner(){return !!state.user&&state.user.id===JOSH_OWNER_UID}
+function normalizeJoshRow(row){
+ const defaults=JOSH_DEFAULTS[row.book_key]||{};
+ return {key:row.book_key,title:row.title,author:row.author||"",cover:row.cover_url||"",description:row.description||defaults.description||"",source:row.source||"Guilty Pages Josh-approved collection",genres:Array.isArray(row.genres)&&row.genres.length?row.genres:(defaults.genres||[]),published:""};
 }
+function renderJoshManager(){
+ const section=$("joshShelfList")?.parentElement;
+ if(!section)return;
+ let manager=$("joshShelfManager");
+ if(!isJoshOwner()){if(manager)manager.remove();return}
+ if(!manager){
+  manager=document.createElement("div");
+  manager.id="joshShelfManager";
+  manager.className="joshManager";
+  manager.innerHTML=`<h3>Owner controls · Manage the collection</h3><p class="muted">Only your owner account can add, remove or rearrange books. Everyone else can browse and rate.</p><div class="joshFormGrid"><label class="field">Book title<input id="joshNewTitle" maxlength="180" placeholder="Book title" required></label><label class="field">Author<input id="joshNewAuthor" maxlength="180" placeholder="Author name"></label><label class="field">Cover image URL <span class="muted">(optional)</span><input id="joshNewCover" type="url" placeholder="https://…"></label><label class="field">Short description <span class="muted">(optional)</span><textarea id="joshNewDescription" rows="2" maxlength="1200" placeholder="A little about the book…"></textarea></label></div><button type="button" class="pill pink" id="joshAddBookBtn">＋ Add book to Josh shelf</button>`;
+  section.insertBefore(manager,$("joshShelfList"));
+ }
+}
+async function saveJoshOrder(keys){
+ if(!isJoshOwner())return;
+ const results=await Promise.all(keys.map((key,index)=>db.from("josh_shelf_books").update({position:index+1}).eq("book_key",key)));
+ const failed=results.find(result=>result.error);
+ if(failed){toast("I couldn't save that order: "+failed.error.message);await loadJoshShelf();return}
+ joshShelfRows.sort((a,b)=>keys.indexOf(a.book_key)-keys.indexOf(b.book_key));
+ toast("Josh shelf order saved 💗");
+}
+async function moveJoshBook(key,direction){
+ if(!isJoshOwner())return;
+ const rows=[...joshShelfRows],index=rows.findIndex(row=>row.book_key===key),next=index+(direction==="up"?-1:1);
+ if(index<0||next<0||next>=rows.length)return;
+ [rows[index],rows[next]]=[rows[next],rows[index]];
+ await saveJoshOrder(rows.map(row=>row.book_key));
+ renderJoshShelf();
+}
+async function addJoshBook(){
+ if(!isJoshOwner()){toast("Only the shelf owner can add books.");return}
+ const title=$("joshNewTitle")?.value.trim()||"",author=$("joshNewAuthor")?.value.trim()||"",cover=$("joshNewCover")?.value.trim()||"",description=$("joshNewDescription")?.value.trim()||"";
+ if(!title){toast("Add the book title first 💗");return}
+ if(cover&&!/^https?:\/\//i.test(cover)){toast("The cover URL must begin with http:// or https://.");return}
+ const maxPosition=joshShelfRows.reduce((max,row)=>Math.max(max,Number(row.position)||0),0);
+ const slug=title.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,55)||"book";
+ const book_key=`gp-josh-${slug}-${Date.now().toString(36)}`;
+ const {error}=await db.from("josh_shelf_books").insert({book_key,title,author,cover_url:cover||null,description:description||null,source:"Guilty Pages Josh-approved collection",genres:[],position:maxPosition+1});
+ if(error){toast("Couldn't add this book: "+error.message);return}
+ $("joshNewTitle").value="";$("joshNewAuthor").value="";$("joshNewCover").value="";$("joshNewDescription").value="";
+ toast("Added to the Josh shelf 💘");
+ await loadJoshShelf();
+}
+async function removeJoshBook(key){
+ if(!isJoshOwner())return;
+ const row=joshShelfRows.find(item=>item.book_key===key);
+ if(!row||!confirm(`Remove “${row.title}” from the Josh-approved shelf?`))return;
+ const {error}=await db.from("josh_shelf_books").delete().eq("book_key",key);
+ if(error){toast("Couldn't remove this book: "+error.message);return}
+ toast("Book removed from the Josh shelf.");
+ await loadJoshShelf();
+}
+async function loadJoshShelf(){
+ const box=$("joshShelfList");if(!box)return;
+ const {data,error}=await db.from("josh_shelf_books").select("book_key,title,author,cover_url,description,source,genres,position,created_at").order("position",{ascending:true}).order("created_at",{ascending:true});
+ if(error){box.innerHTML='<div class="empty">The Josh shelf could not load just now. Please try again.</div>';console.warn("Josh shelf:",error.message);return}
+ joshShelfRows=data||[];
+ renderJoshManager();
+ if(!joshShelfRows.length){box.innerHTML='<div class="empty">The Josh shelf is waiting for its next dangerously devoted favourite. 💗</div>';return}
+ const books=joshShelfRows.map(normalizeJoshRow);
+ box.innerHTML=books.map((book,index)=>`<div class="shelf-card josh-shelf-card" data-josh-card="${esc(book.key)}">${isJoshOwner()?`<div class="drag-hint">⠿ Drag to rearrange</div>`:""}${renderBook(book)}${isJoshOwner()?`<div class="joshOwnerActions"><button type="button" class="pill shelfMove" data-josh-move="up" data-key="${esc(book.key)}" ${index===0?"disabled":""}>↑ Move up</button><button type="button" class="pill shelfMove" data-josh-move="down" data-key="${esc(book.key)}" ${index===books.length-1?"disabled":""}>↓ Move down</button><button type="button" class="pill" data-josh-remove="${esc(book.key)}">Remove</button></div>`:""}</div>`).join("");
+ loadCardRatings(box,books.map(book=>book.key));
+ if(box._joshSortable){box._joshSortable.destroy();box._joshSortable=null}
+ if(isJoshOwner()&&window.Sortable){
+  box._joshSortable=Sortable.create(box,{draggable:".josh-shelf-card",handle:".drag-hint",animation:180,delay:180,delayOnTouchOnly:true,touchStartThreshold:4,filter:"button,a,input,textarea",preventOnFilter:false,ghostClass:"sortable-ghost",chosenClass:"sortable-chosen",onEnd:()=>saveJoshOrder([...box.querySelectorAll(".josh-shelf-card")].map(card=>card.dataset.joshCard))});
+ }
+}
+function renderJoshShelf(){
+ renderJoshManager();
+ loadJoshShelf();
+}
+
 function renderProfile(){const area=$("profileArea");if(!state.user){area.innerHTML='<div class="empty">Sign in to manage your reader profile and saved shelves.</div>';return}const p=state.profile||{};const names={tbr:"💗 TBR",reading:"📖 Reading",finished:"✨ Finished",dnf:"💀 DNF",reread:"🔁 Rereads"};const shelvesHtml=Object.keys(names).map(key=>{const books=state.shelves[key]||[];return `<div class="profileShelf"><div class="profileShelfHead"><h3>${names[key]}</h3><button class="pill" data-open-shelf="${key}">Open shelf (${books.length})</button></div><div class="profileShelfBooks">${books.length?books.map(b=>`<div class="book">${coverHtml(b)}<strong>${esc(b.title)}</strong><div class="muted">${esc(b.author||"")}</div><div class="cardRating" data-card-rating="${esc(b.key)}"><span class="ratingCount">Loading rating…</span></div><div class="actions"><button class="pill shelfMove" data-move-book="up" data-shelf="${key}" data-key="${esc(b.key)}">↑ Move up</button><button class="pill shelfMove" data-move-book="down" data-shelf="${key}" data-key="${esc(b.key)}">↓ Move down</button><button class="pill" data-details="${esc(b.key)}">Details</button></div></div>`).join(""):'<div class="muted">No books here yet.</div>'}</div></div>`}).join("");area.innerHTML=`<div class="profileHero"><div class="avatar">${esc((p.username||"R").slice(0,1).toUpperCase())}</div><div><strong>@${esc(p.username||"reader")}</strong><div class="muted">Your one public name across Guilty Pages</div></div></div><div class="field"><label for="profileUsername">Public username</label><input id="profileUsername" maxlength="30" value="${esc(p.username||"")}"><small class="muted">Unique, 3–30 characters: letters, numbers and underscores.</small></div><div class="actions"><button class="pill pink" id="saveProfileBtn">Save profile</button></div><p class="muted">Your account and shelves are stored in Supabase. Email stays private for login and password recovery.</p><div class="profileShelves"><h2>📚 My Bookshelves</h2>${shelvesHtml}</div>`;const keys=Object.values(state.shelves).flat().map(b=>b.key);loadCardRatings(area,keys)}
 async function saveProfile(){if(!state.user)return;const username=$("profileUsername").value.trim().replace(/^@/,"").toLowerCase();if(!/^[a-z0-9_]{3,30}$/.test(username)){toast("Public name must be 3–30 characters: letters, numbers or underscores.");return}const {data,error}=await db.from("profiles").upsert({id:state.user.id,username,display_name:username},{onConflict:"id"}).select().single();if(error){toast(error.message.includes("duplicate")?"That public name is already taken.":error.message);return}state.profile=data;updateAuthUI();renderProfile();toast("Your public name is saved 💗")}
 async function signUp(){const email=$("email").value.trim(),password=$("password").value,username=$("publicUsername").value.trim().replace(/^@/,"").toLowerCase();if(!email||!password||!username){toast("Enter your email, password and public name.");return}if(!/^[a-z0-9_]{3,30}$/.test(username)){toast("Public name must be 3–30 characters: letters, numbers or underscores.");return}if(password.length<8){toast("Choose a password with at least 8 characters.");return}const {data,error}=await db.auth.signUp({email,password,options:{data:{username,display_name:username}}});if(error){toast(error.message);return}if(data.session){state.user=data.user;const prof=await db.from("profiles").upsert({id:data.user.id,username,display_name:username},{onConflict:"id"});if(prof.error){toast(prof.error.message);return}await loadProfile();await loadShelves();showTab("home");toast("Welcome to Guilty Pages 💗")}else{toast("Account created. If Supabase email confirmation is enabled, confirm your email before signing in; your chosen public name is saved with the signup request.");}}
@@ -524,11 +603,11 @@ document.querySelectorAll("[data-tab]").forEach(btn=>btn.addEventListener("click
 $("profileBtn").addEventListener("click",()=>state.user?showTab("profile"):openAuth("signin"));$("headerSignIn").addEventListener("click",()=>{openAuth("signin");$("email").focus()});$("headerSignUp").addEventListener("click",()=>{openAuth("signup");$("publicUsername").focus()});$("headerSignOut").addEventListener("click",signOut);$("searchBtn").addEventListener("click",()=>searchBooks());$("searchInput").addEventListener("keydown",e=>{if(e.key==="Enter")searchBooks()});$("discoverSearchBtn").addEventListener("click",()=>searchBooks($("discoverSearchInput").value));$("discoverSearchInput").addEventListener("keydown",e=>{if(e.key==="Enter")searchBooks($("discoverSearchInput").value)});
 document.querySelectorAll("[data-genre]").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll("[data-genre]").forEach(x=>x.classList.remove("active"));btn.classList.add("active");loadGenreTheme(btn.dataset.genre);searchGenre(btn.dataset.genre)}));
 $("authSubmitBtn").addEventListener("click",()=>authMode==="signup"?signUp():signIn());$("switchToSignUpBtn").addEventListener("click",()=>setAuthMode("signup"));$("switchToSignInBtn").addEventListener("click",()=>setAuthMode("signin"));$("resetPasswordBtn").addEventListener("click",resetPassword);$("saveNewPasswordBtn").addEventListener("click",saveNewPassword);$("postCommentBtn").addEventListener("click",postComment);$("postRoomMessageBtn").addEventListener("click",postRoomMessage);document.querySelectorAll('[data-tab="membership"]').forEach(btn=>btn.addEventListener("click",()=>{showTab("membership");loadMembership()}));
-document.addEventListener("click",e=>{if(e.target.closest("#loadMore")){searchBooks(state.searchQuery,true);return}if(e.target.closest("#openBookRoom")){ensureRoom(state.activeBookKey);return}if(e.target.closest("#saveProfileBtn")){saveProfile();return}if(e.target.closest("#signOutBtn")){signOut();return}if(e.target.closest("[data-back-discover]")){showTab("discover");return}const roomDetail=e.target.closest("[data-details-room]");if(roomDetail){ensureRoom(roomDetail.dataset.detailsRoom);return}const details=e.target.closest("[data-details]");if(details){openBookDetails(details.dataset.details);return}const a=e.target.closest("[data-add]");if(a){addBook(a.dataset.add,a.dataset.key,a);return}const d=e.target.closest("[data-discuss]");if(d){openDiscussion(d.dataset.discuss);return}const cardStar=e.target.closest("[data-card-star]");if(cardStar){state.activeBookKey=cardStar.dataset.key;rateBook(Number(cardStar.dataset.cardStar));return}const s=e.target.closest("[data-star]");if(s)rateBook(Number(s.dataset.star));const move=e.target.closest("[data-move-book]");if(move){moveShelfBook(move.dataset.shelf,move.dataset.key,move.dataset.moveBook);return}const openShelf=e.target.closest("[data-open-shelf]");if(openShelf){showTab(openShelf.dataset.openShelf);return}const r=e.target.closest("[data-remove]");if(r)removeBook(r.dataset.remove,r.dataset.key);const room=e.target.closest("[data-enter-room]");if(room)ensureRoom(room.dataset.enterRoom);const del=e.target.closest("[data-delete-comment]");if(del)deleteComment(del.dataset.deleteComment);const mr=e.target.closest("[data-report-message]");if(mr)reportMessage(mr.dataset.reportMessage);const dm=e.target.closest("[data-delete-message]");if(dm)deleteMessage(dm.dataset.deleteMessage)});
+document.addEventListener("click",e=>{const joshMove=e.target.closest("[data-josh-move]");if(joshMove){moveJoshBook(joshMove.dataset.key,joshMove.dataset.joshMove);return}const joshRemove=e.target.closest("[data-josh-remove]");if(joshRemove){removeJoshBook(joshRemove.dataset.joshRemove);return}if(e.target.closest("#joshAddBookBtn")){addJoshBook();return}if(e.target.closest("#loadMore")){searchBooks(state.searchQuery,true);return}if(e.target.closest("#openBookRoom")){ensureRoom(state.activeBookKey);return}if(e.target.closest("#saveProfileBtn")){saveProfile();return}if(e.target.closest("#signOutBtn")){signOut();return}if(e.target.closest("[data-back-discover]")){showTab("discover");return}const roomDetail=e.target.closest("[data-details-room]");if(roomDetail){ensureRoom(roomDetail.dataset.detailsRoom);return}const details=e.target.closest("[data-details]");if(details){openBookDetails(details.dataset.details);return}const a=e.target.closest("[data-add]");if(a){addBook(a.dataset.add,a.dataset.key,a);return}const d=e.target.closest("[data-discuss]");if(d){openDiscussion(d.dataset.discuss);return}const cardStar=e.target.closest("[data-card-star]");if(cardStar){state.activeBookKey=cardStar.dataset.key;rateBook(Number(cardStar.dataset.cardStar));return}const s=e.target.closest("[data-star]");if(s)rateBook(Number(s.dataset.star));const move=e.target.closest("[data-move-book]");if(move){moveShelfBook(move.dataset.shelf,move.dataset.key,move.dataset.moveBook);return}const openShelf=e.target.closest("[data-open-shelf]");if(openShelf){showTab(openShelf.dataset.openShelf);return}const r=e.target.closest("[data-remove]");if(r)removeBook(r.dataset.remove,r.dataset.key);const room=e.target.closest("[data-enter-room]");if(room)ensureRoom(room.dataset.enterRoom);const del=e.target.closest("[data-delete-comment]");if(del)deleteComment(del.dataset.deleteComment);const mr=e.target.closest("[data-report-message]");if(mr)reportMessage(mr.dataset.reportMessage);const dm=e.target.closest("[data-delete-message]");if(dm)deleteMessage(dm.dataset.deleteMessage)});
 function showPasswordRecovery(){showTab("auth");setAuthMode("signin");$("authHeading").textContent="🔐 Choose a new password";$("authIntro").textContent="Your recovery link is open. Choose a new password for your Guilty Pages account.";$("signupNameField").classList.add("hidden");$("password").parentElement.classList.add("hidden");$("authSubmitBtn").classList.add("hidden");$("switchToSignUpBtn").classList.add("hidden");$("switchToSignInBtn").classList.add("hidden");$("resetPasswordBtn").classList.add("hidden");$("passwordRecovery").classList.remove("hidden");}
 function recoveryParams(){const params=new URLSearchParams(window.location.search);const hash=window.location.hash.startsWith("#")?new URLSearchParams(window.location.hash.slice(1)):new URLSearchParams();for(const [k,v] of hash.entries())if(!params.has(k))params.set(k,v);return params;}
 let recoverySessionReady=false;
-db.auth.onAuthStateChange((event, session)=>{state.user=session?.user||null;if(event==="PASSWORD_RECOVERY"){recoverySessionReady=true;showPasswordRecovery()}setTimeout(async()=>{await loadProfile();if(state.user)await loadShelves();updateAuthUI();if(event==="PASSWORD_RECOVERY")showPasswordRecovery()},0)});
+db.auth.onAuthStateChange((event, session)=>{state.user=session?.user||null;if(event==="PASSWORD_RECOVERY"){recoverySessionReady=true;showPasswordRecovery()}setTimeout(async()=>{await loadProfile();if(state.user)await loadShelves();updateAuthUI();if(!$("josh").classList.contains("hidden"))renderJoshShelf();if(event==="PASSWORD_RECOVERY")showPasswordRecovery()},0)});
 async function processRecoveryUrl(){const params=recoveryParams();const type=params.get("type");const code=params.get("code");const tokenHash=params.get("token_hash");if(type!=="recovery"&&!code&&!tokenHash)return;try{if(tokenHash&&type==="recovery"){const {data,error}=await db.auth.verifyOtp({token_hash:tokenHash,type:"recovery"});if(error)throw error;if(data?.session)recoverySessionReady=true;}else if(code){const {data,error}=await db.auth.exchangeCodeForSession(code);if(error)throw error;if(data?.session)recoverySessionReady=true;}else{const {data,error}=await db.auth.getSession();if(error)throw error;if(data?.session)recoverySessionReady=true;}if(recoverySessionReady){showPasswordRecovery();history.replaceState({},document.title,window.location.pathname);return;}if(type==="recovery"){showTab("auth");toast("The recovery link was opened, but Supabase did not establish a reset session. Request a fresh email and open its link directly.");}}catch(error){showTab("auth");toast("This reset link could not be verified. Request a fresh password-reset email.");console.error("Password recovery verification failed:",error);}}
 async function restoreNavigation(){let tab="home",bookKey="",roomKey="",query="",savedBook=null;try{tab=sessionStorage.getItem("gp:lastTab")||"home";bookKey=sessionStorage.getItem("gp:activeBookKey")||"";roomKey=sessionStorage.getItem("gp:activeRoomKey")||"";query=sessionStorage.getItem("gp:searchQuery")||"";savedBook=JSON.parse(sessionStorage.getItem("gp:activeBook")||"null");}catch(e){}if(savedBook?.key)cacheBook(savedBook);state.activeBookKey=bookKey||savedBook?.key||null;state.activeRoomKey=roomKey||null;state.searchQuery=query;if(tab==="bookroom"&&state.activeRoomKey){await ensureRoom(state.activeRoomKey);return}if(tab==="discussion"&&state.activeBookKey){await openDiscussion(state.activeBookKey);return}if(tab==="bookdetails"&&state.activeBookKey){openBookDetails(state.activeBookKey);return}showTab(["home","discover","community","tbr","dnf","reread","reading","finished","josh","profile","auth","membership"].includes(tab)?tab:"home");if(tab==="discover"&&query){$("discoverSearchInput").value=query;await searchBooks(query)}}
 (async()=>{
